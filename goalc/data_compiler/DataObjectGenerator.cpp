@@ -219,16 +219,16 @@ std::vector<u8> DataObjectGenerator::generate_link_table() {
   }
   push_variable_length_integer(0, &link);
 
-  for (auto& sl : m_symbol_links) {
+  for (auto& [key, value] : m_symbol_links) {
     // insert name. first char won't have the highest bit set
-    for (auto c : sl.first) {
+    for (auto c : key) {
       link.push_back(c);
     }
     link.push_back(0);
-    std::sort(sl.second.begin(), sl.second.end());
+    std::sort(value.begin(), value.end());
     int prev = 0;
 
-    for (auto& x : sl.second) {
+    for (int x : value) {
       int diff = x - prev;
       ASSERT(diff >= 0);
       push_better_variable_length_integer(diff * 4, &link);
@@ -239,17 +239,17 @@ std::vector<u8> DataObjectGenerator::generate_link_table() {
   }
 
   // types
-  for (auto& tl : m_type_links) {
+  for (auto& [key, value] : m_type_links) {
     link.push_back(0x80);
-    for (auto c : tl.first) {
+    for (char c : key) {
       link.push_back(c);
     }
     link.push_back(0);
 
-    std::sort(tl.second.begin(), tl.second.end());
+    std::sort(value.begin(), value.end());
     int prev = 0;
 
-    for (auto& x : tl.second) {
+    for (int x : value) {
       int diff = x - prev;
       ASSERT(diff >= 0);
       push_better_variable_length_integer(diff * 4, &link);
@@ -268,13 +268,13 @@ std::vector<u8> DataObjectGenerator::generate_link_table() {
 }
 
 void DataObjectGenerator::add_strings() {
-  for (auto& entry : m_string_pool) {
+  for (const auto& [key, value] : m_string_pool) {
     // add the string
     align(4);
     add_type_tag("string");
-    auto target_word = add_word(entry.first.length());
+    auto target_word = add_word(key.length());
     std::vector<u8> string_buff;
-    for (auto c : entry.first) {
+    for (const int c : key) {
       string_buff.push_back(c);
     }
     string_buff.push_back(0);
@@ -286,7 +286,7 @@ void DataObjectGenerator::add_strings() {
       add_word(*(u32*)(string_buff.data() + i * 4));
     }
 
-    for (auto& source : entry.second) {
+    for (int source : value) {
       link_word_to_word(source, target_word);
     }
   }

@@ -66,7 +66,7 @@ void compile_game_count(const std::string& input_filename, const std::string& ou
   DataObjectGenerator gen;
   gen.add_type_tag("game-count-info");
   gen.add_word(counts.size());
-  for (auto& x : counts) {
+  for (const Count& x : counts) {
     gen.add_word(x.money);
     gen.add_word(x.buzzer);
   }

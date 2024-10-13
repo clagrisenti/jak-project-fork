@@ -1,5 +1,7 @@
 #include "Entity.h"
 
+#include <algorithm>
+
 namespace jak1 {
 size_t EntityActor::generate(DataObjectGenerator& gen) const {
   size_t result = res_lump.generate_header(gen, "entity-actor");
@@ -41,10 +43,10 @@ size_t generate_drawable_actor(DataObjectGenerator& gen,
 
 size_t generate_inline_array_actors(DataObjectGenerator& gen,
                                     const std::vector<EntityActor>& actors) {
-  std::vector<size_t> actor_locs;
-  for (auto& actor : actors) {
-    actor_locs.push_back(actor.generate(gen));
-  }
+  std::vector<size_t> actor_locs(actors.size());
+
+  std::transform(actors.begin(), actors.end(), actor_locs.begin(),
+                 [&gen](const auto& actor) -> size_t { return actor.generate(gen); });
 
   gen.align_to_basic();
   gen.add_type_tag("drawable-inline-array-actor");  // 0
@@ -140,10 +142,11 @@ size_t generate_drawable_ambient(DataObjectGenerator& gen,
 
 size_t generate_inline_array_ambients(DataObjectGenerator& gen,
                                       const std::vector<EntityAmbient>& ambients) {
-  std::vector<size_t> ambient_locs;
-  for (auto& ambient : ambients) {
-    ambient_locs.push_back(ambient.generate(gen));
-  }
+  std::vector<size_t> ambient_locs(ambients.size());
+
+  std::transform(ambients.begin(), ambients.end(), ambient_locs.begin(),
+                 [&gen](const auto& ambient) -> size_t { return ambient.generate(gen); });
+
   gen.align_to_basic();
   gen.add_type_tag("drawable-inline-array-ambient");  // 0
   size_t result = gen.current_offset_bytes();

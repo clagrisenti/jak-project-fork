@@ -30,7 +30,7 @@ std::string StaticString::print() const {
 
 void StaticString::generate(emitter::ObjectGenerator* gen) {
   rec = gen->add_static_to_seg(seg, 16);
-  auto& d = gen->get_static_data(rec);
+  std::vector<u8>& d = gen->get_static_data(rec);
 
   // add "string" type tag:
   gen->link_static_type_ptr(rec, d.size(), "string");
@@ -42,9 +42,10 @@ void StaticString::generate(emitter::ObjectGenerator* gen) {
   push_data_to_byte_vector<u32>(text.size(), d);
 
   // add chars
-  for (auto c : text) {
+  for (char c : text) {
     d.push_back(c);
   }
+
   d.push_back(0);
 }
 

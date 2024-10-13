@@ -41,10 +41,10 @@ size_t generate_drawable_actor(DataObjectGenerator& gen,
 
 size_t generate_inline_array_actors(DataObjectGenerator& gen,
                                     const std::vector<EntityActor>& actors) {
-  std::vector<size_t> actor_locs;
-  for (auto& actor : actors) {
-    actor_locs.push_back(actor.generate(gen));
-  }
+  std::vector<size_t> actor_locs(actors.size());
+
+  std::transform(actors.begin(), actors.end(), actor_locs.begin(),
+                 [&gen](const auto& actor) -> size_t { return actor.generate(gen); });
 
   gen.align_to_basic();
   gen.add_type_tag("drawable-inline-array-actor");  // 0

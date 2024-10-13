@@ -628,7 +628,7 @@ std::vector<Frag> fragment_mesh(const std::vector<jak2::CollideFace>& tris) {
 
   while (!too_big_frags.empty()) {
     printf("sizes %zu %zu\n", too_big_frags.size(), good_frags.size());
-    auto& back = too_big_frags.back();
+    const FragAndStats& back = too_big_frags.back();
 
     // split it!
     FragAndStats ab[2];
@@ -978,7 +978,8 @@ size_t add_pod_to_object_file(DataObjectGenerator& gen,
 
 template <typename T>
 size_t add_pod_vector_to_object_file(DataObjectGenerator& gen, const std::vector<T>& data) {
-  return add_pod_to_object_file(gen, (const u8*)data.data(), data.size() * sizeof(T), sizeof(T));
+  return add_pod_to_object_file(gen, reinterpret_cast<const u8*>(data.data()),
+                                data.size() * sizeof(T), sizeof(T));
 }
 
 size_t add_to_object_file(const CollideFragment& frag, DataObjectGenerator& gen) {

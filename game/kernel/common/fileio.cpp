@@ -25,8 +25,9 @@ void fileio_init_globals() {
  * DONE, EXACT
  */
 char* strend(char* str) {
-  while (*str)
+  while (*str) {
     str++;
+  }
   return str;
 }
 
@@ -95,10 +96,10 @@ void kstrcpy(char* dst, const char* src) {
 void kstrcpyup(char* dst, const char* src) {
   while (*src) {
     char c = *src;
-    if (c >= 'a' && c <= 'z') {  // A-Z,a-z
-      c -= 0x20;
-    }
+
+    c -= 0x20 * (c >= 'a' && c <= 'z');
     *dst = c;
+
     dst++;
     src++;
   }

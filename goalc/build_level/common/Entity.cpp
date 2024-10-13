@@ -94,10 +94,13 @@ u64 get_enum_or_int(const nlohmann::json& value, decompiler::DecompilerTypeSyste
 }
 template <typename T>
 std::vector<T> enum_from_json(const nlohmann::json& json, decompiler::DecompilerTypeSystem& dts) {
-  std::vector<T> result;
-  for (const auto& entry : json) {
-    result.push_back(static_cast<T>(get_enum_val(entry.get<std::string>(), dts)));
-  }
+  std::vector<T> result(json.size());
+
+  std::transform(json.begin(), json.end(), result.begin(),
+                 [&dts](const nlohmann::basic_json<>::value_type& entry) -> T {
+                   return static_cast<T>(get_enum_val(entry.get<std::string>(), dts));
+                 });
+
   return result;
 }
 

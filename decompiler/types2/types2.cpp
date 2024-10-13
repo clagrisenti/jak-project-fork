@@ -133,12 +133,12 @@ void build_function(FunctionCache& function_cache,
       auto& aop = aops.at(instr->aop_idx);
 
       // allocate types that we'll write/clobber
-      for (auto& reg : aop->write_regs()) {
+      for (const Register& reg : aop->write_regs()) {
         RegType rt;
         rt.reg = reg;
         instr->written_reg_types.push_back(rt);
       }
-      for (auto& reg : aop->clobber_regs()) {
+      for (const Register& reg : aop->clobber_regs()) {
         RegType rt;
         rt.reg = reg;
         instr->written_reg_types.push_back(rt);

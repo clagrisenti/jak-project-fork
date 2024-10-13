@@ -41,7 +41,7 @@ struct VectorHash {
  * Recursively get a list of vertices.
  */
 void collect_vertices(const CNode& node, std::vector<math::Vector3f>& verts) {
-  for (auto& child : node.child_nodes) {
+  for (const CNode& child : node.child_nodes) {
     collect_vertices(child, verts);
   }
   for (auto& face : node.faces) {
@@ -82,7 +82,7 @@ void compute_my_bsphere_ritters(CNode& node, const std::vector<math::Vector3f>& 
   node.bsphere.z() = origin.z();
 
   float max_squared = 0;
-  for (auto& pt : verts) {
+  for (const math::Vector3f& pt : verts) {
     max_squared = std::max(max_squared, (pt - origin).squared_length());
   }
   node.bsphere.w() = std::sqrt(max_squared);
@@ -247,7 +247,7 @@ void drawable_layout_helper(const CNode& node_in,
     ASSERT(!node_in.child_nodes.empty());
     auto& next = parent_to_add_to.draw_node_children.emplace_back();
     next.bsphere = node_in.bsphere;
-    for (auto& c : node_in.child_nodes) {
+    for (const CNode& c : node_in.child_nodes) {
       drawable_layout_helper(c, tree_out, next);
     }
 
@@ -261,7 +261,7 @@ void drawable_layout_helper(const CNode& node_in,
   }
 }
 
-CollideTree build_collide_tree(CNode& root) {
+CollideTree build_collide_tree(const CNode& root) {
   CollideTree tree;
   drawable_layout_helper(root, tree, tree.fake_root_node);
   return tree;
@@ -269,7 +269,7 @@ CollideTree build_collide_tree(CNode& root) {
 
 void debug_stats(const CollideTree& tree) {
   float sum_w = 0, max_w = 0;
-  for (auto& frag : tree.frags.frags) {
+  for (const CollideFrag& frag : tree.frags.frags) {
     sum_w += frag.bsphere.w();
     max_w = std::max(frag.bsphere.w(), max_w);
   }
@@ -300,7 +300,7 @@ CollideTree construct_collide_bvh(const std::vector<jak1::CollideFace>& tris) {
 
   lg::info("Tree layout done in {:.2f} ms", bvh_timer.getMs());
   std::map<int, int> size_histogram;
-  for (const auto& f : tree.frags.frags) {
+  for (const CollideFrag& f : tree.frags.frags) {
     size_histogram[f.faces.size()]++;
   }
 

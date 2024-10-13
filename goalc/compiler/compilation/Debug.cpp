@@ -281,16 +281,16 @@ Val* Compiler::compile_pm(const goos::Object& form, const goos::Object& rest, En
     case PrintMode::UNSIGNED_DEC:
       switch (elt_size) {
         case 1:
-          mem_print((u8*)mem.data(), elts, addr, mode);
+          mem_print(static_cast<u8*>(mem.data()), elts, addr, mode);
           break;
         case 2:
-          mem_print((u16*)mem.data(), elts, addr, mode);
+          mem_print(reinterpret_cast<u16*>(mem.data()), elts, addr, mode);
           break;
         case 4:
-          mem_print((u32*)mem.data(), elts, addr, mode);
+          mem_print(reinterpret_cast<u32*>(mem.data()), elts, addr, mode);
           break;
         case 8:
-          mem_print((u64*)mem.data(), elts, addr, mode);
+          mem_print(reinterpret_cast<u64*>(mem.data()), elts, addr, mode);
           break;
         default:
           throw_compiler_error(form, ":pm {} is an invalid element size for unsigned", elt_size);
@@ -299,16 +299,16 @@ Val* Compiler::compile_pm(const goos::Object& form, const goos::Object& rest, En
     case PrintMode::SIGNED_DEC:
       switch (elt_size) {
         case 1:
-          mem_print((s8*)mem.data(), elts, addr, mode);
+          mem_print(reinterpret_cast<s8*>(mem.data()), elts, addr, mode);
           break;
         case 2:
-          mem_print((s16*)mem.data(), elts, addr, mode);
+          mem_print(reinterpret_cast<s16*>(mem.data()), elts, addr, mode);
           break;
         case 4:
-          mem_print((s32*)mem.data(), elts, addr, mode);
+          mem_print(reinterpret_cast<s32*>(mem.data()), elts, addr, mode);
           break;
         case 8:
-          mem_print((s64*)mem.data(), elts, addr, mode);
+          mem_print(reinterpret_cast<s64*>(mem.data()), elts, addr, mode);
           break;
         default:
           throw_compiler_error(form, ":pm {} is a bad element size for signed", elt_size);
@@ -317,7 +317,7 @@ Val* Compiler::compile_pm(const goos::Object& form, const goos::Object& rest, En
     case PrintMode::FLOAT:
       switch (elt_size) {
         case 4:
-          mem_print((float*)mem.data(), elts, addr, mode);
+          mem_print(reinterpret_cast<float*>(mem.data()), elts, addr, mode);
           break;
         default:
           throw_compiler_error(form, ":pm float can only be printed with size 4, but got size {}",

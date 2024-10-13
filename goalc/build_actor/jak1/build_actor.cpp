@@ -5,14 +5,14 @@
 
 #include "goalc/build_actor/common/MercExtract.h"
 #include "goalc/build_actor/common/animation_processing.h"
+#include <goalc/build_actor/common/animation_processing.h>
 
 #include "third-party/tiny_gltf/tiny_gltf.h"
 
 using namespace gltf_util;
 namespace jak1 {
 
-JointAnimCompressedHDR::JointAnimCompressedHDR(const anim::CompressedAnim& anim) {
-  matrix_bits = 0;
+JointAnimCompressedHDR::JointAnimCompressedHDR(const anim::CompressedAnim& anim) : matrix_bits(0) {
   if (anim.matrix_animated[0]) {
     matrix_bits |= 1;
   }
@@ -20,9 +20,7 @@ JointAnimCompressedHDR::JointAnimCompressedHDR(const anim::CompressedAnim& anim)
     matrix_bits |= 2;
   }
 
-  for (auto& word : control_bits) {
-    word = 0;
-  }
+  std::fill(control_bits.begin(), control_bits.end(), 0);
 
   for (size_t i = 0; i < anim.joint_metadata.size(); i++) {
     const int word_idx = i / 8;
@@ -83,8 +81,8 @@ JointAnimCompressedFixed::JointAnimCompressedFixed(const anim::CompressedAnim& a
   ASSERT(num_data_qw_used <= 133);
 }
 
-JointAnimCompressedFrame::JointAnimCompressedFrame(const anim::CompressedFrame& frame) {
-  reserved = 0;
+JointAnimCompressedFrame::JointAnimCompressedFrame(const anim::CompressedFrame& frame)
+    : reserved(0) {
   u8* dest = (u8*)data;
   const u8* u64_src = (const u8*)frame.data64.data();
   const u8* u32_src = (const u8*)frame.data32.data();
@@ -115,11 +113,9 @@ JointAnimCompressedFrame::JointAnimCompressedFrame(const anim::CompressedFrame& 
 }
 
 JointAnimCompressedControl::JointAnimCompressedControl(const anim::CompressedAnim& anim)
-    : fixed(anim) {
-  num_frames = anim.frames.size();
-  for (auto& in_frame : anim.frames) {
-    frame.emplace_back(in_frame);
-  }
+    : num_frames(anim.frames.size()), fixed(anim) {
+  std::copy(anim.frames.begin(), anim.frames.end(), frame.begin());
+
   fixed_qwc = fixed.num_data_qw_used;
   frame_qwc = frame.at(0).num_data_qw_used;
 }
@@ -133,9 +129,13 @@ ArtJointAnim::ArtJointAnim(const anim::CompressedAnim& anim, const std::vector<J
   artist_step = 1.0f;
   master_art_group_name = name;
   master_art_group_index = 2;
-  for (auto& joint : joints) {
-    data.emplace_back(joint, anim.frames.size());
-  }
+
+  data.reserve(joints.size());
+
+  std::transform(joints.begin(), joints.end(), data.begin(),
+                 [&anim](const Joint& joint) -> JointAnimCompressed {
+                   return JointAnimCompressed(joint, anim.frames.size());
+                 });
 }
 
 std::map<int, size_t> g_joint_map;
@@ -625,10 +625,10 @@ std::vector<u8> ArtGroup::save_object_file() const {
 }
 
 int ArtGroup::get_joint_idx(const std::string& name) {
-  for (auto& elt : this->elts) {
+  for (const std::shared_ptr<ArtElement>& elt : this->elts) {
     if (elt && typeid(*elt) == typeid(ArtJointGeo)) {
       auto jgeo = (ArtJointGeo*)elt.get();
-      for (auto& joint : jgeo->data) {
+      for (const Joint& joint : jgeo->data) {
         if (joint.name == name) {
           return joint.number;
         }
@@ -685,7 +685,7 @@ std::vector<GltfJoint> extract_skeleton(const tinygltf::Model& model, int skin_i
     node_to_joint[joint_node_idx] = i;
     joint_to_node[i] = joint_node_idx;
 
-    auto& gjoint = joints.emplace_back();
+    GltfJoint& gjoint = joints.emplace_back();
     gjoint.bind_pose_T_w = inverse_bind_matrices[i];
     gjoint.name = joint_node.name;
     gjoint.gltf_node_index = joint_node_idx;

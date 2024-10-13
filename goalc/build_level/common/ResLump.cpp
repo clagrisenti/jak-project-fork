@@ -339,7 +339,7 @@ void ResLump::generate_tag_list_and_data(DataObjectGenerator& gen, size_t header
     ASSERT(tag.elt_count < (UINT16_MAX >> 1));
     packed |= (((u16)tag.elt_count) << 16);
     if (tag.inlined) {
-      packed |= (1 << 31);
+      packed |= (1u << 31);
     }
     gen.add_word(packed);
     rec.data = current_data_ptr;

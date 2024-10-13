@@ -49,9 +49,11 @@ bool run_build_level(const std::string& input_file,
   dts.parse_enum_defs({"decompiler", "config", "jak2", "all-types.gc"});
   std::vector<EntityActor> actors;
   add_actors_from_json(level_json.at("actors"), actors, level_json.value("base_id", 1234), dts);
-  std::sort(actors.begin(), actors.end(), [](auto& a, auto& b) { return a.aid < b.aid; });
-  auto duplicates = std::adjacent_find(actors.begin(), actors.end(),
-                                       [](auto& a, auto& b) { return a.aid == b.aid; });
+  std::sort(actors.begin(), actors.end(),
+            [](const EntityActor& a, const EntityActor& b) -> bool { return a.aid < b.aid; });
+  auto duplicates = std::adjacent_find(
+      actors.begin(), actors.end(),
+      [](const EntityActor& a, const EntityActor& b) -> bool { return a.aid == b.aid; });
   ASSERT_MSG(duplicates == actors.end(),
              fmt::format("Actor IDs must be unique. Found at least two actors with ID {}",
                          duplicates->aid));
@@ -115,14 +117,15 @@ bool run_build_level(const std::string& input_file,
       return false;
     }
 
-    std::vector<fs::path> dgos, objs;
-    for (const auto& dgo_name : config.dgo_names) {
-      dgos.push_back(iso_folder / dgo_name);
-    }
+    std::vector<fs::path> dgos(config.dgo_names.size()), objs(config.object_file_names.size());
 
-    for (const auto& obj_name : config.object_file_names) {
-      objs.push_back(iso_folder / obj_name);
-    }
+    std::transform(
+        config.dgo_names.begin(), config.dgo_names.end(), dgos.begin(),
+        [&iso_folder](const std::string& dgo_name) -> fs::path { return iso_folder / dgo_name; });
+
+    std::transform(
+        config.object_file_names.begin(), config.object_file_names.end(), objs.begin(),
+        [&iso_folder](const std::string& obj_name) -> fs::path { return iso_folder / obj_name; });
 
     decompiler::ObjectFileDB db(dgos, fs::path(config.obj_file_name_map_file), objs, {}, {}, {},
                                 config);
@@ -172,7 +175,7 @@ bool run_build_level(const std::string& input_file,
 
       // then add
       for (auto& [id, tex] : tex_db.textures) {
-        for (auto& tex0 : wanted_texs) {
+        for (const std::string& tex0 : wanted_texs) {
           if (std::find(processed_textures.begin(), processed_textures.end(), tex.name) !=
               processed_textures.end()) {
             continue;

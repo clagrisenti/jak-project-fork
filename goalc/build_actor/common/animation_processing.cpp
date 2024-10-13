@@ -1,5 +1,7 @@
 #include "animation_processing.h"
 
+#include <algorithm>
+
 #include "common/log/log.h"
 #include "common/util/gltf_util.h"
 
@@ -139,25 +141,23 @@ bool is_constant(const std::vector<math::Vector<float, n>>& in) {
   if (in.empty()) {
     return true;
   }
-  auto first = in.at(0);
-  for (auto& x : in) {
-    if (x != first) {
-      return false;
-    }
-  }
-  return true;
+  math::Vector<float, n> first = in.at(0);
+
+  return std::any_of(in.begin(), in.end(),
+                     [&first](const math::Vector<float, n>& x) -> bool { return x != first; });
 }
 
 bool can_use_small_trans(const std::vector<math::Vector3f>& trans_frames) {
   constexpr float kMaxTrans = 32767.f * (4.f / 4096.f);
-  for (auto& trans : trans_frames) {
-    for (int i = 0; i < 3; i++) {
-      if (trans[i] > kMaxTrans || trans[i] < -kMaxTrans) {
-        return false;
-      }
-    }
-  }
-  return true;
+
+  return std::any_of(trans_frames.begin(), trans_frames.end(),
+                     [](const math::Vector3f& trans) -> bool {
+                       for (int i = 0; i < 3; i++)
+                         if (trans[i] > kMaxTrans || trans[i] < -kMaxTrans) {
+                           return false;
+                         }
+                       return true;
+                     });
 }
 
 bool is_matrix_constant(const UncompressedSingleJointAnim& anim) {

@@ -47,7 +47,7 @@ struct JointAnimCompressed {
 // Header for a compressed joint animation - this tells the decompressor how to read
 // the data in the animation.
 struct JointAnimCompressedHDR {
-  u32 control_bits[14];
+  std::array<u32, 14> control_bits;
   u32 num_joints;
   u32 matrix_bits;
 

@@ -194,7 +194,7 @@ QuantizedColors quantize_colors_octree(const std::vector<math::Vector<u8, 4>>& i
                                        u32 target_count) {
   Node root;
   root.depth = 0;
-  for (auto& color : in) {
+  for (const auto& color : in) {
     insert(root, color, 0);
   }
 
@@ -202,7 +202,7 @@ QuantizedColors quantize_colors_octree(const std::vector<math::Vector<u8, 4>>& i
 
   QuantizedColors out;
   assign_colors(root, out.final_colors);
-  for (auto& color : in) {
+  for (const auto& color : in) {
     out.vtx_to_color.push_back(lookup_node_for_color(root, color, 0));
   }
 
@@ -293,13 +293,14 @@ Color u32_as_color(u32 in) {
 
 std::vector<Color> deduplicated_colors(const std::vector<Color>& in) {
   std::set<u32> unique;
-  for (auto& x : in) {
+  for (const auto& x : in) {
     unique.insert(color_as_u32(x));
   }
-  std::vector<Color> out;
-  for (auto& x : unique) {
-    out.push_back(u32_as_color(x));
-  }
+  std::vector<Color> out(unique.size());
+
+  std::transform(unique.begin(), unique.end(), out.begin(),
+                 [](const auto x) -> Color { return u32_as_color(x); });
+
   return out;
 }
 
@@ -325,7 +326,7 @@ QuantizedColors quantize_colors_kd_tree(const std::vector<math::Vector<u8, 4>>& 
     const u32 slot = result.final_colors.size();
     u32 totals[4] = {0, 0, 0, 0};
     u32 n = node->colors.size();
-    for (auto& color : node->colors) {
+    for (const auto& color : node->colors) {
       color_value_to_color_idx[color_as_u32(color)] = slot;
       for (int i = 0; i < 4; i++) {
         totals[i] += color[i];
@@ -335,7 +336,7 @@ QuantizedColors quantize_colors_kd_tree(const std::vector<math::Vector<u8, 4>>& 
                                      totals[3] / (2 * n));
   });
 
-  for (auto& color : in) {
+  for (const auto& color : in) {
     result.vtx_to_color.push_back(color_value_to_color_idx.at(color_as_u32(color)));
   }
 

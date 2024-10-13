@@ -1,7 +1,10 @@
 #include "collide_drawable.h"
 
+#include <algorithm>
 #include <unordered_map>
 #include <unordered_set>
+
+#include "collide_bvh.h"
 
 #include "common/util/Assert.h"
 
@@ -236,10 +239,11 @@ std::unordered_map<const collide::DrawNode*, size_t> add_draw_nodes(
 std::vector<const collide::DrawNode*> bfs_nodes(const collide::DrawNode& fake_root) {
   std::vector<const collide::DrawNode*> out;
   std::unordered_set<const collide::DrawNode*> added;
-  std::vector<const collide::DrawNode*> frontier;
-  for (auto& dnc : fake_root.draw_node_children) {
-    frontier.push_back(&dnc);
-  }
+  std::vector<const collide::DrawNode*> frontier(fake_root.draw_node_children.size());
+
+  std::transform(fake_root.draw_node_children.begin(), fake_root.draw_node_children.end(),
+                 frontier.begin(),
+                 [](const collide::DrawNode& dnc) -> const collide::DrawNode* { return &dnc; });
 
   while (!frontier.empty()) {
     std::vector<const collide::DrawNode*> next_frontier;
@@ -269,10 +273,12 @@ size_t DrawableTreeCollideFragment::add_to_object_file(DataObjectGenerator& gen)
   size_t pat_array_loc = generate_pat_array(gen, packed_frags.pats);
 
   // generated packed data
-  std::vector<size_t> packed_data_locs;
-  for (auto& mesh : packed_frags.packed_frag_data) {
-    packed_data_locs.push_back(generate_packed_collide_data(gen, mesh.packed_data));
-  }
+  std::vector<size_t> packed_data_locs(packed_frags.packed_frag_data.size());
+
+  std::transform(packed_frags.packed_frag_data.begin(), packed_frags.packed_frag_data.end(),
+                 packed_data_locs.begin(), [&gen](const auto& mesh) -> size_t {
+                   return generate_packed_collide_data(gen, mesh.packed_data);
+                 });
 
   // generate collide frag meshes
   std::vector<size_t> collide_frag_meshes;

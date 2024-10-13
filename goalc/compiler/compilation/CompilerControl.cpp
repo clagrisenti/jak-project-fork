@@ -547,7 +547,7 @@ void Compiler::repl_coloring(
       if (expression_stack.empty()) {
         colors.at(i) = cl::RED;
       } else {
-        auto& matching_paren = expression_stack.top();
+        const std::pair<char, cl>& matching_paren = expression_stack.top();
         expression_stack.pop();
         if (matching_paren.first == '(') {
           if (i == context.size() - 1 && !expression_stack.empty()) {

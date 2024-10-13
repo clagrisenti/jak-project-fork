@@ -61,7 +61,7 @@ PackedU16Verts pack_verts_to_u16(const std::vector<math::Vector3f>& input) {
   auto base = result.base.cast<float>();
 
   // compute offset relative to base.
-  for (auto& vtx : input) {
+  for (const auto& vtx : input) {
     // add the "magic offset" to make this a 0x4dXXXXXX float.
     // subtract the base to make this a 0x4d00XXXX float.
     auto vertex_magic = vtx + magic_offset - base;

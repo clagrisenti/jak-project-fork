@@ -67,7 +67,9 @@ void mc_print(const std::string& str, Args&&... args) {
   }
 }
 
-const char* filename_jak1[12] = {
+constexpr std::size_t file_name_count = 12;
+
+const std::array<const char*, file_name_count> filename_jak1 = {
     "BASCUS-97124AYBABTU!",           "BASCUS-97124AYBABTU!/icon.sys",
     "BASCUS-97124AYBABTU!/icon.ico",  "BASCUS-97124AYBABTU!/BASCUS-97124AYBABTU!",
     "BASCUS-97124AYBABTU!/bank0.bin", "BASCUS-97124AYBABTU!/bank1.bin",
@@ -75,7 +77,7 @@ const char* filename_jak1[12] = {
     "BASCUS-97124AYBABTU!/bank4.bin", "BASCUS-97124AYBABTU!/bank5.bin",
     "BASCUS-97124AYBABTU!/bank6.bin", "BASCUS-97124AYBABTU!/bank7.bin"};
 
-const char* filename_jak2[12] = {
+const std::array<const char*, file_name_count> filename_jak2 = {
     "BASCUS-97265AYBABTU!",           "BASCUS-97265AYBABTU!/icon.sys",
     "BASCUS-97265AYBABTU!/icon.ico",  "BASCUS-97265AYBABTU!/BASCUS-97265AYBABTU!",
     "BASCUS-97265AYBABTU!/bank0.bin", "BASCUS-97265AYBABTU!/bank1.bin",
@@ -83,7 +85,7 @@ const char* filename_jak2[12] = {
     "BASCUS-97265AYBABTU!/bank4.bin", "BASCUS-97265AYBABTU!/bank5.bin",
     "BASCUS-97265AYBABTU!/bank6.bin", "BASCUS-97265AYBABTU!/bank7.bin"};
 
-const char* filename_jak3[12] = {
+const std::array<const char*, file_name_count> filename_jak3 = {
     "BASCUS-97330AYBABTU!",           "BASCUS-97330AYBABTU!/icon.sys",
     "BASCUS-97330AYBABTU!/icon.ico",  "BASCUS-97330AYBABTU!/BASCUS-97330AYBABTU!",
     "BASCUS-97330AYBABTU!/bank0.bin", "BASCUS-97330AYBABTU!/bank1.bin",
@@ -92,19 +94,17 @@ const char* filename_jak3[12] = {
     "BASCUS-97330AYBABTU!/bank6.bin", "BASCUS-97330AYBABTU!/bank7.bin"};
 
 const char* mc_get_filename_no_dir(GameVersion version, int ndx) {
-  const char** filenames = nullptr;
   switch (version) {
     case GameVersion::Jak1:
-      filenames = filename_jak1;
+      return filename_jak1[ndx];
       break;
     case GameVersion::Jak2:
-      filenames = filename_jak2;
+      return filename_jak2[ndx];
       break;
     case GameVersion::Jak3:
-      filenames = filename_jak3;
+      return filename_jak3[ndx];
       break;
   }
-  return filenames[ndx];
 }
 
 inline fs::path mc_get_filename(GameVersion version, int ndx) {
@@ -171,12 +171,12 @@ bool file_is_present(int id, int bank = 0) {
   // which a file full of zeros logically is.
   auto fp = file_util::open_file(bankname.c_str(), "rb");
 
-  // we can actually just check if the save count is over zero...
-  u32 savecount = 0;
-  fread(&savecount, sizeof(u32), 1, fp);
-  fclose(fp);
-  return savecount > 0;
-  */
+// we can actually just check if the save count is over zero...
+u32 savecount = 0;
+fread(&savecount, sizeof(u32), 1, fp);
+fclose(fp);
+return savecount > 0;
+*/
 }
 
 /*!
