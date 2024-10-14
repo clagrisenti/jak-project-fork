@@ -613,8 +613,8 @@ std::vector<Frag> fragment_mesh(const std::vector<jak2::CollideFace>& tris) {
     FragStats s;
   };
 
-  auto initial_frag = add_all_to_frag(tris);
-  auto initial_stats = compute_frag_stats(tris, initial_frag.tri_indices);
+  Frag initial_frag = add_all_to_frag(tris);
+  FragStats initial_stats = compute_frag_stats(tris, initial_frag.tri_indices);
   if (frag_is_valid_for_packing(initial_frag, initial_stats, tris)) {
     printf("initial is good!\n");
     printf("%s\n%s\n\n", initial_stats.bbox.min.to_string_aligned().c_str(),
@@ -746,12 +746,8 @@ CollideHash build_grid_for_main_hash(std::vector<CollideFragment>&& frags) {
     ASSERT_NOT_REACHED();
   }
 
-  int unique_found = 0;
-  for (auto x : debug_found_flags) {
-    if (x) {
-      unique_found++;
-    }
-  }
+  int unique_found = std::count_if(debug_found_flags.begin(), debug_found_flags.end(),
+                                   [](bool x) -> bool { return x; });
 
   printf("frag find counts: %d %d %d\n", unique_found, (int)debug_found_flags.size(),
          debug_intersect_count);
@@ -882,12 +878,8 @@ CollideFragment build_grid_for_frag(const std::vector<jak2::CollideFace>& tris, 
   }
 
   // TODO: could dedup buckets here.
-  int unique_found = 0;
-  for (auto x : debug_found_flags) {
-    if (x) {
-      unique_found++;
-    }
-  }
+  int unique_found = std::count_if(debug_found_flags.begin(), debug_found_flags.end(),
+                                   [](bool x) -> bool { return x; });
 
   // printf("find counts: %d %d %d\n", unique_found, (int)debug_found_flags.size(),
   // debug_intersect_count);
@@ -897,7 +889,7 @@ CollideFragment build_grid_for_frag(const std::vector<jak2::CollideFace>& tris, 
   }
 
   result.pat_array = std::move(pats);
-  for (auto& list : polys_in_cells) {
+  for (const std::vector<int>& list : polys_in_cells) {
     auto& bucket = result.buckets.emplace_back();
     bucket.index = result.index_array.size();
     bucket.count = list.size();
@@ -937,10 +929,11 @@ CollideHash construct_collide_hash(const std::vector<jak2::CollideFace>& tris) {
   CollideHash collide_hash;
 
   std::vector<Frag> frags = fragment_mesh(tris);
-  std::vector<CollideFragment> hashed_frags;
-  for (auto& frag : frags) {
-    hashed_frags.push_back(build_grid_for_frag(tris, frag));
-  }
+  std::vector<CollideFragment> hashed_frags(frags.size());
+
+  std::transform(
+      frags.begin(), frags.end(), hashed_frags.begin(),
+      [&tris](const Frag& frag) -> CollideFragment { return build_grid_for_frag(tris, frag); });
 
   // hash tris in frags
   // hash frags
@@ -1082,10 +1075,11 @@ size_t add_to_object_file(const CollideFragment& frag, DataObjectGenerator& gen)
 }
 
 size_t add_to_object_file(const CollideHash& hash, DataObjectGenerator& gen) {
-  std::vector<size_t> frags;
-  for (auto& frag : hash.fragments) {
-    frags.push_back(add_to_object_file(frag, gen));
-  }
+  std::vector<size_t> frags(hash.fragments.size());
+
+  std::transform(
+      hash.fragments.begin(), hash.fragments.end(), frags.begin(),
+      [&gen](const CollideFragment& frag) -> size_t { return add_to_object_file(frag, gen); });
 
   auto buckets = add_pod_vector_to_object_file(gen, hash.buckets);
 

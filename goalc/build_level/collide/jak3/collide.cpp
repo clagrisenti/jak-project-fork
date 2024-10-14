@@ -1,6 +1,7 @@
 #include "collide.h"
 
 #include <algorithm>
+#include <array>
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
@@ -629,7 +630,7 @@ std::vector<Frag> fragment_mesh(const std::vector<jak3::CollideFace>& tris) {
 
   while (!too_big_frags.empty()) {
     printf("sizes %zu %zu\n", too_big_frags.size(), good_frags.size());
-    auto& back = too_big_frags.back();
+    const FragAndStats& back = too_big_frags.back();
 
     // split it!
     FragAndStats ab[2];
@@ -676,14 +677,14 @@ CollideHash build_grid_for_main_hash(std::vector<CollideFragment>&& frags) {
   // for the cell size.
   constexpr float kTargetCellSize = 30000;
 
-  int grid_dimension[3] = {(int)(box_size[0] / kTargetCellSize),
-                           (int)(box_size[1] / kTargetCellSize),
-                           (int)(box_size[2] / kTargetCellSize)};
-  for (auto& x : grid_dimension) {
-    if (x >= UINT8_MAX) {
-      x = UINT8_MAX;
-    }
-  }
+  std::array<int, 3> grid_dimension = {(int)(box_size[0] / kTargetCellSize),
+                                       (int)(box_size[1] / kTargetCellSize),
+                                       (int)(box_size[2] / kTargetCellSize)};
+
+  std::replace_if(
+      grid_dimension.begin(), grid_dimension.end(), [](int x) -> bool { return x >= UINT8_MAX; },
+      UINT8_MAX);
+
   lg::info("Size is {}x{}x{} (total {})\n", grid_dimension[0], grid_dimension[1], grid_dimension[2],
            grid_dimension[0] * grid_dimension[1] * grid_dimension[2]);
   const math::Vector3f grid_cell_size(box_size[0] / grid_dimension[0],
@@ -747,12 +748,8 @@ CollideHash build_grid_for_main_hash(std::vector<CollideFragment>&& frags) {
     ASSERT_NOT_REACHED();
   }
 
-  int unique_found = 0;
-  for (auto x : debug_found_flags) {
-    if (x) {
-      unique_found++;
-    }
-  }
+  int unique_found = std::count_if(debug_found_flags.begin(), debug_found_flags.end(),
+                                   [](bool x) -> bool { return x; });
 
   printf("frag find counts: %d %d %d\n", unique_found, (int)debug_found_flags.size(),
          debug_intersect_count);
@@ -884,12 +881,8 @@ jak3::CollideFragment build_grid_for_frag(const std::vector<jak3::CollideFace>& 
   }
 
   // TODO: could dedup buckets here.
-  int unique_found = 0;
-  for (auto x : debug_found_flags) {
-    if (x) {
-      unique_found++;
-    }
-  }
+  int unique_found = std::count_if(debug_found_flags.begin(), debug_found_flags.end(),
+                                   [](bool x) -> bool { return x; });
 
   // printf("find counts: %d %d %d\n", unique_found, (int)debug_found_flags.size(),
   // debug_intersect_count);
@@ -899,16 +892,16 @@ jak3::CollideFragment build_grid_for_frag(const std::vector<jak3::CollideFace>& 
   }
 
   result.pat_array = std::move(pats);
-  for (auto& list : polys_in_cells) {
-    auto& bucket = result.buckets.emplace_back();
+  for (const std::vector<int>& list : polys_in_cells) {
+    CollideBucket& bucket = result.buckets.emplace_back();
     bucket.index = result.index_array.size();
     bucket.count = list.size();
-    for (auto x : list) {
+    for (int x : list) {
       result.index_array.push_back(x);
     }
   }
   result.poly_array = std::move(polys);
-  for (auto x : vertices) {
+  for (const math::Vector<u16, 3>& x : vertices) {
     auto& v = result.vert_array.emplace_back();
     v.position[0] = x.x();
     v.position[1] = x.y();
@@ -939,10 +932,11 @@ CollideHash construct_collide_hash(const std::vector<jak3::CollideFace>& tris) {
   CollideHash collide_hash;
 
   std::vector<Frag> frags = fragment_mesh(tris);
-  std::vector<CollideFragment> hashed_frags;
-  for (auto& frag : frags) {
-    hashed_frags.push_back(build_grid_for_frag(tris, frag));
-  }
+  std::vector<CollideFragment> hashed_frags(frags.size());
+
+  std::transform(
+      frags.begin(), frags.end(), hashed_frags.begin(),
+      [&tris](const Frag& frag) -> CollideFragment { return build_grid_for_frag(tris, frag); });
 
   // hash tris in frags
   // hash frags
@@ -980,7 +974,8 @@ size_t add_pod_to_object_file(DataObjectGenerator& gen,
 
 template <typename T>
 size_t add_pod_vector_to_object_file(DataObjectGenerator& gen, const std::vector<T>& data) {
-  return add_pod_to_object_file(gen, (const u8*)data.data(), data.size() * sizeof(T), sizeof(T));
+  return add_pod_to_object_file(gen, reinterpret_cast<const u8*>(data.data()),
+                                data.size() * sizeof(T), sizeof(T));
 }
 
 size_t add_to_object_file(const CollideFragment& frag, DataObjectGenerator& gen) {
@@ -1083,12 +1078,13 @@ size_t add_to_object_file(const CollideFragment& frag, DataObjectGenerator& gen)
 }
 
 size_t add_to_object_file(const CollideHash& hash, DataObjectGenerator& gen) {
-  std::vector<size_t> frags;
-  for (auto& frag : hash.fragments) {
-    frags.push_back(add_to_object_file(frag, gen));
-  }
+  std::vector<size_t> frags(hash.fragments.size());
 
-  auto buckets = add_pod_vector_to_object_file(gen, hash.buckets);
+  std::transform(
+      hash.fragments.begin(), hash.fragments.end(), frags.begin(),
+      [&gen](const CollideFragment& frag) -> size_t { return add_to_object_file(frag, gen); });
+
+  size_t buckets = add_pod_vector_to_object_file(gen, hash.buckets);
 
   // create the item array.
   auto item_array = gen.current_offset_bytes();

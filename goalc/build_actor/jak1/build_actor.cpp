@@ -1,5 +1,7 @@
 #include "build_actor.h"
 
+#include <algorithm>
+
 #include "common/log/log.h"
 #include "common/math/geometry.h"
 
@@ -51,10 +53,10 @@ JointAnimCompressedHDR::JointAnimCompressedHDR(const anim::CompressedAnim& anim)
 }
 
 JointAnimCompressedFixed::JointAnimCompressedFixed(const anim::CompressedAnim& anim) : hdr(anim) {
-  u8* dest = (u8*)data;
-  const u8* u64_src = (const u8*)anim.fixed.data64.data();
-  const u8* u32_src = (const u8*)anim.fixed.data32.data();
-  const u8* u16_src = (const u8*)anim.fixed.data16.data();
+  u8* dest = reinterpret_cast<u8*>(data);
+  const u8* u64_src = reinterpret_cast<const u8*>(anim.fixed.data64.data());
+  const u8* u32_src = reinterpret_cast<const u8*>(anim.fixed.data32.data());
+  const u8* u16_src = reinterpret_cast<const u8*>(anim.fixed.data16.data());
 
   const int u64_size = anim.fixed.data64.size() * sizeof(u64);
   const int u32_size = anim.fixed.data32.size() * sizeof(u32);
@@ -83,10 +85,10 @@ JointAnimCompressedFixed::JointAnimCompressedFixed(const anim::CompressedAnim& a
 
 JointAnimCompressedFrame::JointAnimCompressedFrame(const anim::CompressedFrame& frame)
     : reserved(0) {
-  u8* dest = (u8*)data;
-  const u8* u64_src = (const u8*)frame.data64.data();
-  const u8* u32_src = (const u8*)frame.data32.data();
-  const u8* u16_src = (const u8*)frame.data16.data();
+  u8* dest = reinterpret_cast<u8*>(data);
+  const u8* u64_src = reinterpret_cast<const u8*>(frame.data64.data());
+  const u8* u32_src = reinterpret_cast<const u8*>(frame.data32.data());
+  const u8* u16_src = reinterpret_cast<const u8*>(frame.data16.data());
 
   const int u64_size = frame.data64.size() * sizeof(u64);
   const int u32_size = frame.data32.size() * sizeof(u32);
@@ -304,7 +306,7 @@ size_t ArtJointGeo::generate_mesh(DataObjectGenerator& gen) const {
   gen.add_word(cmeshes.size());      // 4 (allocated-length)
   gen.add_type_tag("collide-mesh");  // 8 (content-type)
   content_slots.reserve(cmeshes.size());
-  for (auto& data : cmeshes) {
+  for (const CollideMesh& data : cmeshes) {
     (void)data;
     content_slots.push_back(gen.add_word(0));  // 12 (data)
   }
@@ -549,7 +551,7 @@ size_t generate_dummy_merc_ctrl(DataObjectGenerator& gen, const ArtGroup& ag) {
   gen.add_type_tag("merc-ctrl");
   size_t result = gen.current_offset_bytes();
   // excluding align and prejoint
-  auto joints = ((ArtJointGeo*)ag.elts.at(0).get())->length - 2;
+  auto joints = (reinterpret_cast<ArtJointGeo*>(ag.elts.at(0).get()))->length - 2;
   gen.add_word(0);                                   // 4
   gen.add_ref_to_string_in_pool(ag.name + "-lod0");  // 8
   gen.add_word(0);                                   // 12
@@ -608,7 +610,7 @@ std::vector<u8> ArtGroup::save_object_file() const {
   gen.set_word(28 / 4, 0);
   if (!elts.empty()) {
     if (elts.at(0)) {
-      auto jgeo = (ArtJointGeo*)elts.at(0).get();
+      auto jgeo = reinterpret_cast<ArtJointGeo*>(elts.at(0).get());
       gen.link_word_to_byte(32 / 4, jgeo->generate(gen));
     }
     if (!elts.at(1)) {
@@ -616,7 +618,7 @@ std::vector<u8> ArtGroup::save_object_file() const {
     }
 
     for (size_t i = 2; i < elts.size(); i++) {
-      auto ja = (ArtJointAnim*)elts.at(i).get();
+      auto ja = reinterpret_cast<ArtJointAnim*>(elts.at(i).get());
       gen.link_word_to_byte((32 + i * 4) / 4, ja->generate(gen));
     }
   }
@@ -627,11 +629,12 @@ std::vector<u8> ArtGroup::save_object_file() const {
 int ArtGroup::get_joint_idx(const std::string& name) {
   for (const std::shared_ptr<ArtElement>& elt : this->elts) {
     if (elt && typeid(*elt) == typeid(ArtJointGeo)) {
-      auto jgeo = (ArtJointGeo*)elt.get();
-      for (const Joint& joint : jgeo->data) {
-        if (joint.name == name) {
-          return joint.number;
-        }
+      auto jgeo = reinterpret_cast<ArtJointGeo*>(elt.get());
+
+      auto joint = std::find_if(jgeo->data.begin(), jgeo->data.end(),
+                                [&name](const Joint& joint) -> bool { return joint.name == name; });
+      if (joint != jgeo->data.end()) {
+        return joint->number;
       }
     }
   }
