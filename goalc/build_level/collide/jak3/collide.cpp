@@ -974,8 +974,7 @@ size_t add_pod_to_object_file(DataObjectGenerator& gen,
 
 template <typename T>
 size_t add_pod_vector_to_object_file(DataObjectGenerator& gen, const std::vector<T>& data) {
-  return add_pod_to_object_file(gen, reinterpret_cast<const u8*>(data.data()),
-                                data.size() * sizeof(T), sizeof(T));
+  return add_pod_to_object_file(gen, (const u8*)data.data(), data.size() * sizeof(T), sizeof(T));
 }
 
 size_t add_to_object_file(const CollideFragment& frag, DataObjectGenerator& gen) {

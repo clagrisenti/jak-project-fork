@@ -42,8 +42,9 @@ void StaticString::generate(emitter::ObjectGenerator* gen) {
   push_data_to_byte_vector<u32>(text.size(), d);
 
   // add chars
-  d.resize(text.size());
-  std::copy(text.begin(), text.end(), d.begin());
+  for (char c : text) {
+    d.push_back(c);
+  }
 
   d.push_back(0);
 }
