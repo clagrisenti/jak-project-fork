@@ -88,8 +88,9 @@ std::vector<std::string> format_block_comment(const std::string& comment) {
   }
   comment_contents = str_util::rtrim(comment_contents);
   std::vector<std::string> lines = {new_comment};
-  const auto contents_as_lines = str_util::split_string(comment_contents, "\n");
+  const std::vector<std::string> contents_as_lines = str_util::split_string(comment_contents, "\n");
   if (contents_as_lines.size() > 1) {
+    lines.reserve(contents_as_lines.size());
     for (const auto& line : contents_as_lines) {
       lines.push_back(line);
     }
@@ -147,13 +148,9 @@ bool is_element_second_in_constant_pair_new(const FormatterTreeNode& prev_node,
         return true;
       }
       // If they are just a list of symbol names (enum or simple method call)
-      bool all_symbols = true;
-      for (const auto& ref : curr_node.refs) {
-        if (ref.metadata.node_type != "sym_name") {
-          all_symbols = false;
-          break;
-        }
-      }
+      bool all_symbols =
+          std::all_of(curr_node.refs.begin(), curr_node.refs.end(),
+                      [](const auto& ref) -> bool { return ref.metadata.node_type != "sym_name"; });
       if (all_symbols) {
         return true;
       }

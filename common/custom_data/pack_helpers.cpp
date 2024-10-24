@@ -30,7 +30,7 @@ void pack_tfrag_vertices(tfrag3::PackedTfragVertices* result,
   u32 next_cluster_idx = 0;
   std::map<u64, u32> clusters;
 
-  for (auto& vtx : vertices) {
+  for (const auto& vtx : vertices) {
     auto x = position_to_cluster_and_offset(vtx.x);
     auto y = position_to_cluster_and_offset(vtx.y);
     auto z = position_to_cluster_and_offset(vtx.z);

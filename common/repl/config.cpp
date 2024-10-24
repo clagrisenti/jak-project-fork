@@ -44,13 +44,10 @@ void from_json(const json& j, Config& obj) {
       // - skip ones from the default set if they have the same key + modifier combination
       for (const auto& default_bind : obj.keybinds) {
         // check if it's a duplicate bind
-        bool duplicate = false;
-        for (const auto& new_bind : keybinds) {
-          if (new_bind.key == default_bind.key && new_bind.modifier == default_bind.modifier) {
-            duplicate = true;
-            break;
-          }
-        }
+        bool duplicate = std::any_of(
+            keybinds.begin(), keybinds.end(), [&default_bind](const auto& new_bind) -> bool {
+              return new_bind.key == default_bind.key && new_bind.modifier == default_bind.modifier;
+            });
         if (!duplicate) {
           keybinds.push_back(default_bind);
         }

@@ -43,7 +43,7 @@ const fmt::color log_colors[] = {
     fmt::color::gray, fmt::color::turquoise, fmt::color::light_green, fmt::color::yellow,
     fmt::color::red,  fmt::color::hot_pink,  fmt::color::hot_pink};
 
-void log_message(level log_level, LogTime& now, const char* message) {
+void log_message(level log_level, const LogTime& now, const char* message) {
 #ifdef __linux__
   char date_time_buffer[128];
   time_t now_seconds = now.tv.tv_sec;
@@ -115,23 +115,21 @@ void log_print(const char* message) {
 }
 
 void log_vprintf(const char* format, va_list arg_list) {
-  {
-    // We always immediately flush prints because since it has no associated level
-    // it could be anything from a fatal error to a useless debug log.
-    std::lock_guard<std::mutex> lock(gLogger.mutex);
-    va_list arg_list_2;
-    va_copy(arg_list_2, arg_list);
-    if (gLogger.fp) {
-      // Log to File
-      vfprintf(gLogger.fp, format, arg_list);
-      fflush(gLogger.fp);
-    }
+  // We always immediately flush prints because since it has no associated level
+  // it could be anything from a fatal error to a useless debug log.
+  std::lock_guard<std::mutex> lock(gLogger.mutex);
+  va_list arg_list_2;
+  va_copy(arg_list_2, arg_list);
+  if (gLogger.fp) {
+    // Log to File
+    vfprintf(gLogger.fp, format, arg_list);
+    fflush(gLogger.fp);
+  }
 
-    if (gLogger.stdout_log_level < lg::level::off_unless_die) {
-      vprintf(format, arg_list_2);
-      fflush(stdout);
-      fflush(stderr);
-    }
+  if (gLogger.stdout_log_level < lg::level::off_unless_die) {
+    vprintf(format, arg_list_2);
+    fflush(stdout);
+    fflush(stderr);
   }
 }
 }  // namespace internal

@@ -34,8 +34,7 @@ u64 get_current_ts() {
   return std::chrono::steady_clock::now().time_since_epoch().count();
 }
 
-GlobalProfiler::GlobalProfiler() {
-  m_t0 = get_current_ts();
+GlobalProfiler::GlobalProfiler() : m_t0(get_current_ts()) {
   m_nodes.resize(m_max_events);
 }
 
@@ -142,7 +141,7 @@ void GlobalProfiler::dump_to_json() {
   }
 
   for (size_t event_idx = 0; event_idx < m_nodes.size(); event_idx++) {
-    auto& event = m_nodes[(event_idx + m_next_idx) % m_nodes.size()];
+    const auto& event = m_nodes[(event_idx + m_next_idx) % m_nodes.size()];
     if (event.kind == ProfNode::UNUSED) {
       continue;
     }

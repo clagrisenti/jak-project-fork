@@ -241,7 +241,7 @@ int get_max_bits(s32 value) {
   return result;
 }
 
-int break_filter_ties(s32* errors, s32* filter_shifts) {
+int break_filter_ties(const s32* const errors, const s32* const filter_shifts) {
   s32 best_error = INT32_MAX;
 
   for (int filter_idx = 0; filter_idx < 5; filter_idx++) {

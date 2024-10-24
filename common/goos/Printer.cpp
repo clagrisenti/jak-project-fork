@@ -90,7 +90,7 @@ goos::Object build_list(const std::vector<std::string>& symbols) {
   }
   std::vector<goos::Object> f;
   f.reserve(symbols.size());
-  for (auto& x : symbols) {
+  for (const auto& x : symbols) {
     f.push_back(to_symbol(x));
   }
   return build_list(f.data(), f.size());

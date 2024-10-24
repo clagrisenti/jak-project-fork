@@ -60,7 +60,7 @@ SymbolTable::SymbolTable() {
 }
 
 SymbolTable::~SymbolTable() {
-  for (auto& e : m_entries) {
+  for (const auto& e : m_entries) {
     delete[] e.name;
   }
 }
@@ -366,7 +366,7 @@ Object Object::make_number(IntType value) {
  */
 std::string ArgumentSpec::print() const {
   std::string result = "  unnamed args:\n";
-  for (auto& arg : unnamed) {
+  for (const auto& arg : unnamed) {
     result += "    " + arg + "\n";
   }
   result += "  named args:\n";
@@ -386,7 +386,7 @@ std::string ArgumentSpec::print() const {
 
 std::string Arguments::print() const {
   std::string result = "  unnamed args:\n";
-  for (auto& arg : unnamed) {
+  for (const auto& arg : unnamed) {
     result += "    " + arg.print() + "\n";
   }
   result += "  named args:\n";
@@ -395,7 +395,7 @@ std::string Arguments::print() const {
   }
   if (!rest.empty()) {
     result += "  rest: \n";
-    for (auto& x : rest) {
+    for (const auto& x : rest) {
       result += "    " + x.print() + "\n";
     }
   }

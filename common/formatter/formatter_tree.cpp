@@ -72,8 +72,8 @@ bool nodes_on_same_line(const std::string& source, const TSNode& n1, const TSNod
   return !str_util::contains(code_between, "\n");
 }
 
-FormatterTree::FormatterTree(const std::string& source, const TSNode& root_node) {
-  root = FormatterTreeNode();
+FormatterTree::FormatterTree(const std::string& source, const TSNode& root_node)
+    : root(FormatterTreeNode()) {
   root.metadata.is_top_level = true;
   construct_formatter_tree_recursive(source, root_node, root);
 }
@@ -145,13 +145,10 @@ void FormatterTree::construct_formatter_tree_recursive(const std::string& source
     const auto child_node = ts_node_child(curr_node, i);
     auto debug_child = ts_node_string(child_node);
     const auto contents = get_source_code(source, child_node);
-    bool skip_node = false;
-    for (const auto& skippable_content : skippable_nodes) {
-      if (skippable_content == contents) {
-        skip_node = true;
-        break;
-      }
-    }
+    bool skip_node = std::any_of(skippable_nodes.begin(), skippable_nodes.end(),
+                                 [&contents](const auto& skippable_content) -> bool {
+                                   return skippable_content == contents;
+                                 });
     if (skip_node) {
       continue;
     }
