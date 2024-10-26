@@ -6,10 +6,7 @@
 
 #include "fmt/core.h"
 
-SubtitleEditorReplClient::SubtitleEditorReplClient() {
-  int port = 8181;
-  m_repl = std::make_unique<ReplClient>(port);
-}
+SubtitleEditorReplClient::SubtitleEditorReplClient() : m_repl(std::make_unique<ReplClient>(8181)) {}
 
 void SubtitleEditorReplClient::set_continue_point(const std::string& continue_point) {
   m_repl->eval(

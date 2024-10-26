@@ -17,12 +17,10 @@ Tie3::Tie3(const std::string& name, int my_id, int level_id, tfrag3::TieCategory
   math::Vector4f ones(1, 1, 1, 1);
   m_wind_data.wind_normal = ones;
   m_wind_data.wind_temp = ones;
-  for (auto& wv : m_wind_data.wind_array) {
-    wv = ones;
-  }
-  for (auto& wf : m_wind_data.wind_force) {
-    wf = 1.f;
-  }
+
+  std::fill(m_wind_data.wind_array.begin(), m_wind_data.wind_array.end(), ones);
+
+  std::fill(m_wind_data.wind_force.begin(), m_wind_data.wind_force.end(), 1.0f);
 }
 
 Tie3::~Tie3() {

@@ -75,10 +75,10 @@ class Tie3 : public BucketRenderer {
   struct WindWork {
     u32 paused;
     u32 pad[3];
-    math::Vector4f wind_array[64];
+    std::array<math::Vector4f, 64> wind_array;
     math::Vector4f wind_normal;
     math::Vector4f wind_temp;
-    float wind_force[64];
+    std::array<float, 64> wind_force;
     u32 wind_time;
     u32 pad2[3];
   } m_wind_data;

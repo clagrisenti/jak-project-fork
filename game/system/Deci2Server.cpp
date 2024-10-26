@@ -126,7 +126,7 @@ void Deci2Server::read_data() {
 
   int handler = -1;
   for (int i = 0; i < *d2_driver_count; i++) {
-    auto& prot = d2_drivers[i];
+    const auto& prot = d2_drivers[i];
     if (prot.active && prot.protocol) {
       if (handler != -1) {
         printf("[DECI2] Warning: more than on protocol handler for this message!\n");

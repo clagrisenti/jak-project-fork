@@ -72,7 +72,7 @@ class FullScreenDraw {
   ~FullScreenDraw();
   FullScreenDraw(const FullScreenDraw&) = delete;
   FullScreenDraw& operator=(const FullScreenDraw&) = delete;
-  void draw(const math::Vector4f& color, SharedRenderState* render_state, ScopedProfilerNode& prof);
+  void draw(const math::Vector4f& color, SharedRenderState& render_state, ScopedProfilerNode& prof);
 
  private:
   GLuint m_vao;

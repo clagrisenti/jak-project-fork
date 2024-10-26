@@ -18,6 +18,6 @@ class VisDataHandler : public BucketRenderer {
     int num_visible = 0;
   };
   static constexpr int kMaxLevels = 10;
-  LevelStats m_stats[kMaxLevels];
+  std::array<LevelStats, kMaxLevels> m_stats;
   bool m_count_vis = false;
 };

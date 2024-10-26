@@ -40,11 +40,8 @@ void Jak1SubtitleEditorDB::update() {
       }
       new_entry.execute_code = val.at("execute_code").get<std::string>();
       new_entry.requirements = val.at("requirements").get<std::vector<std::string>>();
-      if (m_db.count(key) == 0) {
-        m_db.emplace(key, new_entry);
-      } else {
-        m_db[key] = new_entry;
-      }
+
+      m_db[key] = new_entry;
 
     } catch (std::exception& ex) {
       fmt::print("Bad subtitle db entry - {} - {}", key, ex.what());

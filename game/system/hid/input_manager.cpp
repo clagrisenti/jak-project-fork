@@ -48,9 +48,8 @@ InputManager::InputManager()
     m_keyboard = KeyboardDevice(m_settings);
     m_mouse = MouseDevice(m_settings);
 
-    if (m_data.find(m_keyboard_and_mouse_port) == m_data.end()) {
-      m_data[m_keyboard_and_mouse_port] = std::make_shared<PadData>();
-    }
+    m_data.try_emplace(m_keyboard_and_mouse_port, std::make_shared<PadData>());
+
     m_command_binds = CommandBindingGroups();
     refresh_device_list();
     ignore_background_controller_events(false);
@@ -109,9 +108,7 @@ void InputManager::refresh_device_list() {
               m_available_controllers.size() - 1;
         }
         // Allocate a PadData if this is a new port
-        if (m_data.find(i) == m_data.end()) {
-          m_data[i] = std::make_shared<PadData>();
-        }
+        m_data.try_emplace(i, std::make_shared<PadData>());
       }
       // If the controller that was last selected to be port 0 is around, prioritize it
       if (!m_settings->last_selected_controller_guid.empty()) {
@@ -275,25 +272,18 @@ void InputManager::process_ee_events() {
 
 void InputManager::register_command(const CommandBinding::Source source,
                                     const CommandBinding bind) {
+  auto entry_value = std::vector<CommandBinding>();
   switch (source) {
     case CommandBinding::Source::CONTROLLER:
-      if (m_command_binds.controller_binds.find(bind.host_key) ==
-          m_command_binds.controller_binds.end()) {
-        m_command_binds.controller_binds[bind.host_key] = {};
-      }
+      m_command_binds.controller_binds.try_emplace(bind.host_key, entry_value);
       m_command_binds.controller_binds[bind.host_key].push_back(bind);
       break;
     case CommandBinding::Source::KEYBOARD:
-      if (m_command_binds.keyboard_binds.find(bind.host_key) ==
-          m_command_binds.keyboard_binds.end()) {
-        m_command_binds.keyboard_binds[bind.host_key] = {};
-      }
+      m_command_binds.keyboard_binds.try_emplace(bind.host_key, entry_value);
       m_command_binds.keyboard_binds[bind.host_key].push_back(bind);
       break;
     case CommandBinding::Source::MOUSE:
-      if (m_command_binds.mouse_binds.find(bind.host_key) == m_command_binds.mouse_binds.end()) {
-        m_command_binds.mouse_binds[bind.host_key] = {};
-      }
+      m_command_binds.mouse_binds.try_emplace(bind.host_key, entry_value);
       m_command_binds.mouse_binds[bind.host_key].push_back(bind);
       break;
   }

@@ -37,6 +37,8 @@
 #ifdef _WIN32
 #include <Windows.h>
 #endif
+#include <algorithm>
+
 #include "common/util/string_util.h"
 
 namespace {
@@ -991,7 +993,7 @@ void OpenGLRenderer::render(DmaFollower dma, const RenderOptions& settings) {
   {
     g_current_renderer = "pcrtc";
     auto prof = m_profiler.root()->make_scoped_child("pcrtc");
-    do_pcrtc_effects(settings.pmode_alp_register, &m_render_state, prof);
+    do_pcrtc_effects(settings.pmode_alp_register, m_render_state, prof);
     if (settings.gpu_sync) {
       glFinish();
     }
@@ -1568,7 +1570,7 @@ void OpenGLRenderer::finish_screenshot(const std::string& output_name,
 }
 
 void OpenGLRenderer::do_pcrtc_effects(float alp,
-                                      SharedRenderState* render_state,
+                                      SharedRenderState& render_state,
                                       ScopedProfilerNode& prof) {
   Fbo* window_blit_src = nullptr;
   if (m_fbo_state.resources.resolve_buffer.valid) {
@@ -1592,16 +1594,16 @@ void OpenGLRenderer::do_pcrtc_effects(float alp,
 
   glBindFramebuffer(GL_READ_FRAMEBUFFER, window_blit_src->fbo_id);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-  glBlitFramebuffer(0,                                                          // srcX0
-                    0,                                                          // srcY0
-                    window_blit_src->width,                                     // srcX1
-                    window_blit_src->height,                                    // srcY1
-                    render_state->draw_offset_x,                                // dstX0
-                    render_state->draw_offset_y,                                // dstY0
-                    render_state->draw_offset_x + render_state->draw_region_w,  // dstX1
-                    render_state->draw_offset_y + render_state->draw_region_h,  // dstY1
-                    GL_COLOR_BUFFER_BIT,                                        // mask
-                    GL_LINEAR                                                   // filter
+  glBlitFramebuffer(0,                                                        // srcX0
+                    0,                                                        // srcY0
+                    window_blit_src->width,                                   // srcX1
+                    window_blit_src->height,                                  // srcY1
+                    render_state.draw_offset_x,                               // dstX0
+                    render_state.draw_offset_y,                               // dstY0
+                    render_state.draw_offset_x + render_state.draw_region_w,  // dstX1
+                    render_state.draw_offset_y + render_state.draw_region_h,  // dstY1
+                    GL_COLOR_BUFFER_BIT,                                      // mask
+                    GL_LINEAR                                                 // filter
   );
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

@@ -196,13 +196,14 @@ Resolution DisplayManager::get_resolution(int id, bool for_window_size) {
 }
 
 bool DisplayManager::is_supported_resolution(int width, int height) {
-  for (const auto& resolution : m_available_resolutions) {
-    if (resolution.width == width && resolution.height == height) {
-      return true;
-    }
+  bool res = std::any_of(m_available_resolutions.begin(), m_available_resolutions.end(),
+                         [width, height](const auto& resolution) -> bool {
+                           return resolution.width == width && resolution.height == height;
+                         });
+  if (!res) {
+    lg::warn("[DISPLAY] {}x{} is not a supported resolution", width, height);
   }
-  lg::warn("[DISPLAY] {}x{} is not a supported resolution", width, height);
-  return false;
+  return res;
 }
 
 void DisplayManager::enqueue_set_window_size(int width, int height) {

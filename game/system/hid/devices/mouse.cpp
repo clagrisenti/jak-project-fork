@@ -176,11 +176,10 @@ void MouseDevice::process_event(const SDL_Event& event,
         break;
     }
 
-    auto& binds = m_settings->mouse_binds;
-
     // Binding re-assignment
     if (bind_assignment && event.type == SDL_MOUSEBUTTONDOWN) {
       if (bind_assignment->device_type == InputDeviceType::MOUSE && !bind_assignment->for_analog) {
+        auto& binds = m_settings->mouse_binds;
         binds.assign_button_bind(button_event.button, bind_assignment.value(), false,
                                  InputModifiers(SDL_GetModState()));
       }

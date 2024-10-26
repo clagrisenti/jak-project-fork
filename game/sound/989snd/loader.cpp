@@ -291,9 +291,8 @@ SFXBlock* SFXBlock::ReadBlock(std::span<u8> bank_data, std::span<u8> samples) {
         strncpy(buf, (char*)name->Name, 16);
 
         std::string str(buf);
-        if (block->Names.find(str) == block->Names.end()) {
-          block->Names[str] = name->Index;
-        }
+
+        block->Names.try_emplace(str, name->Index);
 
         name++;
       }

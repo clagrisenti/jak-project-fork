@@ -15,12 +15,9 @@ std::string log_and_return_error(const std::string& msg) {
   return sdl_cause;
 }
 bool is_any_event_type(uint32_t event_type, const std::vector<uint32_t>& allowed_types) {
-  for (const auto& allowed_type : allowed_types) {
-    if (allowed_type == event_type) {
-      return true;
-    }
-  }
-  return false;
+  return std::any_of(
+      allowed_types.begin(), allowed_types.end(),
+      [event_type](const auto& allowed_type) -> bool { return allowed_type == event_type; });
 }
 SDL_bool sdl_bool(const bool val) {
   return val ? SDL_TRUE : SDL_FALSE;

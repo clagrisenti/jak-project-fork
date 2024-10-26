@@ -121,7 +121,7 @@ class IOP_Kernel {
   void YieldThread();
   std::optional<time_stamp> dispatch();
   void set_rpc_queue(iop::sceSifQueueData* qd, u32 thread);
-  void rpc_loop(iop::sceSifQueueData* qd);
+  void rpc_loop(const iop::sceSifQueueData* constqd);
   void shutdown();
 
   /*!

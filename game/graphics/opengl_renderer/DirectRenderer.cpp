@@ -1228,7 +1228,7 @@ void DirectRenderer::handle_xyzf2_common(u32 x,
       if (m_prim_building.building_idx == 2) {
         // build triangles from the sprite.
         auto& corner1_vert = m_prim_building.building_vert[0];
-        auto& corner1_rgba = m_prim_building.building_rgba[0];
+        const auto& corner1_rgba = m_prim_building.building_rgba[0];
         auto& corner2_vert = m_prim_building.building_vert[1];
         auto& corner2_rgba = m_prim_building.building_rgba[1];
         auto& corner1_stq = m_prim_building.building_stq[0];
@@ -1244,8 +1244,8 @@ void DirectRenderer::handle_xyzf2_common(u32 x,
           // I'm not really sure what the GS does here.
           ASSERT(false);
         }
-        auto& corner3_rgba = corner2_rgba;
-        auto& corner4_rgba = corner2_rgba;
+        const auto& corner3_rgba = corner2_rgba;
+        const auto& corner4_rgba = corner2_rgba;
 
         m_prim_buffer.push(corner1_rgba, corner1_vert, corner1_stq, scissor, 0, tcc, decal, fge,
                            use_uv);

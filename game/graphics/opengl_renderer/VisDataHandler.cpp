@@ -38,9 +38,8 @@ void VisDataHandler::render(DmaFollower& dma,
                             SharedRenderState* render_state,
                             ScopedProfilerNode& /*prof*/) {
   // reset stats
-  for (auto& stats : m_stats) {
-    stats = LevelStats();
-  }
+  std::generate(m_stats.begin(), m_stats.end(), []() -> LevelStats { return LevelStats(); });
+
   if (dma.current_tag_offset() == render_state->next_bucket) {
     return;
   }

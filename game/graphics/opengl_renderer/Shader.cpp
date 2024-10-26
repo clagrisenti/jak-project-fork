@@ -131,7 +131,7 @@ ShaderLibrary::ShaderLibrary(GameVersion version) {
   at(ShaderId::HFRAG) = {"hfrag", version};
   at(ShaderId::HFRAG_MONTAGE) = {"hfrag_montage", version};
 
-  for (auto& shader : m_shaders) {
+  for (const auto& shader : m_shaders) {
     ASSERT_MSG(shader.okay(), "error compiling shader");
   }
 }

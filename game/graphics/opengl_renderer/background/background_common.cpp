@@ -454,7 +454,7 @@ u32 make_all_visible_multidraws(std::pair<int, int>* draw_ptrs_out,
     ds.first = md_idx;
     ds.second = 1;
     int num_inds = 0;
-    for (auto& grp : draw.vis_groups) {
+    for (const auto& grp : draw.vis_groups) {
       num_tris += grp.num_tris;
       num_inds += grp.num_inds;
     }
@@ -612,7 +612,7 @@ u32 make_index_list_from_vis_string(std::pair<int, int>* group_out,
     bool building_run = false;
     int run_start_out = 0;
     int run_start_in = 0;
-    for (auto& grp : draw.vis_groups) {
+    for (const auto& grp : draw.vis_groups) {
       bool vis = grp.vis_idx_in_pc_bvh == UINT16_MAX || vis_data[grp.vis_idx_in_pc_bvh];
       if (vis) {
         num_tris += grp.num_tris;
@@ -668,7 +668,7 @@ u32 make_index_list_from_vis_and_proto_string(std::pair<int, int>* group_out,
     bool building_run = false;
     int run_start_out = 0;
     int run_start_in = 0;
-    for (auto& grp : draw.vis_groups) {
+    for (const auto& grp : draw.vis_groups) {
       bool vis = (grp.vis_idx_in_pc_bvh == UINT16_MAX || vis_data[grp.vis_idx_in_pc_bvh]) &&
                  proto_vis_data[grp.tie_proto_idx];
       if (vis) {
@@ -720,7 +720,7 @@ u32 make_all_visible_index_list(std::pair<int, int>* group_out,
     std::pair<int, int> ds;
     ds.first = idx_buffer_ptr;
     u32 num_inds = 0;
-    for (auto& grp : draw.vis_groups) {
+    for (const auto& grp : draw.vis_groups) {
       num_inds += grp.num_inds;
       num_tris += grp.num_tris;
     }

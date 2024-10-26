@@ -8,16 +8,13 @@ KeyboardDevice::KeyboardDevice(std::shared_ptr<game_settings::InputSettings> set
 
 // I don't trust SDL's key repeat stuff, do it myself to avoid bug reports...(or cause more)
 bool KeyboardDevice::is_action_already_active(const u32 sdl_keycode) {
-  for (const auto& action : m_active_actions) {
-    if (action.sdl_keycode == sdl_keycode) {
-      return true;
-    }
-  }
-  return false;
+  return std::any_of(
+      m_active_actions.begin(), m_active_actions.end(),
+      [&sdl_keycode](const auto& action) -> bool { return action.sdl_keycode == sdl_keycode; });
 }
 
 void KeyboardDevice::poll_state(std::shared_ptr<PadData> data) {
-  auto& binds = m_settings->keyboard_binds;
+  const auto& binds = m_settings->keyboard_binds;
   const auto keyboard_state = SDL_GetKeyboardState(NULL);
   const auto keyboard_modifier_state = SDL_GetModState();
 
@@ -101,13 +98,14 @@ void KeyboardDevice::process_event(const SDL_Event& event,
       return;
     }
 
-    auto& binds = m_settings->keyboard_binds;
-
     // Binding re-assignment
     if (bind_assignment) {
       if (bind_assignment->device_type != InputDeviceType::KEYBOARD) {
         return;
       }
+
+      auto& binds = m_settings->keyboard_binds;
+
       // A normal key down event (a new key was pressed) and it's not a modifier
       if (event.type == SDL_KEYDOWN && !sdl_util::is_modifier_key(key_event.keysym.sym)) {
         if (bind_assignment->for_analog) {

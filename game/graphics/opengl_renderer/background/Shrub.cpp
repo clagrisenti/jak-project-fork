@@ -102,7 +102,7 @@ void Shrub::update_load(const LevelData* loader_data) {
     m_trees[l_tree].proto_vis_mask.resize(tree.proto_names.size(), true);
     m_trees[l_tree].proto_name_to_idx.clear();
     size_t i = 0;
-    for (auto& name : tree.proto_names) {
+    for (const auto& name : tree.proto_names) {
       m_trees[l_tree].proto_name_to_idx[name].push_back(i++);
     }
     m_trees[l_tree].colors = &tree.time_of_day_colors;

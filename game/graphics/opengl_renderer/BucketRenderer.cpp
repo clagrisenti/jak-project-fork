@@ -107,9 +107,12 @@ RenderMux::RenderMux(const std::string& name,
                      int my_id,
                      std::vector<std::unique_ptr<BucketRenderer>> renderers)
     : BucketRenderer(name, my_id), m_renderers(std::move(renderers)) {
+  m_name_strs.reserve(m_name_strs.size() + m_renderers.size());
   for (auto& r : m_renderers) {
     m_name_strs.push_back(r->name_and_id());
   }
+
+  m_name_str_ptrs.reserve(m_name_str_ptrs.size() + m_name_strs.size());
   for (auto& n : m_name_strs) {
     m_name_str_ptrs.push_back(n.data());
   }

@@ -474,8 +474,8 @@ void Loader::update(TexturePool& texture_pool) {
           m_garbage_textures.push_back(tex);
         }
 
-        for (auto& tie_geo : lev->tie_data) {
-          for (auto& tie_tree : tie_geo) {
+        for (const auto& tie_geo : lev->tie_data) {
+          for (const auto& tie_tree : tie_geo) {
             m_garbage_buffers.push_back(tie_tree.vertex_buffer);
             if (tie_tree.has_wind) {
               m_garbage_buffers.push_back(tie_tree.wind_indices);
@@ -484,8 +484,8 @@ void Loader::update(TexturePool& texture_pool) {
           }
         }
 
-        for (auto& tfrag_geo : lev->tfrag_vertex_data) {
-          for (auto& tfrag_buff : tfrag_geo) {
+        for (const auto& tfrag_geo : lev->tfrag_vertex_data) {
+          for (const auto& tfrag_buff : tfrag_geo) {
             m_garbage_buffers.push_back(tfrag_buff);
           }
         }

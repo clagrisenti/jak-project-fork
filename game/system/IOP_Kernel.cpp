@@ -326,7 +326,7 @@ std::optional<time_stamp> IOP_Kernel::nextWakeup() {
   bool found_ready = false;
   time_stamp lowest = time_point_cast<microseconds>(steady_clock::now()) + microseconds(1000);
 
-  for (auto& t : threads) {
+  for (const auto& t : threads) {
     if (t.waitType == IopThread::Wait::Delay) {
       if (t.resumeTime < lowest) {
         lowest = t.resumeTime;
@@ -426,13 +426,15 @@ bool IOP_Kernel::sif_busy(u32 id) {
   sif_mtx.lock();
   bool rv = false;
   bool found = false;
-  for (auto& r : sif_records) {
-    if (r.qd->serve_data->command == id) {
-      rv = !r.cmd.finished;
-      found = true;
-      break;
-    }
+
+  auto it = std::find_if(sif_records.begin(), sif_records.end(),
+                         [id](const auto& r) -> bool { return r.qd->serve_data->command == id; });
+
+  if (it != sif_records.end()) {
+    rv = !it.base()->cmd.finished;
+    found = true;
   }
+
   ASSERT(found);
   sif_mtx.unlock();
   return rv;
@@ -484,7 +486,7 @@ void IOP_Kernel::sif_rpc(s32 rpcChannel,
   sif_mtx.unlock();
 }
 
-void IOP_Kernel::rpc_loop(iop::sceSifQueueData* qd) {
+void IOP_Kernel::rpc_loop(const iop::sceSifQueueData* const qd) {
   while (true) {
     bool got_cmd = false;
     SifRpcCommand cmd;
