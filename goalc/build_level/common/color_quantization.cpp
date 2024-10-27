@@ -298,8 +298,8 @@ std::vector<Color> deduplicated_colors(const std::vector<Color>& in) {
   }
   std::vector<Color> out(unique.size());
 
-  std::transform(unique.begin(), unique.end(), out.begin(),
-                 [](const auto x) -> Color { return u32_as_color(x); });
+  std::ranges::transform(unique, out.begin(),
+                         [](const auto x) -> Color { return u32_as_color(x); });
 
   return out;
 }

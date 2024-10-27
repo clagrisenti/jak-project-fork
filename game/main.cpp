@@ -225,6 +225,7 @@ int main(int argc, char** argv) {
   bool force_debug_next_time = false;
   // always start with an empty arg, as internally kmachine starts at `1` not `0`
   std::vector<const char*> arg_ptrs = {""};
+  arg_ptrs.reserve(arg_ptrs.size() + game_args.size());
   for (auto& str : game_args) {
     arg_ptrs.push_back(str.data());
   }
@@ -234,11 +235,12 @@ int main(int argc, char** argv) {
       // I'd like to check and not add duplicates, unfortunately since the game
       // cares about ordering...that's likely error prone if the user passed args in the wrong order
       // ie. -debug -boot (we'd skip adding things, but the order would be wrong).
-      game_args.push_back("-boot");
-      game_args.push_back("-debug");
+      game_args.emplace_back("-boot");
+      game_args.emplace_back("-debug");
       force_debug_next_time = false;
       arg_ptrs = {""};  // see above for rationale
-      for (auto& str : game_args) {
+      arg_ptrs.reserve(arg_ptrs.size() + game_args.size());
+      for (const auto& str : game_args) {
         arg_ptrs.push_back(str.data());
       }
     }

@@ -201,7 +201,7 @@ SFXBlock* SFXBlock::ReadBlock(std::span<u8> bank_data, std::span<u8> samples) {
   }
 
   block->SampleData = std::make_unique<u8[]>(samples.size());
-  std::copy(samples.begin(), samples.end(), block->SampleData.get());
+  std::ranges::copy(samples, block->SampleData.get());
 
   block->Version = data.read<u32>();
   block->Flags.flags = data.read<u32>();
@@ -325,10 +325,10 @@ MusicBank* MusicBank::ReadBank(std::span<u8> bank_data,
   }
 
   bank->SampleData = std::make_unique<u8[]>(samples.size_bytes());
-  std::copy(samples.begin(), samples.end(), bank->SampleData.get());
+  std::ranges::copy(samples, bank->SampleData.get());
 
   bank->SeqData = std::make_unique<u8[]>(midi_data.size_bytes());
-  std::copy(midi_data.begin(), midi_data.end(), bank->SeqData.get());
+  std::ranges::copy(midi_data, bank->SeqData.get());
 
   bank->Version = data.read<u32>();
   bank->Flags.flags = data.read<u32>();

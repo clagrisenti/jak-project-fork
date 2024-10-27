@@ -934,9 +934,9 @@ CollideHash construct_collide_hash(const std::vector<jak3::CollideFace>& tris) {
   std::vector<Frag> frags = fragment_mesh(tris);
   std::vector<CollideFragment> hashed_frags(frags.size());
 
-  std::transform(
-      frags.begin(), frags.end(), hashed_frags.begin(),
-      [&tris](const Frag& frag) -> CollideFragment { return build_grid_for_frag(tris, frag); });
+  std::ranges::transform(frags, hashed_frags.begin(), [&tris](const Frag& frag) -> CollideFragment {
+    return build_grid_for_frag(tris, frag);
+  });
 
   // hash tris in frags
   // hash frags
@@ -1079,8 +1079,8 @@ size_t add_to_object_file(const CollideFragment& frag, DataObjectGenerator& gen)
 size_t add_to_object_file(const CollideHash& hash, DataObjectGenerator& gen) {
   std::vector<size_t> frags(hash.fragments.size());
 
-  std::transform(
-      hash.fragments.begin(), hash.fragments.end(), frags.begin(),
+  std::ranges::transform(
+      hash.fragments, frags.begin(),
       [&gen](const CollideFragment& frag) -> size_t { return add_to_object_file(frag, gen); });
 
   size_t buckets = add_pod_vector_to_object_file(gen, hash.buckets);

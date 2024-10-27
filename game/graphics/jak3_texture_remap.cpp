@@ -1,5 +1,6 @@
 #include "jak3_texture_remap.h"
 
+#include <algorithm>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -2041,10 +2042,13 @@ int lookup_jak3_texture_dest_offset(int tpage, int texture_idx) {
   if (it == data.end()) {
     return 0;
   }
-  for (auto& p : it->second) {
-    if (p.first == texture_idx) {
-      return p.second;
-    }
+
+  const auto find =
+      std::find_if(it->second.begin(), it->second.end(),
+                   [texture_idx](const auto& p) -> bool { return p.first == texture_idx; });
+  if (find == it->second.end()) {
+    return find->second;
+  } else {
+    return 0;
   }
-  return 0;
 }

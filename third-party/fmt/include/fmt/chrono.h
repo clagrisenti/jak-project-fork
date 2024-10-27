@@ -1709,7 +1709,7 @@ auto format_duration_value(OutputIt out, Rep val, int precision) -> OutputIt {
 
 template <typename Char, typename OutputIt>
 auto copy_unit(string_view unit, OutputIt out, Char) -> OutputIt {
-  return std::copy(unit.begin(), unit.end(), out);
+  return std::ranges::copy(unit, out);
 }
 
 template <typename OutputIt>
@@ -1940,7 +1940,7 @@ struct chrono_formatter {
         if (buf.size() < 2 || buf[1] == '.') {
           out = detail::write_padding(out, pad);
         }
-        out = std::copy(buf.begin(), buf.end(), out);
+        out = std::ranges::copy(buf, out);
       } else {
         write(second(), 2, pad);
         write_fractional_seconds<char_type>(

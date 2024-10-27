@@ -241,9 +241,9 @@ std::vector<const collide::DrawNode*> bfs_nodes(const collide::DrawNode& fake_ro
   std::unordered_set<const collide::DrawNode*> added;
   std::vector<const collide::DrawNode*> frontier(fake_root.draw_node_children.size());
 
-  std::transform(fake_root.draw_node_children.begin(), fake_root.draw_node_children.end(),
-                 frontier.begin(),
-                 [](const collide::DrawNode& dnc) -> const collide::DrawNode* { return &dnc; });
+  std::ranges::transform(
+      fake_root.draw_node_children, frontier.begin(),
+      [](const collide::DrawNode& dnc) -> const collide::DrawNode* { return &dnc; });
 
   while (!frontier.empty()) {
     std::vector<const collide::DrawNode*> next_frontier;
@@ -275,10 +275,10 @@ size_t DrawableTreeCollideFragment::add_to_object_file(DataObjectGenerator& gen)
   // generated packed data
   std::vector<size_t> packed_data_locs(packed_frags.packed_frag_data.size());
 
-  std::transform(packed_frags.packed_frag_data.begin(), packed_frags.packed_frag_data.end(),
-                 packed_data_locs.begin(), [&gen](const auto& mesh) -> size_t {
-                   return generate_packed_collide_data(gen, mesh.packed_data);
-                 });
+  std::ranges::transform(packed_frags.packed_frag_data, packed_data_locs.begin(),
+                         [&gen](const auto& mesh) -> size_t {
+                           return generate_packed_collide_data(gen, mesh.packed_data);
+                         });
 
   // generate collide frag meshes
   std::vector<size_t> collide_frag_meshes;

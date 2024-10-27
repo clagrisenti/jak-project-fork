@@ -116,7 +116,7 @@ JointAnimCompressedFrame::JointAnimCompressedFrame(const anim::CompressedFrame& 
 
 JointAnimCompressedControl::JointAnimCompressedControl(const anim::CompressedAnim& anim)
     : num_frames(anim.frames.size()), fixed(anim) {
-  std::copy(anim.frames.begin(), anim.frames.end(), frame.begin());
+  std::ranges::copy(anim.frames, frame.begin());
 
   fixed_qwc = fixed.num_data_qw_used;
   frame_qwc = frame.at(0).num_data_qw_used;
@@ -134,10 +134,9 @@ ArtJointAnim::ArtJointAnim(const anim::CompressedAnim& anim, const std::vector<J
 
   data.reserve(joints.size());
 
-  std::transform(joints.begin(), joints.end(), data.begin(),
-                 [&anim](const Joint& joint) -> JointAnimCompressed {
-                   return JointAnimCompressed(joint, anim.frames.size());
-                 });
+  std::ranges::transform(joints, data.begin(), [&anim](const Joint& joint) -> JointAnimCompressed {
+    return JointAnimCompressed(joint, anim.frames.size());
+  });
 }
 
 std::map<int, size_t> g_joint_map;

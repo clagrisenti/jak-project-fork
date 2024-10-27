@@ -45,8 +45,8 @@ size_t generate_inline_array_actors(DataObjectGenerator& gen,
                                     const std::vector<EntityActor>& actors) {
   std::vector<size_t> actor_locs(actors.size());
 
-  std::transform(actors.begin(), actors.end(), actor_locs.begin(),
-                 [&gen](const auto& actor) -> size_t { return actor.generate(gen); });
+  std::ranges::transform(actors, actor_locs.begin(),
+                         [&gen](const auto& actor) -> size_t { return actor.generate(gen); });
 
   gen.align_to_basic();
   gen.add_type_tag("drawable-inline-array-actor");  // 0
@@ -144,8 +144,8 @@ size_t generate_inline_array_ambients(DataObjectGenerator& gen,
                                       const std::vector<EntityAmbient>& ambients) {
   std::vector<size_t> ambient_locs(ambients.size());
 
-  std::transform(ambients.begin(), ambients.end(), ambient_locs.begin(),
-                 [&gen](const auto& ambient) -> size_t { return ambient.generate(gen); });
+  std::ranges::transform(ambients, ambient_locs.begin(),
+                         [&gen](const auto& ambient) -> size_t { return ambient.generate(gen); });
 
   gen.align_to_basic();
   gen.add_type_tag("drawable-inline-array-ambient");  // 0

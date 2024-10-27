@@ -24,7 +24,7 @@ void strcpy_toupper(char* dest, const char* source) {
   // clear the dest string
   memset(dest, 0, 16);
   std::string string(source);
-  std::transform(string.begin(), string.end(), string.begin(), ::toupper);
+  std::ranges::transform(string, string.begin(), ::toupper);
   std::replace(string.begin(), string.end(), '-', '_');
   string.copy(dest, 16);
 }

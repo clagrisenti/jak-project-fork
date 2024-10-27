@@ -37,16 +37,16 @@ bool is_SDL_GUID_zero(SDL_GUID guid) {
 std::vector<std::string> get_modifier_strings(InputModifiers modifiers) {
   std::vector<std::string> result = {};
   if (modifiers.need_ctrl) {
-    result.push_back("ctrl");
+    result.emplace_back("ctrl");
   }
   if (modifiers.need_shift) {
-    result.push_back("shift");
+    result.emplace_back("shift");
   }
   if (modifiers.need_alt) {
-    result.push_back("alt");
+    result.emplace_back("alt");
   }
   if (modifiers.need_meta) {
-    result.push_back("meta");
+    result.emplace_back("meta");
   }
   return result;
 }

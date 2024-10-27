@@ -7,6 +7,8 @@
 
 #include "common/util/diff.h"
 
+#include <bits/ranges_algo.h>
+
 namespace str_util {
 
 const std::string WHITESPACE = " \n\r\t\f\v";
@@ -58,8 +60,8 @@ std::string trim(const std::string& s) {
 std::string trim_newline_indents(const std::string& s) {
   auto lines = split(s, '\n');
   std::vector<std::string> trimmed_lines;
-  std::transform(lines.begin(), lines.end(), std::back_inserter(trimmed_lines),
-                 [](const std::string& line) { return ltrim(line); });
+  std::ranges::transform(lines, std::back_inserter(trimmed_lines),
+                         [](const std::string& line) { return ltrim(line); });
   return join(trimmed_lines, "\n");
 }
 
@@ -212,13 +214,13 @@ std::string current_isotimestamp() {
 
 std::string to_upper(const std::string& str) {
   std::string new_str(str.size(), ' ');
-  std::transform(str.begin(), str.end(), new_str.begin(), ::toupper);
+  std::ranges::transform(str, new_str.begin(), ::toupper);
   return new_str;
 }
 
 std::string to_lower(const std::string& str) {
   std::string new_str(str.size(), ' ');
-  std::transform(str.begin(), str.end(), new_str.begin(), ::tolower);
+  std::ranges::transform(str, new_str.begin(), ::tolower);
   return new_str;
 }
 

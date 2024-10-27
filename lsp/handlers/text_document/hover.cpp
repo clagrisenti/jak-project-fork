@@ -105,16 +105,14 @@ std::optional<LSPSpec::Hover> hover_handler_ir(Workspace& workspace,
   if (token_at_pos) {
     lg::debug("hover - token match - {}", token_at_pos.value());
     auto& token = token_at_pos.value();
-    std::transform(token.begin(), token.end(), token.begin(),
-                   [](unsigned char c) { return std::tolower(c); });
+    std::ranges::transform(token, token.begin(), ::tolower);
     // Find the instruction, there are some edge-cases here where they could be multiple
     // TODO - havn't addressed `bc` and such instructions!  Those need to be prefixed matched
     std::vector<std::string> ee_instructions = {};
     std::vector<std::string> vu_instructions = {};
     for (const auto& instr : LSPData::MIPS_INSTRUCTION_LIST) {
       auto mnemonic_lower = instr.mnemonic;
-      std::transform(mnemonic_lower.begin(), mnemonic_lower.end(), mnemonic_lower.begin(),
-                     [](unsigned char c) { return std::tolower(c); });
+      std::ranges::transform(mnemonic_lower, mnemonic_lower.begin(), ::tolower);
       if (mnemonic_lower == token) {
         if (instr.type == "ee") {
           ee_instructions.push_back(fmt::format("- _{}_\n\n", instr.description));

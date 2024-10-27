@@ -12,8 +12,8 @@ void strcpy_toupper(char* dest, const char* source) {
   // clear the dest string
   memset(dest, 0, 16);
   std::string string(source);
-  std::transform(string.begin(), string.end(), string.begin(), ::toupper);
-  std::replace(string.begin(), string.end(), '-', '_');
+  std::ranges::transform(string, string.begin(), ::toupper);
+  std::ranges::replace(string, '-', '_');
   string.copy(dest, 16);
 }
 }  // namespace jak3
