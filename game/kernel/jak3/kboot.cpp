@@ -39,7 +39,7 @@ void kboot_init_globals() {
   strcpy(DebugBootUser, username.c_str());
 }
 
-s32 goal_main(int argc, const char* const* argv) {
+s32 goal_main(int argc, const std::vector<std::string>& argv) {
   // only in PC port
   InitParms(argc, argv);
 

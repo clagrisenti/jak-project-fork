@@ -159,7 +159,7 @@ int main(int argc, char** argv) {
     json data = output;
     try {
       file_util::write_text_file(gpu_test_out_path, data.dump(2));
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
       return 1;
     }
     return 0;
@@ -224,10 +224,10 @@ int main(int argc, char** argv) {
 
   bool force_debug_next_time = false;
   // always start with an empty arg, as internally kmachine starts at `1` not `0`
-  std::vector<const char*> arg_ptrs = {""};
+  std::vector<std::string> arg_ptrs = {""};
   arg_ptrs.reserve(arg_ptrs.size() + game_args.size());
   for (auto& str : game_args) {
-    arg_ptrs.push_back(str.data());
+    arg_ptrs.push_back(str);
   }
 
   while (true) {
@@ -241,7 +241,7 @@ int main(int argc, char** argv) {
       arg_ptrs = {""};  // see above for rationale
       arg_ptrs.reserve(arg_ptrs.size() + game_args.size());
       for (const auto& str : game_args) {
-        arg_ptrs.push_back(str.data());
+        arg_ptrs.push_back(str);
       }
     }
 
@@ -249,7 +249,7 @@ int main(int argc, char** argv) {
     lg::info("OpenGOAL Runtime {}.{}", versions::GOAL_VERSION_MAJOR, versions::GOAL_VERSION_MINOR);
     try {
       MasterExit = RuntimeExitStatus::RUNNING;
-      auto exit_status = exec_runtime(game_options, arg_ptrs.size(), arg_ptrs.data());
+      auto exit_status = exec_runtime(game_options, arg_ptrs.size(), arg_ptrs);
       switch (exit_status) {
         case RuntimeExitStatus::EXIT:
           return 0;

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include "common/common_types.h"
 // Discord RPC
 struct DiscordRichPresence;
@@ -7,7 +10,7 @@ namespace jak1 {
 /*!
  * Initialize global variables based on command line parameters
  */
-void InitParms(int argc, const char* const* argv);
+void InitParms(int argc, const std::vector<std::string>& argv);
 /*!
  * Initialize the I/O Processor
  */

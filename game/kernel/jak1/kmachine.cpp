@@ -54,7 +54,7 @@ namespace jak1 {
  * DONE
  * Modified to use std::string, and removed call to fflush.
  */
-void InitParms(int argc, const char* const* argv) {
+void InitParms(int argc, const std::vector<std::string>& argv) {
   // Modified default settings:
   if (argc == 1) {
     DiskBoot = 1;

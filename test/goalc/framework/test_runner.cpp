@@ -43,7 +43,7 @@ std::string CompilerTestRunner::test_file_name(std::string templateStr) {
 }
 
 void CompilerTestRunner::run_static_test(inja::Environment& env,
-                                         std::string& testCategory,
+                                         const std::string& testCategory,
                                          const std::string& test_file,
                                          const std::vector<std::string>& expected,
                                          std::optional<int> truncate) {
@@ -86,11 +86,11 @@ void CompilerTestRunner::run_test(const std::string& test_category,
 
     std::string testOutput = "\n\n;------TEST OUTPUT------\n;-------Expected-------\n";
 
-    for (auto& x : expected) {
+    for (const auto& x : expected) {
       testOutput += fmt::format("; \"{}\"\n", escaped_string(x));
     }
     testOutput += "\n;--------Actual--------\n";
-    for (auto& x : result) {
+    for (const auto& x : result) {
       testOutput += fmt::format("; \"{}\"\n", escaped_string(x));
     }
 
@@ -108,7 +108,7 @@ void CompilerTestRunner::run_always_pass(const std::string& test_category,
 
 void runtime_no_kernel_jak1() {
   constexpr int argc = 5;
-  const char* argv[argc] = {"", "-fakeiso", "-debug", "-nokernel", "-nosound"};
+  const std::vector<std::string>& argv = {"", "-fakeiso", "-debug", "-nokernel", "-nosound"};
   GameLaunchOptions game_options;
   game_options.disable_display = true;
   exec_runtime(game_options, argc, argv);
@@ -116,7 +116,7 @@ void runtime_no_kernel_jak1() {
 
 void runtime_no_kernel_jak2() {
   constexpr int argc = 5;
-  const char* argv[argc] = {"", "-fakeiso", "-debug", "-nokernel", "-nosound"};
+  const std::vector<std::string>& argv = {"", "-fakeiso", "-debug", "-nokernel", "-nosound"};
   GameLaunchOptions game_options;
   game_options.disable_display = true;
   game_options.game_version = GameVersion::Jak2;
@@ -125,7 +125,7 @@ void runtime_no_kernel_jak2() {
 
 void runtime_with_kernel_jak1() {
   constexpr int argc = 4;
-  const char* argv[argc] = {"", "-fakeiso", "-debug", "-nosound"};
+  const std::vector<std::string>& argv{"", "-fakeiso", "-debug", "-nosound"};
   GameLaunchOptions game_options;
   game_options.disable_display = true;
   exec_runtime(game_options, argc, argv);
@@ -133,7 +133,7 @@ void runtime_with_kernel_jak1() {
 
 void runtime_with_kernel_jak2() {
   constexpr int argc = 4;
-  const char* argv[argc] = {"", "-fakeiso", "-debug", "-nosound"};
+  const std::vector<std::string>& argv{"", "-fakeiso", "-debug", "-nosound"};
   GameLaunchOptions game_options;
   game_options.disable_display = true;
   game_options.game_version = GameVersion::Jak2;
@@ -142,7 +142,7 @@ void runtime_with_kernel_jak2() {
 
 void runtime_with_kernel_jak3() {
   constexpr int argc = 4;
-  const char* argv[argc] = {"", "-fakeiso", "-debug", "-nosound"};
+  const std::vector<std::string>& argv{"", "-fakeiso", "-debug", "-nosound"};
   GameLaunchOptions game_options;
   game_options.disable_display = true;
   game_options.game_version = GameVersion::Jak3;
@@ -151,7 +151,7 @@ void runtime_with_kernel_jak3() {
 
 void runtime_with_kernel_no_debug_segment() {
   constexpr int argc = 4;
-  const char* argv[argc] = {"", "-fakeiso", "-debug-mem", "-nosound"};
+  const std::vector<std::string>& argv = {"", "-fakeiso", "-debug-mem", "-nosound"};
   GameLaunchOptions game_options;
   game_options.disable_display = true;
   exec_runtime(game_options, argc, argv);

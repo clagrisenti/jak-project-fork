@@ -6,7 +6,7 @@
 #include "common/sqlite/sqlite.h"
 
 namespace jak2 {
-void InitParms(int argc, const char* const* argv);
+void InitParms(int argc, const std::vector<std::string>& argv);
 void InitIOP();
 int InitMachine();
 int ShutdownMachine();

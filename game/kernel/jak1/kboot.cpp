@@ -46,7 +46,7 @@ void kboot_init_globals() {}
  * Renamed from `main` to `goal_main`
  * Add call to sceDeci2Reset when GOAL shuts down.
  */
-s32 goal_main(int argc, const char* const* argv) {
+s32 goal_main(int argc, const std::vector<std::string>& argv) {
   // Initialize global variables based on command line parameters
   // This call is not present in the retail version of the game
   // but the function is, and it likely goes here.

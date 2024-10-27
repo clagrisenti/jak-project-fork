@@ -5,6 +5,9 @@
  * GOAL Boot.  Contains the "main" function to launch GOAL runtime.
  */
 
+#include <string>
+#include <vector>
+
 #include "common/common_types.h"
 
 #include "game/kernel/common/kboot.h"
@@ -26,7 +29,7 @@ void kboot_init_globals();
  * @param argv : argument list
  * @return 0 on success, otherwise failure.
  */
-s32 goal_main(int argc, const char* const* argv);
+s32 goal_main(int argc, const std::vector<std::string>& argv);
 
 /*!
  * Run the GOAL Kernel.

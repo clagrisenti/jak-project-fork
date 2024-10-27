@@ -19,6 +19,8 @@ extern GameVersion g_game_version;
 extern BackgroundWorker g_background_worker;
 extern int g_server_port;
 
-RuntimeExitStatus exec_runtime(GameLaunchOptions game_options, int argc, const char** argv);
+RuntimeExitStatus exec_runtime(GameLaunchOptions game_options,
+                               int argc,
+                               const std::vector<std::string>& argv);
 
 extern std::thread::id g_main_thread_id;

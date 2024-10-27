@@ -97,7 +97,7 @@ int g_server_port = DECI2_PORT;
 namespace {
 
 int g_argc = 0;
-const char** g_argv = nullptr;
+static std::vector<std::string> g_argv{};
 
 /*!
  * SystemThread function for running the DECI2 communication with the GOAL compiler.
@@ -374,7 +374,9 @@ void null_runner(SystemThreadInterface& iface) {
  * Main function to launch the runtime.
  * GOAL kernel arguments are currently ignored.
  */
-RuntimeExitStatus exec_runtime(GameLaunchOptions game_options, int argc, const char** argv) {
+RuntimeExitStatus exec_runtime(GameLaunchOptions game_options,
+                               int argc,
+                               const std::vector<std::string>& argv) {
   prof().root_event();
   g_argc = argc;
   g_argv = argv;

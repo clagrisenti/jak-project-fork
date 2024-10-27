@@ -37,7 +37,7 @@ void kboot_init_globals() {
 
 void KernelCheckAndDispatch();
 
-s32 goal_main(int argc, const char* const* argv) {
+s32 goal_main(int argc, const std::vector<std::string>& argv) {
   // only in PC port
   InitParms(argc, argv);
 
