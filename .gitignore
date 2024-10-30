@@ -7,7 +7,7 @@ prof.json
 /Testing
 
 # for QTCreator
-#CMakeLists.txt.user
+CMakeLists.txt.user
 
 # for clion
 cmake-build-debug/*
