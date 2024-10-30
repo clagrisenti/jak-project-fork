@@ -225,10 +225,10 @@ int main(int argc, char** argv) {
   bool force_debug_next_time = false;
   // always start with an empty arg, as internally kmachine starts at `1` not `0`
   std::vector<std::string> arg_ptrs = {""};
-  arg_ptrs.reserve(arg_ptrs.size() + game_args.size());
-  for (auto& str : game_args) {
-    arg_ptrs.push_back(str);
-  }
+  arg_ptrs.resize(arg_ptrs.size() + game_args.size());
+
+  std::ranges::transform(game_args, arg_ptrs.begin() + 1,
+                         [](const auto& str) -> std::string { return str; });
 
   while (true) {
     if (force_debug_next_time) {
@@ -239,10 +239,9 @@ int main(int argc, char** argv) {
       game_args.emplace_back("-debug");
       force_debug_next_time = false;
       arg_ptrs = {""};  // see above for rationale
-      arg_ptrs.reserve(arg_ptrs.size() + game_args.size());
-      for (const auto& str : game_args) {
-        arg_ptrs.push_back(str);
-      }
+      arg_ptrs.resize(arg_ptrs.size() + game_args.size());
+      std::ranges::transform(game_args, arg_ptrs.begin() + 1,
+                             [](const auto& str) -> std::string { return str; });
     }
 
     // run the runtime in a loop so we can reset the game and have it restart cleanly
