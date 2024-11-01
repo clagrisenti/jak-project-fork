@@ -4,3 +4,6 @@
 [submodule "third-party/curl"]
 	path = third-party/curl
 	url = https://github.com/curl/curl
+[submodule "third-party/discord-rpc"]
+	path = third-party/discord-rpc
+	url = https://github.com/discord/discord-rpc
