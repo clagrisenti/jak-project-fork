@@ -1,3 +1,6 @@
 [submodule "third-party/cubeb/cubeb"]
 	path = third-party/cubeb/cubeb
 	url = https://github.com/mozilla/cubeb
+[submodule "third-party/curl"]
+	path = third-party/curl
+	url = https://github.com/curl/curl
