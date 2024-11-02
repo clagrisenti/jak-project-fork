@@ -72,7 +72,7 @@ enum MemoryUsageCategory {
 };
 
 struct MemoryUsageTracker {
-  u32 data[MemoryUsageCategory::NUM_CATEGORIES];
+  std::array<u32, MemoryUsageCategory::NUM_CATEGORIES> data;
 
   MemoryUsageTracker() {
     for (auto& x : data) {

@@ -1,34 +1,34 @@
 #include "discord_jak1.h"
 
 namespace jak1 {
-const std::map<std::string, std::string> level_names = {{"intro", "Intro"},
-                                                        {"title", "Title screen"},
-                                                        {"training", "Geyser Rock"},
-                                                        {"village1", "Sandover Village"},
-                                                        {"beach", "Sentinel Beach"},
-                                                        {"jungle", "Forbidden Jungle"},
-                                                        {"misty", "Misty Island"},
-                                                        {"firecanyon", "Fire Canyon"},
-                                                        {"village2", "Rock Village"},
-                                                        {"swamp", "Boggy Swamp"},
-                                                        {"rolling", "Precursor Basin"},
-                                                        {"sunken", "Lost Precursor City"},
-                                                        {"ogre", "Mountain Pass"},
-                                                        {"village3", "Volcanic Crater"},
-                                                        {"snow", "Snowy Mountain"},
-                                                        {"maincave", "Spider Cave"},
-                                                        {"lavatube", "Lava Tube"},
-                                                        {"citadel", "Gol and Maia's Citadel"},
-                                                        {"finalboss", "Final Boss"}};
+const std::map<std::string, std::string> level_names{{"intro", "Intro"},
+                                                     {"title", "Title screen"},
+                                                     {"training", "Geyser Rock"},
+                                                     {"village1", "Sandover Village"},
+                                                     {"beach", "Sentinel Beach"},
+                                                     {"jungle", "Forbidden Jungle"},
+                                                     {"misty", "Misty Island"},
+                                                     {"firecanyon", "Fire Canyon"},
+                                                     {"village2", "Rock Village"},
+                                                     {"swamp", "Boggy Swamp"},
+                                                     {"rolling", "Precursor Basin"},
+                                                     {"sunken", "Lost Precursor City"},
+                                                     {"ogre", "Mountain Pass"},
+                                                     {"village3", "Volcanic Crater"},
+                                                     {"snow", "Snowy Mountain"},
+                                                     {"maincave", "Spider Cave"},
+                                                     {"lavatube", "Lava Tube"},
+                                                     {"citadel", "Gol and Maia's Citadel"},
+                                                     {"finalboss", "Final Boss"}};
 
 // for remapping sub-level names to the matching one in level_names
-const std::map<std::string, std::string> level_name_remap = {{"jungleb", "jungle"},
-                                                             {"sunkenb", "sunken"},
-                                                             {"robocave", "maincave"},
-                                                             {"darkcave", "maincave"}};
+const std::map<std::string, std::string> level_name_remap{{"jungleb", "jungle"},
+                                                          {"sunkenb", "sunken"},
+                                                          {"robocave", "maincave"},
+                                                          {"darkcave", "maincave"}};
 
 // levels that are not affected by time of day
-const std::vector<std::string> indoor_levels = {
+const std::vector<std::string> indoor_levels{
     "intro",    "title",    "jungleb",  "sunken",   "sunkenb",
     "maincave", "robocave", "darkcave", "lavatube", "citadel",
 };

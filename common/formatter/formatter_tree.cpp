@@ -78,7 +78,7 @@ FormatterTree::FormatterTree(const std::string& source, const TSNode& root_node)
   construct_formatter_tree_recursive(source, root_node, root);
 }
 
-const std::unordered_map<std::string, std::vector<std::string>> node_type_ignorable_contents = {
+const std::unordered_map<std::string, std::array<std::string, 2>> node_type_ignorable_contents = {
     {"list_lit", {"(", ")"}}};
 
 // TODO make an imperative version eventually
@@ -137,15 +137,16 @@ void FormatterTree::construct_formatter_tree_recursive(const std::string& source
     construct_formatter_tree_recursive(source, ts_node_child(curr_node, 1), tree_node, node_prefix);
     return;
   }
-  std::vector<std::string> skippable_nodes = {};
+  const std::array<std::string, 2>* skippable_nodes = nullptr;
   if (node_type_ignorable_contents.find(curr_node_type) != node_type_ignorable_contents.end()) {
-    skippable_nodes = node_type_ignorable_contents.at(curr_node_type);
+    skippable_nodes = &node_type_ignorable_contents.at(curr_node_type);
   }
   for (size_t i = 0; i < ts_node_child_count(curr_node); i++) {
     const auto child_node = ts_node_child(curr_node, i);
-    auto debug_child = ts_node_string(child_node);
+    // auto debug_child = ts_node_string(child_node);
     const auto contents = get_source_code(source, child_node);
-    bool skip_node = std::any_of(skippable_nodes.begin(), skippable_nodes.end(),
+    bool skip_node = skippable_nodes != nullptr &&
+                     std::any_of(skippable_nodes->begin(), skippable_nodes->end(),
                                  [&contents](const auto& skippable_content) -> bool {
                                    return skippable_content == contents;
                                  });

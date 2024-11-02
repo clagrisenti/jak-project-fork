@@ -1,7 +1,7 @@
 #include "discord_jak3.h"
 
 namespace jak3 {
-const std::map<std::string, std::string> level_names = {
+const std::map<std::string, std::string> level_names{
     {"intro", "Intro"},
     {"title", "Title screen"},
     {"wascity", "Spargus City"},
@@ -34,12 +34,12 @@ const std::map<std::string, std::string> level_names = {
 };
 
 // for remapping sub-level names to the matching one in level_names
-std::map<std::string, std::string> level_name_remap = {
+std::map<std::string, std::string> level_name_remap{
     {"introcst", "intro"}, {"templex", "temple"}, {"combx", "comb"},      {"volcanox", "volcano"},
     {"railx", "rail"},     {"railb2", "rail"},    {"rubblea2", "rubble"}, {"wasstada", "wasstad"},
 };
 
-const std::map<std::string, std::pair<char, char>> level_remap_hack = {
+const std::map<std::string, std::pair<char, char>> level_remap_hack{
     {"forest", {'a', 'b'}}, {"factory", {'a', 'd'}}, {"stadium", {'a', 'b'}},
     {"hang", {'a', 'b'}},   {"wascity", {'a', 'b'}}, {"nst", {'a', 'b'}},
     {"mhcity", {'a', 'b'}}, {"sew", {'a', 'o'}},     {"comb", {'a', 'n'}},
@@ -63,7 +63,7 @@ void remap_hack() {
 }
 
 // levels that are not affected by time of day
-const std::vector<std::string> indoor_levels = {
+const std::vector<std::string> indoor_levels{
     "intro",   "introcst", "title",  "sew", "gungame", "precur", "hideout",
     "vinroom", "onintent", "hiphog", "nst", "comb",    "rail",   "freehq",
 };

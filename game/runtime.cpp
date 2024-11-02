@@ -97,7 +97,7 @@ int g_server_port = DECI2_PORT;
 namespace {
 
 int g_argc = 0;
-static std::vector<std::string> g_argv{};
+static std::vector<std::string> g_argv;
 
 /*!
  * SystemThread function for running the DECI2 communication with the GOAL compiler.

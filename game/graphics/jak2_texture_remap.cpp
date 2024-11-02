@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace {
-const std::unordered_map<int, std::vector<std::pair<int, int>>> data = {
+const std::unordered_map<int, std::vector<std::pair<int, int>>> data{
     {12, {{46, 1}, {134, 1}, {38, 1}, {201, 1}, {52, 1}, {12, 1}, {187, 1}}},
     {31, {{2, 1}}},
     {623, {{6, 1}, {7, 2}}},
@@ -1648,7 +1648,6 @@ const std::unordered_map<int, std::vector<std::pair<int, int>>> data = {
       {14, 1}}},
     {3454, {{15, 1}, {14, 1}}},
 };
-
 };
 
 int lookup_jak2_texture_dest_offset(int tpage, int texture_idx) {

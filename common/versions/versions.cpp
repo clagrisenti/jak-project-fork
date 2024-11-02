@@ -48,9 +48,10 @@ std::string version_to_game_name_external(GameVersion v) {
   }
 }
 
-std::vector<std::string> valid_game_version_names() {
-  return {game_version_names[GameVersion::Jak1], game_version_names[GameVersion::Jak2],
-          game_version_names[GameVersion::Jak3]};
+std::array<std::string, 3> valid_game_version_names() {
+  return std::array<std::string, 3>{game_version_names[GameVersion::Jak1],
+                                    game_version_names[GameVersion::Jak2],
+                                    game_version_names[GameVersion::Jak3]};
 }
 
 std::string build_revision() {

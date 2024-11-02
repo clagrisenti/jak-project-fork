@@ -1,7 +1,7 @@
 #include "discord_jak2.h"
 
 namespace jak2 {
-const std::map<std::string, std::string> level_names = {
+const std::map<std::string, std::string> level_names{
     {"intro", "Intro"},
     {"title", "Title screen"},
     {"prison", "Prison"},
@@ -50,7 +50,7 @@ const std::map<std::string, std::string> level_names = {
 };
 
 // for remapping sub-level names to the matching one in level_names
-const std::map<std::string, std::string> level_name_remap = {
+const std::map<std::string, std::string> level_name_remap{
     {"forexita", "forexit"}, {"forexitb", "forexit"}, {"fordumpa", "fordump"},
     {"fordumpb", "fordump"}, {"fordumpc", "fordump"}, {"forresca", "forresc"},
     {"forrescb", "forresc"}, {"ctysluma", "ctyslum"}, {"ctyslumb", "ctyslum"},
@@ -69,7 +69,7 @@ const std::map<std::string, std::string> level_name_remap = {
 };
 
 // levels that are not affected by time of day
-const std::vector<std::string> indoor_levels = {
+const std::vector<std::string> indoor_levels{
     "intro",    "introcst", "title",    "prison", "forexita", "forexitb", "fordumpa", "fordumpb",
     "fordumpc", "forresca", "forrescb", "tomba",  "tombb",    "tombc",    "tombd",    "dig1",
     "dig3a",    "dig3b",    "palshaft", "sewer",  "sewesc",   "castle",   "tombe",    "tombboss",

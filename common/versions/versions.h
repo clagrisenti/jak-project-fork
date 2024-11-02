@@ -5,6 +5,7 @@
  * Version numbers for GOAL Language, Kernel, etc...
  */
 
+#include <array>
 #include <string>
 #include <vector>
 
@@ -64,6 +65,6 @@ GameVersion game_name_to_version(const std::string& name);
 bool valid_game_version(const std::string& name);
 std::string version_to_game_name(GameVersion v);
 std::string version_to_game_name_external(GameVersion v);
-std::vector<std::string> valid_game_version_names();
+std::array<std::string, 3> valid_game_version_names();
 
 std::string build_revision();

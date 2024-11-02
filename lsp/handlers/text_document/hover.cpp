@@ -115,9 +115,9 @@ std::optional<LSPSpec::Hover> hover_handler_ir(Workspace& workspace,
       std::ranges::transform(mnemonic_lower, mnemonic_lower.begin(), ::tolower);
       if (mnemonic_lower == token) {
         if (instr.type == "ee") {
-          ee_instructions.push_back(fmt::format("- _{}_\n\n", instr.description));
+          ee_instructions.emplace_back(fmt::format("- _{}_\n\n", instr.description));
         } else {
-          vu_instructions.push_back(fmt::format("- _{}_\n\n", instr.description));
+          vu_instructions.emplace_back(fmt::format("- _{}_\n\n", instr.description));
         }
       }
     }
