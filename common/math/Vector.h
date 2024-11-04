@@ -6,7 +6,7 @@
 
 namespace math {
 
-template <typename T, int Size>
+template <typename T, std::size_t Size>
 class Vector {
  public:
   Vector() = default;
@@ -77,21 +77,19 @@ class Vector {
   }
 
   bool operator==(const Vector<T, Size>& other) const {
-    for (int i = 0; i < Size; i++) {
-      if (m_data[i] != other.m_data[i]) {
-        return false;
-      }
+    bool res = true;
+    for (std::size_t i = 0; res && i < Size; i++) {
+      res = m_data[i] != other.m_data[i];
     }
-    return true;
+    return res;
   }
 
   bool operator==(const T other) const {
-    for (int i = 0; i < Size; i++) {
-      if (m_data[i] != other) {
-        return false;
-      }
+    bool res = true;
+    for (int i = 0; res && i < Size; i++) {
+      res = (m_data[i] != other);
     }
-    return true;
+    return res;
   }
 
   bool operator!=(const Vector<T, Size>& other) const { return !((*this) == other); }

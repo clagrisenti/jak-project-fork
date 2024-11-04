@@ -136,14 +136,12 @@ UncompressedJointAnim extract_anim_from_gltf(const tinygltf::Model& model,
 }
 
 namespace {
-template <int n>
+template <std::size_t n>
 bool is_constant(const std::vector<math::Vector<float, n>>& in) {
-  if (in.empty()) {
-    return true;
-  }
   math::Vector<float, n> first = in.at(0);
 
-  return std::any_of(in.begin(), in.end(),
+  return in.empty() ||
+         std::any_of(in.begin(), in.end(),
                      [&first](const math::Vector<float, n>& x) -> bool { return x != first; });
 }
 

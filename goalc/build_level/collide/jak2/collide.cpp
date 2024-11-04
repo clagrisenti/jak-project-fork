@@ -43,16 +43,7 @@ bool separating_axis_test(const math::Vector3f& bbox_half_side_length,
   const float ptri_max = std::max(std::max(pa, pb), pc);
   const float ptri_min = std::min(std::min(pa, pb), pc);
 
-  if (ptri_max < pbox_minus) {
-    return true;
-  }
-
-  if (ptri_min > pbox_plus) {
-    return true;
-  }
-
-  // there must be overlap.
-  return false;
+  return (ptri_max < pbox_minus) || (ptri_min > pbox_plus);
 }
 
 /*!
@@ -87,10 +78,7 @@ bool triangle_bounding_box(const BoundingBox& bbox_w,
 
   // check face normals of the box
   for (int axis = 0; axis < 3; axis++) {
-    if (tri_max[axis] < -half_side_length[axis]) {
-      return false;
-    }
-    if (tri_min[axis] > half_side_length[axis]) {
+    if ((tri_max[axis] < -half_side_length[axis]) || (tri_min[axis] > half_side_length[axis])) {
       return false;
     }
   }
@@ -125,10 +113,7 @@ bool triangle_bounding_box(const BoundingBox& bbox_w,
 
 bool bounding_box_bounding_box(const BoundingBox& a, const BoundingBox& b) {
   for (int i = 0; i < 3; i++) {
-    if (a.min[i] > b.max[i]) {
-      return false;
-    }
-    if (a.max[i] < b.min[i]) {
+    if ((a.min[i] > b.max[i]) || (a.max[i] < b.min[i])) {
       return false;
     }
   }

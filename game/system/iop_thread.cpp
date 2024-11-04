@@ -58,7 +58,7 @@ void* IOP::iop_alloc(int size) {
 }
 
 void IOP::wait_run_iop(
-    std::chrono::time_point<std::chrono::steady_clock, std::chrono::microseconds> wakeup) {
+    const std::chrono::time_point<std::chrono::steady_clock, std::chrono::microseconds>& wakeup) {
   auto p = scoped_prof("krnlw");
   std::unique_lock<std::mutex> lk(run_cv_mutex);
   iop_run_cv.wait_until(lk, wakeup);

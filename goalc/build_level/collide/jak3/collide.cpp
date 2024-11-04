@@ -127,10 +127,7 @@ bool triangle_bounding_box(const BoundingBox& bbox_w,
 
 bool bounding_box_bounding_box(const BoundingBox& a, const BoundingBox& b) {
   for (int i = 0; i < 3; i++) {
-    if (a.min[i] > b.max[i]) {
-      return false;
-    }
-    if (a.max[i] < b.min[i]) {
+    if ((a.min[i] > b.max[i]) || (a.max[i] < b.min[i])) {
       return false;
     }
   }
