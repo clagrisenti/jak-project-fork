@@ -11,6 +11,7 @@
 
 #include "fake_iso.h"
 
+#include <array>
 #include <cstring>
 
 #include "common/log/log.h"
@@ -39,14 +40,32 @@ struct FakeIsoEntry {
   std::string full_path;
 };
 
-FakeIsoEntry fake_iso_entries[MAX_ISO_FILES];  //! List of all known files
-static FileRecord sFiles[MAX_ISO_FILES];       //! List of "FileRecords" for IsoFs API consumers
+void initFakeIsoEntry(std::array<FakeIsoEntry, MAX_ISO_FILES>& data) {
+  for (auto& d : data) {
+    memset(d.iso_name, 0, sizeof(d.iso_name));
+    d.iso_name[0] = '\0';
+    d.full_path = "";
+  }
+}
+
+void initFileRecord(std::array<FileRecord, MAX_ISO_FILES>& data) {
+  for (auto& d : data) {
+    memset(d.name, 0, sizeof(d.name));
+    d.name[0] = '\0';
+    d.location = 0;
+    d.size = 0;
+  }
+}
+
+std::array<FakeIsoEntry, MAX_ISO_FILES> fake_iso_entries;  //! List of all known files
+static std::array<FileRecord, MAX_ISO_FILES>
+    sFiles;                                    //! List of "FileRecords" for IsoFs API consumers
 u32 fake_iso_entry_count;                      //! Total count of fake iso files
 
 void fake_iso_init_globals() {
   // init file lists
-  memset(fake_iso_entries, 0, sizeof(fake_iso_entries));
-  memset(sFiles, 0, sizeof(sFiles));
+  initFakeIsoEntry(fake_iso_entries);
+  initFileRecord(sFiles);
 
   fake_iso_entry_count = 0;
 }
@@ -105,7 +124,7 @@ FileRecord* FS_FindIN(const char* iso_name) {
   while (count < fake_iso_entry_count) {
     const uint32_t* ref = (uint32_t*)sFiles[count].name;
     if (ref[0] == buff[0] && ref[1] == buff[1] && ref[2] == buff[2]) {
-      return sFiles + count;
+      return sFiles.data() + count;
     }
     count++;
   }

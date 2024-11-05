@@ -374,15 +374,14 @@ void CPageManager::WaitForPagesFilled(u32 mask) {
   }
 }
 
-CPage::CPage(uint8_t* page_mem_start, uint8_t* page_mem_end, int page_idx) {
+CPage::CPage(uint8_t* page_mem_start, uint8_t* page_mem_end, int page_idx)
+    : mask(1 << (page_idx & 0x1f)), m_nPageIdx(page_idx) {
   m_pNextPage = nullptr;
-  mask = 1 << (page_idx & 0x1f);
   m_pPrevPage = nullptr;
   m_pPageMemStart = page_mem_start;
   m_pPageList = nullptr;
   m_pPageMemEnd = page_mem_end;
   m_nPageRefCount = 0;
-  m_nPageIdx = page_idx;
   m_nDmaRefCount = 0;
   m_nAllocState = 0;
   input_state = State::UNMAKRED;
@@ -489,12 +488,10 @@ void CPage::FromPagesCopy(uint8_t* in, uint8_t* dest, s32 size) {
   }
 }
 
-CCache::CCache() {
+CCache::CCache() : m_nAllocatedMask(0), m_nPagelistAllocatedMask(0) {
   m_PendingMask = kAllPagesMask;
   m_PagesFilledEventFlag = -1;
   m_nNumFreePages = 0;
-  m_nAllocatedMask = 0;
-  m_nPagelistAllocatedMask = 0;
 }
 
 void CCache::Initialize() {

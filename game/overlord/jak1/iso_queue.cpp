@@ -28,11 +28,11 @@ struct IsoStrBuffer {
   u8 data[STR_BUFFER_DATA_SIZE];
 };
 
-static IsoBuffer sBuffer[N_BUFFERS];
-static IsoStrBuffer sStrBuffer[N_STR_BUFFERS];
+static std::array<IsoBuffer, N_BUFFERS> sBuffer;
+static std::array<IsoStrBuffer, N_STR_BUFFERS> sStrBuffer;
 static IsoBuffer* sFreeBuffer;
 static IsoStrBuffer* sFreeStrBuffer;
-PriStackEntry gPriStack[N_PRIORITIES];
+std::array<PriStackEntry, N_PRIORITIES> gPriStack;
 
 u32 vag_cmd_cnt;
 u32 vag_cmd_used;
@@ -42,8 +42,8 @@ VagCommand vag_cmds[N_VAG_CMDS];
 static s32 sSema;
 
 void iso_queue_init_globals() {
-  memset(sBuffer, 0, sizeof(sBuffer));
-  memset(sStrBuffer, 0, sizeof(sStrBuffer));
+  memset(sBuffer.data(), 0, sizeof(sBuffer));
+  memset(sStrBuffer.data(), 0, sizeof(sStrBuffer));
   sFreeBuffer = nullptr;
   sFreeStrBuffer = nullptr;
   for (auto& e : gPriStack)
@@ -356,7 +356,7 @@ VagCommand* GetVAGCommand() {
   }
 }
 
-void FreeVAGCommand(VagCommand* cmd) {
+void FreeVAGCommand(const VagCommand* cmd) {
   s32 idx = cmd - vag_cmds;
   if (idx >= 0 && idx < N_VAG_CMDS && ((vag_cmd_used >> (idx & 0x1f)) & 1)) {
     while (WaitSema(sSema)) {

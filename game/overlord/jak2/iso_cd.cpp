@@ -595,8 +595,8 @@ int FS_PageBeginRead(LoadStackEntry* lse, Buffer* buffer) {
     ReadPagesPagePool = plist;
     ReadPagesCurrentPage = pages;
     ReadPagesCurrentSector = sector;
-    int local_34 = 0;  // super sketchy...
-    ReadPagesDoneFlag = &local_34;
+    int* local_34 = new int(0);  // super sketchy...
+    ReadPagesDoneFlag = local_34;
     int npages = pages->free_pages;
     ReadPagesNumToRead = npages;
 

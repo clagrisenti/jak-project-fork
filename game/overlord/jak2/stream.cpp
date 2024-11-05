@@ -351,12 +351,12 @@ u32 STRThread() {
 sceSifServeData* gserve = nullptr;
 u32 PLAYThread() {
   sceSifQueueData dq;
-  sceSifServeData serve;
-  gserve = &serve;
+  sceSifServeData* serve = new sceSifServeData();
+  gserve = serve;
   CpuDisableIntr();
   sceSifInitRpc(0);
   sceSifSetRpcQueue(&dq, GetThreadId());
-  sceSifRegisterRpc(&serve, PLAY_RPC_ID[g_game_version], RPC_PLAY, sPLAYBuf, kPlayBufSize, nullptr,
+  sceSifRegisterRpc(serve, PLAY_RPC_ID[g_game_version], RPC_PLAY, sPLAYBuf, kPlayBufSize, nullptr,
                     nullptr, &dq);
   CpuEnableIntr();
   sceSifRpcLoop(&dq);

@@ -104,6 +104,8 @@ const char* mc_get_filename_no_dir(GameVersion version, int ndx) {
     case GameVersion::Jak3:
       return filename_jak3[ndx];
       break;
+    default:
+      throw std::exception();
   }
 }
 

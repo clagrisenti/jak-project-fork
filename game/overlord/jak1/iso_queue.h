@@ -19,6 +19,6 @@ void ReturnMessage(IsoMessage* cmd);
 IsoBufferHeader* TryAllocateBuffer(uint32_t size);
 
 VagCommand* GetVAGCommand();
-void FreeVAGCommand(VagCommand* cmd);
+void FreeVAGCommand(const VagCommand* cmd);
 void ReleaseMessage(IsoMessage* cmd);
 }  // namespace jak1

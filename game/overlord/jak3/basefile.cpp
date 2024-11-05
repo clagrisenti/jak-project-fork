@@ -13,7 +13,7 @@ void jak3_overlord_init_globals_basefile() {}
 /*!
  * Construct a CBaseFile in an unused state.
  */
-CBaseFile::CBaseFile() {
+CBaseFile::CBaseFile() : m_nNumPages(kDefaultBufferPageCount), m_Status(EIsoStatus::NONE_0) {
   m_Buffer.m_pCurrentData = nullptr;
   m_Buffer.m_pCurrentPageStart = nullptr;
   m_Buffer.m_nMinNumPages = 1;
@@ -26,18 +26,17 @@ CBaseFile::CBaseFile() {
   m_ProcessDataSemaphore = -1;
   m_FileDef = nullptr;
   m_FileKind = Kind::UNKNOWN;
-  m_Status = EIsoStatus::NONE_0;
   m_ReadRate = 0;
   m_LengthPages = 0;
   m_PageOffset = 0;
-  m_nNumPages = kDefaultBufferPageCount;
 }
 
 /*!
  * Construct a CBaseFile for a given file, but keep it in the "idle" state, with no buffer
  * allocated.
  */
-CBaseFile::CBaseFile(const jak3::ISOFileDef* file, int semaphore) {
+CBaseFile::CBaseFile(const jak3::ISOFileDef* file, int semaphore)
+    : m_nNumPages(kDefaultBufferPageCount), m_Status(EIsoStatus::IDLE_1) {
   m_Buffer.m_pCurrentData = nullptr;
   m_Buffer.m_nMaxNumPages = kDefaultBufferPageCount;
   m_Buffer.m_nDataLength = 0;
@@ -47,11 +46,9 @@ CBaseFile::CBaseFile(const jak3::ISOFileDef* file, int semaphore) {
   m_Buffer.m_pCurrentPageStart = nullptr;
   m_Buffer.m_eBufferType = CBuffer::BufferType::EBT_FREE;
 
-  m_nNumPages = kDefaultBufferPageCount;
   m_FileDef = file;
   m_ProcessDataSemaphore = semaphore;
   m_FileKind = Kind::UNKNOWN;
-  m_Status = EIsoStatus::IDLE_1;
   m_ReadRate = 0;
   m_LengthPages = 0;
   m_PageOffset = 0;

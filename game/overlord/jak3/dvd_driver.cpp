@@ -69,24 +69,24 @@ void CMsgCancelRead::handler() {
 
 u32 DvdThread();
 
-CDvdDriver::CDvdDriver() {
-  fifo_entry_sema = -1;
-  current_thread_priority = 0x13;
-  disk_type = 5;
-  tray_flag = 1;
-  // m_nLockCount = 0;
-  event_flag = -1;
-  fifo_access_sema = -1;
-  tray_flag2 = 1;
-  initialized = 0;
-  m_nNumFifoEntries = 0;
-  ring_head = 0;
-  ring_tail = 0;
-  read_in_progress = 0;
-  callback = nullptr;
-  // locked = false;
-  trayflag3 = 0;
-  m_nDvdThreadAccessSemaCount = 0;
+CDvdDriver::CDvdDriver()
+    : initialized(0),
+      event_flag(-1),
+      fifo_access_sema(-1),
+      fifo_entry_sema(-1),
+      m_nNumFifoEntries(0),
+      ring_head(0),
+      ring_tail(0),
+      read_in_progress(0),
+      callback(nullptr),
+      current_thread_priority(0x13),
+      disk_type(5),
+      tray_flag2(1),
+      trayflag3(0),
+      tray_flag(1),
+      m_nDvdThreadAccessSemaCount(0) {
+  // m_nLockCount = 0;;
+  // locked = false;;
   memset(ring, 0, sizeof(Block) * 16);
 }
 
