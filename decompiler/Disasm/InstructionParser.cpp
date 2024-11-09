@@ -54,7 +54,7 @@ InstructionParser::InstructionParser() {
                  InstructionKind::MULAS,  InstructionKind::MADDAS, InstructionKind::QMTC2,
                  InstructionKind::QMFC2,  InstructionKind::VITOF0, InstructionKind::VFTOI0,
                  InstructionKind::PSLLW,  InstructionKind::PSRAW}) {
-    auto& info = gOpcodeInfo[int(i)];
+    const auto& info = gOpcodeInfo[int(i)];
     if (info.defined) {
       m_opcode_name_lookup[info.name] = int(i);
       added++;
@@ -62,7 +62,7 @@ InstructionParser::InstructionParser() {
   }
 
   for (auto i : {InstructionKind::VMUL_BC}) {
-    auto& info = gOpcodeInfo[int(i)];
+    const auto& info = gOpcodeInfo[int(i)];
     if (info.defined) {
       m_opcode_name_broadcast_lookup[info.name] = int(i);
       added++;
@@ -418,7 +418,7 @@ Instruction InstructionParser::parse_single_instruction(
 ParsedProgram InstructionParser::parse_program(const std::string& str,
                                                const std::vector<std::string>& predefined_labels) {
   ParsedProgram program;
-  for (auto& x : predefined_labels) {
+  for (const auto& x : predefined_labels) {
     DecompilerLabel label;
     label.target_segment = 0;
     label.offset = 0;
@@ -460,7 +460,7 @@ ParsedProgram InstructionParser::parse_program(const std::string& str,
   }
 
   // second pass
-  for (auto& line : lines) {
+  for (const auto& line : lines) {
     if (!line.empty() && line.front() != 'L') {
       program.instructions.push_back(parse_single_instruction(line, program.labels));
     }
@@ -473,8 +473,8 @@ std::string ParsedProgram::print() {
   std::string result;
 
   int offset = 0;
-  for (auto& instr : instructions) {
-    for (auto& label : labels) {
+  for (const auto& instr : instructions) {
+    for (const auto& label : labels) {
       if (label.offset == offset) {
         result += label.name;
         result += ":\n";

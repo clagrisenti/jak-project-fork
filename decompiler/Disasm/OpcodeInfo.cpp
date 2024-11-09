@@ -469,7 +469,7 @@ void init_opcode_info() {
   def(IK::VWAITQ, "vwaitq");
 
   uint32_t valid_count = 0, total_count = 0;
-  for (auto& info : gOpcodeInfo) {
+  for (const auto& info : gOpcodeInfo) {
     if (info.defined) {
       valid_count++;
     }
@@ -482,7 +482,7 @@ void init_opcode_info() {
   opcodes_initialized = true;
 }
 
-void OpcodeInfo::step(DecodeStep& s) {
+void OpcodeInfo::step(const DecodeStep& s) {
   ASSERT(step_count < MAX_DECODE_STEPS);
   steps[step_count] = s;
   step_count++;

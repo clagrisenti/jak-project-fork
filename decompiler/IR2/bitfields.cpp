@@ -20,7 +20,7 @@ namespace decompiler {
 BitfieldStaticDefElement::BitfieldStaticDefElement(const TypeSpec& type,
                                                    const std::vector<BitFieldDef>& field_defs)
     : m_type(type), m_field_defs(field_defs) {
-  for (auto& x : field_defs) {
+  for (const auto& x : field_defs) {
     x.value->parent_element = this;
   }
 }
@@ -30,7 +30,7 @@ BitfieldStaticDefElement::BitfieldStaticDefElement(
     const std::vector<BitFieldConstantDef>& field_defs,
     FormPool& pool)
     : m_type(type) {
-  for (auto& x : field_defs) {
+  for (const auto& x : field_defs) {
     m_field_defs.push_back(BitFieldDef::from_constant(x, pool));
     m_field_defs.back().value->parent_element = this;
   }
@@ -100,7 +100,7 @@ ModifiedCopyBitfieldElement::ModifiedCopyBitfieldElement(
       m_field_modifications(field_modifications),
       m_from_pcpyud(from_pcpyud) {
   m_base->parent_element = this;
-  for (auto& mod : m_field_modifications) {
+  for (const auto& mod : m_field_modifications) {
     if (mod.value) {
       mod.value->parent_element = this;
     }
@@ -384,7 +384,8 @@ std::string BitfieldAccessElement::debug_print(const Env& env) const {
   }
   result += '\n';
   result += fmt::format("base: {}\n", m_base->to_string(env));
-  for (auto& step : m_steps) {
+  result.reserve(result.size() + m_steps.size() * 10);
+  for (const auto& step : m_steps) {
     result += fmt::format(" {}\n", step.print());
   }
   return result;
@@ -636,7 +637,7 @@ FormElement* BitfieldAccessElement::push_step(const BitfieldManip step,
   }
 
   lg::error("Invalid state in BitfieldReadElement. Previous steps:");
-  for (auto& old_step : m_steps) {
+  for (const auto& old_step : m_steps) {
     lg::error("  {}", old_step.print());
   }
   lg::error("Current: {}", step.print());
@@ -731,7 +732,8 @@ BitFieldDef BitFieldDef::from_constant(const BitFieldConstantDef& constant, Form
   bfd.is_float = constant.is_float;
   if (constant.nested_field) {
     std::vector<BitFieldDef> defs;
-    for (auto& x : constant.nested_field->fields) {
+    defs.reserve(constant.nested_field->fields.size());
+    for (const auto& x : constant.nested_field->fields) {
       defs.push_back(BitFieldDef::from_constant(x, pool));
     }
     bfd.value = pool.form<BitfieldStaticDefElement>(constant.nested_field->field_type, defs);
@@ -806,7 +808,8 @@ std::optional<std::vector<BitFieldDef>> get_field_defs_from_expr(const BitFieldT
         if (!constant_defs) {
           return std::nullopt;  // failed
         }
-        for (auto& x : *constant_defs) {
+        field_defs.reserve(constant_defs->size());
+        for (const auto& x : *constant_defs) {
           field_defs.push_back(BitFieldDef::from_constant(x, pool));
         }
 
@@ -995,10 +998,10 @@ Form* cast_to_bitfield_enum(const EnumType* type_info,
     elts->erase(elts->begin());
   }
 
-  std::vector<Form*> form_elts;
-  for (auto& x : *elts) {
-    form_elts.push_back(pool.form<ConstantTokenElement>(x));
-  }
+  std::vector<Form*> form_elts(elts->size());
+
+  std::transform(elts->begin(), elts->end(), form_elts.begin(),
+                 [&pool](const auto& x) -> Form* { return pool.form<ConstantTokenElement>(x); });
   return pool.form<GenericElement>(oper, form_elts);
 }
 

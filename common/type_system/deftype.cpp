@@ -297,18 +297,18 @@ struct StructureDefResult {
   void append_virtual_state_def(const std::string& state_name,
                                 const StateHandler handler,
                                 DefinitionMetadata data) {
-    if (virtual_state_definitions.count(state_name) == 0) {
-      virtual_state_definitions[state_name] = std::unordered_map<std::string, DefinitionMetadata>();
-    }
+    virtual_state_definitions.try_emplace(state_name,
+                                          std::unordered_map<std::string, DefinitionMetadata>());
+
     virtual_state_definitions[state_name][handler_kind_to_name(handler)] = data;
   }
 
   void append_state_def(const std::string& state_name,
                         const StateHandler handler,
                         DefinitionMetadata data) {
-    if (state_definitions.count(state_name) == 0) {
-      state_definitions[state_name] = std::unordered_map<std::string, DefinitionMetadata>();
-    }
+    state_definitions.try_emplace(state_name,
+                                  std::unordered_map<std::string, DefinitionMetadata>());
+
     state_definitions[state_name][handler_kind_to_name(handler)] = data;
   }
 };

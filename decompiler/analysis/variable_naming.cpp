@@ -103,7 +103,7 @@ void VarMapSSA::merge_reg(Register reg) {
  * Make all Bs A.
  */
 void VarMapSSA::merge_to_first(const VarSSA& var_a, const VarSSA& var_b) {
-  auto& a = m_entries.at(var_a.m_entry_id);
+  const auto& a = m_entries.at(var_a.m_entry_id);
   auto b = m_entries.at(var_b.m_entry_id);
 
   //  lg::print("Merge-to-first {} <- {}\n", to_string(var_a), to_string(var_b));
@@ -175,7 +175,7 @@ void VarMapSSA::debug_print_map() const {
 std::string SSA::Phi::print(const VarMapSSA& var_map) const {
   std::string result = var_map.to_string(dest);
   result += " <- phi(";
-  for (auto& s : sources) {
+  for (const auto& s : sources) {
     result += var_map.to_string(s);
     result += ' ';
   }
@@ -196,7 +196,7 @@ std::string SSA::Ins::print(const VarMapSSA& var_map) const {
     result += "read(";
   }
 
-  for (auto& s : src) {
+  for (const auto& s : src) {
     result += var_map.to_string(s);
     result += ' ';
   }
@@ -216,7 +216,7 @@ std::string SSA::Block::print(const VarMapSSA& var_map) const {
     result += phi.second.print(var_map);
     result += '\n';
   }
-  for (auto& i : ins) {
+  for (const auto& i : ins) {
     result += "   ";
     result += i.print(var_map);
     result += '\n';
@@ -522,21 +522,17 @@ bool SSA::simplify() {
     while (it != block.phis.end()) {
       // first case: all sources are the same as the destination.
       // note - this will remove all phis with 1 or 0 arguments.
-      bool remove = true;
-      auto& dst = it->second.dest;
-      for (auto& src : it->second.sources) {
-        if (!map.same(src, dst)) {
-          remove = false;
-          break;
-        }
-      }
+      const auto& dst = it->second.dest;
+      bool remove =
+          std::all_of(it->second.sources.begin(), it->second.sources.end(),
+                      [this, &dst](const auto& src) -> bool { return map.same(src, dst); });
 
       if (!remove) {
         // second case. V_i = phi(combo of i, j)
         remove = true;
         auto v_i = it->second.dest;
         std::optional<VarSSA> v_j;
-        for (auto& src : it->second.sources) {
+        for (const auto& src : it->second.sources) {
           if (!map.same(v_i, src)) {
             // three cases:
             if (!v_j.has_value()) {
@@ -579,8 +575,8 @@ bool SSA::simplify() {
  */
 void SSA::merge_all_phis() {
   for (auto& block : blocks) {
-    for (auto& phi : block.phis) {
-      for (auto& src : phi.second.sources) {
+    for (const auto& phi : block.phis) {
+      for (const auto& src : phi.second.sources) {
         map.merge_to_first(phi.second.dest, src);
       }
     }
@@ -598,8 +594,7 @@ void SSA::remap(int) {
     std::unordered_set<int> set;
     std::vector<int> order;
     void insert(int x) {
-      if (set.find(x) == set.end()) {
-        set.insert(x);
+      if (set.insert(x).second) {
         order.push_back(x);
       }
     }
@@ -613,7 +608,7 @@ void SSA::remap(int) {
       if (instr.dst.has_value() && map.var_id(*instr.dst) == 0) {
         used_vars[instr.dst->reg()].insert(map.var_id(*instr.dst));
       }
-      for (auto& src : instr.src) {
+      for (const auto& src : instr.src) {
         if (map.var_id(src) == 0) {
           used_vars[src.reg()].insert(map.var_id(src));
         }
@@ -628,7 +623,7 @@ void SSA::remap(int) {
       if (instr.dst.has_value()) {
         used_vars[instr.dst->reg()].insert(map.var_id(*instr.dst));
       }
-      for (auto& src : instr.src) {
+      for (const auto& src : instr.src) {
         used_vars[src.reg()].insert(map.var_id(src));
       }
     }
@@ -670,7 +665,7 @@ void update_var_info(VariableNames::VarInfo* info,
                      const TypeState& ts,
                      int var_id,
                      const DecompilerTypeSystem& dts) {
-  auto& type = ts.get(reg);
+  const auto& type = ts.get(reg);
   if (info->initialized) {
     ASSERT(info->reg_id.id == var_id);
     ASSERT(info->reg_id.reg == reg);
@@ -738,7 +733,7 @@ void SSA::make_vars(const Function& function, const DecompilerTypeSystem& dts) {
         update_var_info(info, instr.dst->reg(), *end_types, var_id, dts);
       }
 
-      for (auto& src : instr.src) {
+      for (const auto& src : instr.src) {
         auto var_id = map.var_id(src);
         auto* info = &program_read_vars[src.reg()].at(var_id);
         update_var_info(info, src.reg(), *init_types, var_id, dts);
@@ -830,12 +825,12 @@ VariableNames SSA::get_vars() const {
 
   for (int block_id = 0; block_id < int(blocks.size()); block_id++) {
     const auto& block = blocks.at(block_id);
-    for (auto& instr : block.ins) {
+    for (const auto& instr : block.ins) {
       auto op_id = instr.op_id;
       if (op_id < 0) {
         continue;
       }
-      for (auto& src : instr.src) {
+      for (const auto& src : instr.src) {
         auto& ids = result.read_opid_to_varid[src.reg()];
         if (int(ids.size()) <= op_id) {
           ids.resize(op_id + 1);
@@ -991,16 +986,16 @@ void promote_register_class(const Function& func,
     if (op_as_asm) {
       auto& instr = op_as_asm->instruction();
       if (gOpcodeInfo[(int)instr.kind].gpr_128) {
-        for (auto& reg : op_as_asm->write_regs()) {
+        for (const auto& reg : op_as_asm->write_regs()) {
           if (reg.get_kind() == Reg::GPR) {
-            auto& info = result->lookup(reg, op_idx, AccessMode::WRITE);
+            const auto& info = result->lookup(reg, op_idx, AccessMode::WRITE);
             promote_map[info.reg_id] = PromotionType::PROMOTE_128;
           }
         }
 
-        for (auto& reg : op_as_asm->read_regs()) {
+        for (const auto& reg : op_as_asm->read_regs()) {
           if (reg.get_kind() == Reg::GPR) {
-            auto& info = result->lookup(reg, op_idx, AccessMode::READ);
+            const auto& info = result->lookup(reg, op_idx, AccessMode::READ);
             promote_map[info.reg_id] = PromotionType::PROMOTE_128;
           }
         }

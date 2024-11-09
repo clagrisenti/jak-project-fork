@@ -1061,7 +1061,7 @@ Instruction decode_instruction(LinkedWord& word, LinkedObjectFile& file, int seg
 
   // loop through decoding steps to extract a value
   for (int j = 0; j < info.step_count; j++) {
-    auto& step = info.steps[j];
+    const auto& step = info.steps[j];
     int32_t value;
     switch (step.field) {
       case FieldType::RS:

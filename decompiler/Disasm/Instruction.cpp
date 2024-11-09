@@ -295,7 +295,7 @@ bool Instruction::is_valid() const {
 /*!
  * Add a destination atom to this Instruction
  */
-void Instruction::add_dst(InstructionAtom& a) {
+void Instruction::add_dst(const InstructionAtom& a) {
   ASSERT(n_dst < MAX_INTRUCTION_DEST);
   dst[n_dst++] = a;
 }
@@ -303,7 +303,7 @@ void Instruction::add_dst(InstructionAtom& a) {
 /*!
  * Add a source atom to this Instruction
  */
-void Instruction::add_src(InstructionAtom& a) {
+void Instruction::add_src(const InstructionAtom& a) {
   ASSERT(n_src < MAX_INSTRUCTION_SOURCE);
   src[n_src++] = a;
 }

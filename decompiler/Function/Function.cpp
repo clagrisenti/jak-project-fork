@@ -284,7 +284,7 @@ void Function::resize_first_block(int new_start, const LinkedObjectFile&) {
   if (basic_blocks.size() >= 2 && basic_blocks.at(1).start_word == new_start) {
     // block 1 is now zero size, so we should eliminate it
     auto& block0 = basic_blocks.at(0);
-    auto& block1 = basic_blocks.at(1);
+    const auto& block1 = basic_blocks.at(1);
     block0.succ_ft = block1.succ_ft;
     block0.succ_branch = block1.succ_branch;
     block0.end_word = block1.end_word;
@@ -730,7 +730,7 @@ BlockTopologicalSort Function::bb_topo_sort() {
     visit_queue.pop_back();
     result.vist_order.push_back(to_visit);
 
-    auto& block = basic_blocks.at(to_visit);
+    const auto& block = basic_blocks.at(to_visit);
     for (auto next : {block.succ_branch, block.succ_ft}) {
       if (next != -1 && visit_set.find(next) == visit_set.end()) {
         visit_set.insert(next);

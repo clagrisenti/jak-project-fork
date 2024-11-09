@@ -5,6 +5,7 @@
 
 #include "Allocator.h"
 
+#include <algorithm>
 #include <stdexcept>
 
 #include "common/log/log.h"
@@ -708,12 +709,10 @@ bool run_allocator(RegAllocCache* cache, const AllocationInput& in, int debug_tr
     }
   }
 
-  for (int var : allocation_order) {
-    if (!do_allocation_for_var(var, cache, in, debug_trace)) {
-      return false;
-    }
-  }
-  return true;
+  return std::all_of(allocation_order.begin(), allocation_order.end(),
+                     [&cache, &in, &debug_trace](const int var) -> bool {
+                       return do_allocation_for_var(var, cache, in, debug_trace);
+                     });
 }
 
 namespace {
@@ -761,7 +760,7 @@ void print_analysis(const AllocationInput& in, RegAllocCache* cache) {
     if (in.debug_instruction_names.size() == in.instructions.size()) {
       std::string code_str = in.debug_instruction_names.at(i);
       if (code_str.length() >= 50) {
-        code_str = code_str.substr(0, 48);
+        code_str.resize(0, 48);
         code_str.push_back('~');
       }
       printf("[%03d] %30s -> %s\n", (int)i, code_str.c_str(), lives.c_str());

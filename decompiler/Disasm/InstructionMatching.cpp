@@ -5,6 +5,9 @@
 
 #include "InstructionMatching.h"
 
+#include <algorithm>
+#include <functional>
+
 #include "common/util/Assert.h"
 
 namespace decompiler {
@@ -220,12 +223,8 @@ auto gpr_all_loads = {InstructionKind::LBU, InstructionKind::LB, InstructionKind
  * Is this a GPR store instruction? sb,sh,sw,sd,sq
  */
 bool is_gpr_store(const Instruction& instr) {
-  for (auto x : gpr_stores) {
-    if (instr.kind == x) {
-      return true;
-    }
-  }
-  return false;
+  return std::any_of(gpr_stores.begin(), gpr_stores.end(),
+                     [&instr](const auto x) -> bool { return instr.kind == x; });
 }
 
 /*!
@@ -234,27 +233,15 @@ bool is_gpr_store(const Instruction& instr) {
  * The LD, LQ opcodes are both signed, unsigned, and "wildcard signed"
  */
 bool is_gpr_load(const Instruction& instr, MatchParam<bool> is_signed) {
+  std::function<bool(decompiler::InstructionKind)> check =
+      [&instr](const InstructionKind x) -> bool { return instr.kind == x; };
+
   if (is_signed.is_wildcard) {
-    for (auto x : gpr_all_loads) {
-      if (instr.kind == x) {
-        return true;
-      }
-    }
-    return false;
+    return std::any_of(gpr_all_loads.begin(), gpr_all_loads.end(), check);
   } else if (is_signed.value) {
-    for (auto x : gpr_signed_loads) {
-      if (instr.kind == x) {
-        return true;
-      }
-    }
-    return false;
+    return std::any_of(gpr_signed_loads.begin(), gpr_signed_loads.end(), check);
   } else {
-    for (auto x : gpr_unsigned_loads) {
-      if (instr.kind == x) {
-        return true;
-      }
-    }
-    return false;
+    return std::any_of(gpr_unsigned_loads.begin(), gpr_unsigned_loads.end(), check);
   }
 }
 

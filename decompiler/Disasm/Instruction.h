@@ -14,8 +14,8 @@
 namespace decompiler {
 struct DecompilerLabel;
 
-constexpr int MAX_INSTRUCTION_SOURCE = 4;
-constexpr int MAX_INTRUCTION_DEST = 1;
+constexpr uint8_t MAX_INSTRUCTION_SOURCE = 4;
+constexpr uint8_t MAX_INTRUCTION_DEST = 1;
 
 // An "atom", representing a single register, immediate, etc... for use in an Instruction.
 struct InstructionAtom {
@@ -77,8 +77,8 @@ class Instruction {
   std::string to_string(const std::vector<DecompilerLabel>& labels) const;
   bool is_valid() const;
 
-  void add_src(InstructionAtom& a);
-  void add_dst(InstructionAtom& a);
+  void add_src(const InstructionAtom& a);
+  void add_dst(const InstructionAtom& a);
 
   InstructionAtom& get_src(size_t idx);
   InstructionAtom& get_dst(size_t idx);

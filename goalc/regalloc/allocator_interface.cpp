@@ -59,7 +59,7 @@ void print_result(const AllocationInput& in, const AllocationResult& result) {
     }
 
     if (code_str.length() >= 50) {
-      code_str = code_str.substr(0, 48);
+      code_str.resize(0, 48);
       code_str.push_back('~');
     }
     printf("[%03d] %30s | %30s | %30s\n", (int)i, code_str.c_str(), lives.c_str(),

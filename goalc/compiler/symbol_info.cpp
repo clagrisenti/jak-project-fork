@@ -58,10 +58,7 @@ void SymbolInfo::set_definition_location(const goos::TextDb* textdb) {
 }
 
 void SymbolInfoMap::add_symbol_to_file_index(const std::string& file_path, SymbolInfo* symbol) {
-  if (m_file_symbol_index.find(file_path) == m_file_symbol_index.end()) {
-    m_file_symbol_index[file_path] = {};
-  }
-  m_file_symbol_index[file_path].push_back(symbol);
+  m_file_symbol_index.try_emplace(file_path, std::vector<SymbolInfo*>{symbol});
 }
 
 void SymbolInfoMap::add_global(const std::string& name,

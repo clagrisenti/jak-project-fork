@@ -354,9 +354,7 @@ void ObjectFileDB::ir2_analyze_all_types(const fs::path& output_file,
   std::unordered_map<std::string, std::vector<std::string>> all_type_names;
   for (auto& [obj_name, obj_info] : per_object) {
     for (const auto& type_name : obj_info.type_names_in_order) {
-      if (all_type_names.find(obj_name) == all_type_names.end()) {
-        all_type_names[obj_name] = {};
-      }
+      all_type_names.try_emplace(obj_name, std::vector<std::string>());
       all_type_names[obj_name].push_back(type_name);
     }
   }

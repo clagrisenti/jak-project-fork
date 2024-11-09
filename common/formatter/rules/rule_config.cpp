@@ -176,7 +176,7 @@ static FormFormattingConfig new_defproc_rule(
   cfg.has_constant_pairs = true;
   cfg.config_set = true;
   cfg.hang_forms = false;
-  cfg.inline_until_index = [start_index](std::vector<std::string> curr_lines) {
+  cfg.inline_until_index = [start_index](const std::vector<std::string>& curr_lines) {
     // if (curr_lines.size() >= 4 && curr_lines.at(3) == "()") {
     //   return 4;
     // }

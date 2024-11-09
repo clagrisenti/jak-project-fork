@@ -345,7 +345,7 @@ struct OpcodeInfo {
   bool has_delay_slot = false;
   bool gpr_128 = false;  // does it requires 128-bit registers?
 
-  void step(DecodeStep& s);
+  void step(const DecodeStep& s);
 
   OpcodeInfo& src(FieldType field, DecodeType decode);
   OpcodeInfo& src_gpr(FieldType field);

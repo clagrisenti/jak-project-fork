@@ -469,7 +469,7 @@ struct ListBuilder {
   std::shared_ptr<PairObject> tail;
   int size = 0;
 
-  ListBuilder() { head = Object::make_empty_list(); }
+  ListBuilder() : head(Object::make_empty_list()) {}
 
   void push_back(Object&& o) {
     size++;

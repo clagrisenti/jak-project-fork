@@ -477,7 +477,8 @@ void Compiler::asm_file(const CompilationOptions& options) {
       break;
     }
   }
-  obj_file_name = obj_file_name.substr(0, obj_file_name.find_last_of('.'));
+
+  obj_file_name.resize(0, obj_file_name.find_last_of('.'));
 
   // COMPILE
   auto obj_file = compile_object_file(obj_file_name, code, !options.no_code);

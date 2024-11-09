@@ -93,8 +93,7 @@ bool SystemThreadManager::all_threads_exiting() {
 /*!
  * bootstrap function to call a SystemThread's function
  */
-void* bootstrap_thread_func(void* x) {
-  SystemThread* thd = (SystemThread*)x;
+void* bootstrap_thread_func(SystemThread* thd) {
   SystemThreadInterface iface(thd);
 
 #ifdef __linux

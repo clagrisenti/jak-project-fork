@@ -17,7 +17,7 @@
 
 #include "common/util/Timer.h"
 
-constexpr int MAX_SYSTEM_THREADS = 16;
+constexpr uint16_t MAX_SYSTEM_THREADS = 16u;
 
 class SystemThreadInterface;
 class SystemThreadManager;
@@ -37,7 +37,7 @@ class SystemThread {
  private:
   friend class SystemThreadInterface;
   friend class SystemThreadManager;
-  friend void* bootstrap_thread_func(void* thd);
+  friend void* bootstrap_thread_func(SystemThread* thd);
 
   std::string name = "invalid";
   std::thread thread;

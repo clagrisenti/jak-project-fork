@@ -253,7 +253,9 @@ std::optional<RegisterAccess> try_strip_cast_get_var(Form* in, std::optional<Typ
 /*!
  * Return (the-as <type> <in>) or <in>.
  */
-FormElement* maybe_cast(FormElement* in, std::optional<TypeSpec>& maybe_cast_type, FormPool& pool) {
+FormElement* maybe_cast(FormElement* in,
+                        const std::optional<TypeSpec>& maybe_cast_type,
+                        FormPool& pool) {
   if (maybe_cast_type) {
     return pool.alloc_element<CastElement>(*maybe_cast_type, pool.alloc_single_form(nullptr, in));
   } else {
