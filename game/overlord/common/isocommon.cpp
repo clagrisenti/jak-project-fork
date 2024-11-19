@@ -9,9 +9,9 @@ void MakeISOName(char* dst, const char* src) {
   while ((i < 8) && (*src_ptr) && (*src_ptr != '.')) {
     char c = *src_ptr;
     src_ptr++;
-    if (('`' < c) && (c < '{')) {  // lower case
-      c -= 0x20;
-    }
+
+    c -= 0x20 * (('`' < c) && (c < '{'));  // lower case
+
     *dst_ptr = c;
     dst_ptr++;
     i++;
@@ -32,9 +32,9 @@ void MakeISOName(char* dst, const char* src) {
   while (i < 11 && (*src_ptr)) {
     char c = *src_ptr;
     src_ptr++;
-    if (('`' < c) && (c < '{')) {  // lower case
-      c -= 0x20;
-    }
+
+    c -= 0x20 * (('`' < c) && (c < '{'));  // lower case
+
     *dst_ptr = c;
     dst_ptr++;
     i++;
@@ -45,5 +45,6 @@ void MakeISOName(char* dst, const char* src) {
     dst_ptr++;
     i++;
   }
+
   *dst_ptr = 0;
 }

@@ -164,6 +164,7 @@ struct ArtJointGeo : ArtElement {
                        std::vector<Joint>& joints) {
     this->name = name + "-lod0";
     length = joints.size();
+    data.reserve(data.size() + joints.size());
     for (auto& joint : joints) {
       data.push_back(joint);
     }
@@ -193,6 +194,7 @@ struct ArtJointAnim : ArtElement {
     artist_step = 1.0f;
     master_art_group_name = name;
     master_art_group_index = 2;
+    data.reserve(data.size() + joints.size());
     for (auto& joint : joints) {
       data.emplace_back(joint, 1);
     }

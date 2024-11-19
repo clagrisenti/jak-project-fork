@@ -13,6 +13,7 @@
 
 #include <array>
 #include <cstring>
+#include <filesystem>
 
 #include "common/log/log.h"
 #include "common/util/Assert.h"
@@ -37,7 +38,7 @@ BS::thread_pool thpool(4);
  */
 struct FakeIsoEntry {
   char iso_name[16];
-  std::string full_path;
+  std::filesystem::path full_path;
 };
 
 void initFakeIsoEntry(std::array<FakeIsoEntry, MAX_ISO_FILES>& data) {

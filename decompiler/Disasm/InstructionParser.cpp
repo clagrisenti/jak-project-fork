@@ -273,7 +273,7 @@ Instruction InstructionParser::parse_single_instruction(
   }
 
   Instruction instr;
-  instr.kind = InstructionKind(*op_idx);
+  instr.kind = InstructionKind(op_idx.value());
   auto& info = gOpcodeInfo[*op_idx];
   for (u8 i = 0; i < info.step_count; i++) {
     auto& step = info.steps[i];
