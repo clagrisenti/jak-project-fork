@@ -1279,7 +1279,7 @@ Val* Compiler::compile_stack_new(const goos::Object& form,
       throw_compiler_error(form, "Cannot stack allocate the dynamic type {}.",
                            type_of_object.print());
     }
-    std::vector<RegVal*> args;
+
     // allocation
     RegVal* mem;
     if (use_singleton) {
@@ -1296,6 +1296,7 @@ Val* Compiler::compile_stack_new(const goos::Object& form,
       }
       // the new method actual takes a "symbol" according the type system. So we have to cheat it.
       mem->set_type(TypeSpec("symbol"));
+      std::vector<RegVal*> args;
       args.push_back(mem);
       // type
       args.push_back(

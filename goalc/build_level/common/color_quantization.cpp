@@ -241,12 +241,10 @@ void split_kd(KdNode* in, u32 depth, int next_split_dim) {
     for (int i = 0; i < 4; i++) {
       bool all_same = true;
       u8 same = in->colors[0][next_split_dim];
-      for (auto& color : in->colors) {
-        if (color[next_split_dim] != same) {
-          all_same = false;
-          break;
-        }
-      }
+      all_same = std::all_of(in->colors.begin(), in->colors.end(),
+                             [next_split_dim, same](const auto& color) -> bool {
+                               return color[next_split_dim] == same;
+                             });
       if (all_same) {
         next_split_dim = (next_split_dim + 1) % 4;
       } else {

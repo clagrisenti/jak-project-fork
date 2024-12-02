@@ -1,6 +1,7 @@
 #include "collide.h"
 
 #include <algorithm>
+#include <array>
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
@@ -660,14 +661,14 @@ CollideHash build_grid_for_main_hash(std::vector<CollideFragment>&& frags) {
   // for the cell size.
   constexpr float kTargetCellSize = 30000;
 
-  int grid_dimension[3] = {(int)(box_size[0] / kTargetCellSize),
-                           (int)(box_size[1] / kTargetCellSize),
-                           (int)(box_size[2] / kTargetCellSize)};
-  for (auto& x : grid_dimension) {
-    if (x >= UINT8_MAX) {
-      x = UINT8_MAX;
-    }
-  }
+  std::array<int, 3> grid_dimension = {(int)(box_size[0] / kTargetCellSize),
+                                       (int)(box_size[1] / kTargetCellSize),
+                                       (int)(box_size[2] / kTargetCellSize)};
+
+  std::replace_if(
+      grid_dimension.begin(), grid_dimension.end(),
+      [](const auto x) -> bool { return x >= UINT8_MAX; }, UINT8_MAX);
+
   lg::info("Size is {}x{}x{} (total {})\n", grid_dimension[0], grid_dimension[1], grid_dimension[2],
            grid_dimension[0] * grid_dimension[1] * grid_dimension[2]);
   const math::Vector3f grid_cell_size(box_size[0] / grid_dimension[0],

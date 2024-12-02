@@ -176,9 +176,8 @@ class VarAssignment {
   }
 
   void clear_stack_slot_regs() {
-    for (auto& x : m_stack_temp_regs) {
-      x = {};
-    }
+    std::fill(m_stack_temp_regs.begin(), m_stack_temp_regs.end(),
+              std::optional<emitter::Register>());
   }
 
   emitter::Register get_stack_slot_reg(int instr_idx) const {
@@ -189,7 +188,7 @@ class VarAssignment {
 
   bool stack_bonus_op_needs_reg(const emitter::Register& reg, int instr_idx) const {
     ASSERT(assigned_to_stack());
-    auto& stack_reg = m_stack_temp_regs.at(instr_idx - m_first_live);
+    const auto& stack_reg = m_stack_temp_regs.at(instr_idx - m_first_live);
     return stack_reg && (*stack_reg == reg);
   }
 
@@ -210,7 +209,7 @@ class VarAssignment {
         Assignment a;
         a.kind = Assignment::Kind::STACK;
         a.stack_slot = m_stack_slot;
-        auto& slot_reg = m_stack_temp_regs.at(i);
+        const auto& slot_reg = m_stack_temp_regs.at(i);
         if (slot_reg) {
           a.kind = Assignment::Kind::REGISTER;
           a.reg = *slot_reg;
@@ -494,7 +493,7 @@ void do_liveliness_analysis(const AllocationInput& input, RACache* cache) {
   // this makes instr * lr1 * lr2 loop much faster!
   cache->live_per_instruction.resize(input.instructions.size());
   for (u32 var_idx = 0; var_idx < cache->vars.size(); var_idx++) {
-    auto& lr = cache->vars.at(var_idx);
+    const auto& lr = cache->vars.at(var_idx);
     if (cache->used_var.at(var_idx)) {
       for (int i = lr.first_live(); i <= lr.last_live(); i++) {
         if (lr.live(i)) {
@@ -570,7 +569,7 @@ bool check_constrained_alloc(RACache* cache, const AllocationInput& in) {
   // first, check that each constraint is actually satisfied.
   // if not, it means that there are two constraints on the same thing.
   for (auto& constr : in.constraints) {
-    auto& lr = cache->vars.at(constr.ireg.id);
+    const auto& lr = cache->vars.at(constr.ireg.id);
     for (int i = lr.first_live(); i <= lr.last_live(); i++) {
       if (lr.assigned()) {
         if (!lr.assigned_to_reg(constr.desired_register)) {
@@ -590,12 +589,12 @@ bool check_constrained_alloc(RACache* cache, const AllocationInput& in) {
   // see it from the register allocation.
   for (uint32_t i = 0; i < in.instructions.size(); i++) {
     for (auto idx1 : cache->live_per_instruction.at(i)) {
-      auto& lr1 = cache->vars.at(idx1);
+      const auto& lr1 = cache->vars.at(idx1);
       for (auto idx2 : cache->live_per_instruction.at(i)) {
         if (idx1 == idx2) {
           continue;
         }
-        auto& lr2 = cache->vars.at(idx2);
+        const auto& lr2 = cache->vars.at(idx2);
         if (lr1.assigned_to_reg() && lr2.assigned_to_reg()) {
           if (lr1.reg() == lr2.reg() && !safe_overlap(in, *cache, lr1, lr2, i)) {
             // todo, this error won't be helpful
@@ -618,7 +617,7 @@ std::vector<int> var_indices_of_function_crossers_large_to_small(const Allocatio
   std::vector<int> result;
 
   for (int var_idx = 0; var_idx < input.max_vars; var_idx++) {
-    auto& info = cache.vars.at(var_idx);
+    const auto& info = cache.vars.at(var_idx);
     if (info.seen() && info.crosses_function()) {
       result.push_back(var_idx);
     }
@@ -633,12 +632,7 @@ std::vector<int> var_indices_of_function_crossers_large_to_small(const Allocatio
 
 template <typename T>
 bool vector_contains(const std::vector<T>& vec, const T& obj) {
-  for (const auto& x : vec) {
-    if (x == obj) {
-      return true;
-    }
-  }
-  return false;
+  return std::any_of(vec.begin(), vec.end(), [&obj](const auto& x) -> bool { return x == obj; });
 }
 
 /*!
@@ -713,7 +707,7 @@ bool check_register_assign(const AllocationInput& input,
                            RACache& cache,
                            int var_idx,
                            emitter::Register reg) {
-  auto& this_var = cache.vars.at(var_idx);
+  const auto& this_var = cache.vars.at(var_idx);
 
   // Step 1: check other assignments
 
@@ -789,7 +783,7 @@ bool check_register_assign(const AllocationInput& input,
 
 int get_stack_slot_for_var(int var, RACache* cache) {
   int slot_size;
-  auto& info = cache->iregs.at(var);
+  const auto& info = cache->iregs.at(var);
   switch (info.reg_class) {
     case RegClass::INT_128:
       slot_size = 2;
@@ -887,7 +881,7 @@ loop_top:
     const auto& instr = input.instructions.at(instr_idx);
     if (instr.is_move) {
       int check_other_reg = is_written ? instr.read.front().id : instr.write.front().id;
-      auto& check_other_var = cache->vars.at(check_other_reg);
+      const auto& check_other_var = cache->vars.at(check_other_reg);
       if (check_other_var.assigned_to_reg()) {
         auto reg = check_other_var.reg();
         if (vector_contains(allowable_local_var_move_elim, reg)) {
@@ -935,7 +929,7 @@ loop_top:
           continue;
         }
 
-        auto& other_var = cache->vars.at(other_var_idx);
+        const auto& other_var = cache->vars.at(other_var_idx);
 
         if (other_var.seen() && (other_var.first_live() <= var.last_live()) &&
             (var.first_live() <= other_var.last_live())) {
@@ -1090,13 +1084,11 @@ int run_assignment_on_some_vars(const AllocationInput& input,
                                 const std::vector<int>& vars_to_alloc,
                                 const AssignmentSettings& settings) {
   cache->stats.assign_passes++;
-  int assigned_count = 0;
-
-  for (auto var_idx : vars_to_alloc) {
-    if (run_assignment_on_var(input, cache, var_idx, settings)) {
-      assigned_count++;
-    }
-  }
+  int assigned_count =
+      std::count_if(vars_to_alloc.begin(), vars_to_alloc.end(),
+                    [&input, cache, &settings](const auto var_idx) -> bool {
+                      return run_assignment_on_var(input, cache, var_idx, settings);
+                    });
   return assigned_count;
 }
 
@@ -1169,7 +1161,7 @@ AllocationResult allocate_registers_v2(const AllocationInput& input) {
     return result;
   }
   for (int var_idx = 0; var_idx < input.max_vars; var_idx++) {
-    auto& var = cache.vars.at(var_idx);
+    const auto& var = cache.vars.at(var_idx);
     if (var.seen() && !var.assigned()) {
       //      lg::print("av2: {} failed\n", input.function_name);
       result.ok = false;
@@ -1184,7 +1176,7 @@ AllocationResult allocate_registers_v2(const AllocationInput& input) {
   // check for use of saved registers
   for (auto sr : emitter::gRegInfo.get_all_saved()) {
     bool uses_sr = false;
-    for (auto& lr : cache.vars) {
+    for (const auto& lr : cache.vars) {
       for (int instr_idx = lr.first_live(); instr_idx <= lr.last_live(); instr_idx++) {
         if (lr.assigned_to_reg()) {
           if (lr.assigned_to_reg(sr)) {
@@ -1207,7 +1199,7 @@ AllocationResult allocate_registers_v2(const AllocationInput& input) {
     }
   }
   // result.ass_as_ranges = std::move(cache.live_ranges);
-  for (auto& lr : cache.vars) {
+  for (const auto& lr : cache.vars) {
     if (!lr.seen()) {
       result.ass_as_ranges.push_back(AssignmentRange(0, {}, {}));
     } else {

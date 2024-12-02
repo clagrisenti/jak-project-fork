@@ -138,11 +138,9 @@ UncompressedJointAnim extract_anim_from_gltf(const tinygltf::Model& model,
 namespace {
 template <std::size_t n>
 bool is_constant(const std::vector<math::Vector<float, n>>& in) {
-  math::Vector<float, n> first = in.at(0);
-
   return in.empty() ||
          std::any_of(in.begin(), in.end(),
-                     [&first](const math::Vector<float, n>& x) -> bool { return x != first; });
+                     [&in](const math::Vector<float, n>& x) -> bool { return x != in[0]; });
 }
 
 bool can_use_small_trans(const std::vector<math::Vector3f>& trans_frames) {
