@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <functional>
 
+#include "common/math/Vector.h"
+
 #ifndef __aarch64__
 #include "xmmintrin.h"
 #else

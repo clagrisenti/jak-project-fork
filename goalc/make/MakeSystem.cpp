@@ -386,8 +386,6 @@ std::vector<std::string> MakeSystem::filter_dependencies(const std::vector<std::
   std::vector<std::string> result;
   std::unordered_set<std::string> stale_deps;
 
-  std::unordered_set<std::string> compiler_sym_needed;
-
   for (auto& to_make : all_deps) {
     auto& rule = m_output_to_step.at(to_make);
     auto& tool = m_tools.at(rule->tool);

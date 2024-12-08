@@ -14,14 +14,6 @@
 class DataObjectGenerator;
 namespace jak3 {
 /*!
- * An axis-aligned bounding box
- */
-struct BoundingBox {
-  math::Vector3f min = math::Vector3f::zero();
-  math::Vector3f max = math::Vector3f::zero();
-};
-
-/*!
  * See if "axis" is a separating axis for a bounding-box to triangle intersection test.
  * The bounding box is centered at the origin.
  * Return true if the axis is a separating axis.
@@ -55,83 +47,6 @@ bool separating_axis_test(const math::Vector3f& bbox_half_side_length,
 
   // there must be overlap.
   return false;
-}
-
-/*!
- * Check to see if a triangle intersects an axis-aligned box.
- */
-bool triangle_bounding_box(const BoundingBox& bbox_w,
-                           const math::Vector3f& a_w,
-                           const math::Vector3f& b_w,
-                           const math::Vector3f& c_w) {
-  // first, translate everything so the center of the bounding box is at the origin
-  const math::Vector3f box_center = (bbox_w.max + bbox_w.min) / 2.f;
-
-  const math::Vector3f half_side_length = bbox_w.max - box_center;
-  const math::Vector3f a = a_w - box_center;
-  const math::Vector3f b = b_w - box_center;
-  const math::Vector3f c = c_w - box_center;
-
-  // the separating axis says that if two convex shapes don't intersect, you can project them onto a
-  // separating axis (line) and their projections don't overlap. This axis is either a face normal,
-  // or a cross-product of edges from each shape.
-
-  // To check intersection, we'll check each possible separating axis - if any are valid, then the
-  // shapes don't intersect.
-
-  // First, check the face normals of the box. This check is special-cased for speed - most
-  // calls to this function will not have intersection, one of these will be a valid separating
-  // axis.
-
-  // find the elementwise min/max of triangle vertices
-  const math::Vector3f tri_min = a.min(b.min(c));
-  const math::Vector3f tri_max = a.max(b.max(c));
-
-  // check face normals of the box
-  for (int axis = 0; axis < 3; axis++) {
-    if (tri_max[axis] < -half_side_length[axis]) {
-      return false;
-    }
-    if (tri_min[axis] > half_side_length[axis]) {
-      return false;
-    }
-  }
-
-  // check the face normal of the tri
-  const math::Vector3f tri_normal = (b - a).cross(c - a);
-  if (separating_axis_test(half_side_length, tri_normal, a, b, c)) {
-    return false;
-  }
-
-  // all three edges of the triangle
-  const math::Vector3f tri_edges[3] = {
-      a - b,
-      a - c,
-      c - b,
-  };
-
-  // check each triangle edge
-  for (auto tri_edge : tri_edges) {
-    // against each box edge
-    for (int box_axis = 0; box_axis < 3; box_axis++) {
-      const math::Vector3f axis = math::Vector3f::unit(box_axis).cross(tri_edge);
-      if (separating_axis_test(half_side_length, axis, a, b, c)) {
-        return false;
-      }
-    }
-  }
-
-  // all possible separating axes failed, there is intersection.
-  return true;
-}
-
-bool bounding_box_bounding_box(const BoundingBox& a, const BoundingBox& b) {
-  for (int i = 0; i < 3; i++) {
-    if ((a.min[i] > b.max[i]) || (a.max[i] < b.min[i])) {
-      return false;
-    }
-  }
-  return true;
 }
 
 /*!
@@ -287,7 +202,7 @@ CollideHash construct_collide_hash(const std::vector<jak1::CollideFace>& tris) {
  */
 struct BBoxBuilder {
   bool added_one = false;
-  BoundingBox box;
+  math::BoundingBox box;
 
   // modify box to include this point.
   void add_pt(const math::Vector3f& pt) {
@@ -308,7 +223,7 @@ struct BBoxBuilder {
     }
   }
 
-  void add_box(const BoundingBox& box) {
+  void add_box(const math::BoundingBox& box) {
     add_pt(box.min);
     add_pt(box.max);
   }
@@ -317,8 +232,8 @@ struct BBoxBuilder {
 /*!
  * Given two bounding boxes, compute the volume of their intersection.
  */
-float overlap_volume(const BoundingBox& a, const BoundingBox& b) {
-  BoundingBox intersection;
+float overlap_volume(const math::BoundingBox& a, const math::BoundingBox& b) {
+  math::BoundingBox intersection;
   for (int i = 0; i < 3; i++) {
     intersection.min[i] = std::max(a.min[i], b.min[i]);
     intersection.max[i] = std::min(a.max[i], b.max[i]);
@@ -345,7 +260,7 @@ struct Frag {
  * Statistics about a Frag, used for a few steps below.
  */
 struct FragStats {
-  BoundingBox bbox;
+  math::BoundingBox bbox;
   math::Vector3f average_vertex_position;
   math::Vector3f median_vertex_position;
 };
@@ -461,7 +376,7 @@ struct SplitStats {
   int tri_count[2] = {0, 0};
 
   // the bounding box of those tris. only valid if nonzero tris.
-  BoundingBox bboxes[2];
+  math::BoundingBox bboxes[2];
 
   float overlap_volume = 0;
   float imbalance = 0;
@@ -700,7 +615,7 @@ CollideHash build_grid_for_main_hash(std::vector<CollideFragment>&& frags) {
       for (int xi = 0; xi < grid_dimension[0]; xi++) {
         auto& cell_list = frags_in_cells.emplace_back();
 
-        BoundingBox cell;
+        math::BoundingBox cell;
         cell.min =
             math::Vector3f(xi * grid_cell_size[0], yi * grid_cell_size[1], zi * grid_cell_size[2]) +
             bbox.box.min;
@@ -857,7 +772,7 @@ jak3::CollideFragment build_grid_for_frag(const std::vector<jak3::CollideFace>& 
       for (int xi = 0; xi < grid_dimension[0]; xi++) {
         auto& cell_list = polys_in_cells.emplace_back();
 
-        BoundingBox cell;
+        math::BoundingBox cell;
         cell.min =
             math::Vector3f(xi * grid_cell_size[0], yi * grid_cell_size[1], zi * grid_cell_size[2]) +
             bbox.box.min;

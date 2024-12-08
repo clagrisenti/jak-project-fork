@@ -5,9 +5,55 @@
 struct CollideVertex {
   float x, y, z;
 };
+namespace collide {
+
+template <typename PatSurfaceEnum>
+struct CollideFaceBaseT {
+  math::Vector3f v[3];
+  PatSurfaceEnum pat;
+};
+
+template <typename PatSurfaceEnum>
+struct CollideFaceT : public CollideFaceBaseT<PatSurfaceEnum> {
+  math::Vector4f bsphere;
+};
+
+struct PatSurfaceT {
+  u32 val = 0;
+
+  void set_noentity(bool x) {
+    if (x) {
+      val |= (1 << 0);
+    } else {
+      val &= ~(1 << 0);
+    }
+  }
+  bool get_noentity() const { return val & (1 << 0); }
+
+  void set_nocamera(bool x) {
+    if (x) {
+      val |= (1 << 1);
+    } else {
+      val &= ~(1 << 1);
+    }
+  }
+  bool get_nocamera() const { return val & (1 << 1); }
+
+  void set_noedge(bool x) {
+    if (x) {
+      val |= (1 << 2);
+    } else {
+      val &= ~(1 << 2);
+    }
+  }
+  bool get_noedge() const { return val & (1 << 2); }
+
+  bool operator==(const PatSurfaceT& other) const { return val == other.val; }
+};
+}  // namespace collide
 
 namespace jak1 {
-struct PatSurface {
+struct PatSurface : public collide::PatSurfaceT {
   enum class Mode { GROUND = 0, WALL = 1, OBSTACLE = 2, MAX_MODE = 3 };
   enum class Material {
     STONE = 0,
@@ -47,33 +93,6 @@ struct PatSurface {
     MAX_EVENT = 7,
   };
 
-  void set_noentity(bool x) {
-    if (x) {
-      val |= (1 << 0);
-    } else {
-      val &= ~(1 << 0);
-    }
-  }
-  bool get_noentity() const { return val & (1 << 0); }
-
-  void set_nocamera(bool x) {
-    if (x) {
-      val |= (1 << 1);
-    } else {
-      val &= ~(1 << 1);
-    }
-  }
-  bool get_nocamera() const { return val & (1 << 1); }
-
-  void set_noedge(bool x) {
-    if (x) {
-      val |= (1 << 2);
-    } else {
-      val &= ~(1 << 2);
-    }
-  }
-  bool get_noedge() const { return val & (1 << 2); }
-
   void set_mode(Mode mode) {
     val &= ~(0b111 << 3);
     val |= ((u32)mode << 3);
@@ -100,21 +119,13 @@ struct PatSurface {
     val |= ((u32)ev << 14);
   }
   Event get_event() const { return (Event)(0b111111 & (val >> 14)); }
-
-  bool operator==(const PatSurface& other) const { return val == other.val; }
-  // bits 13, [15-31] are unused, or have unknown purpose.
-  u32 val = 0;
 };
 
-struct CollideFace {
-  math::Vector4f bsphere;
-  math::Vector3f v[3];
-  PatSurface pat;
-};
+struct CollideFace : public collide::CollideFaceT<jak1::PatSurface> {};
 }  // namespace jak1
 
 namespace jak2 {
-struct PatSurface {
+struct PatSurface : public collide::PatSurfaceT {
   enum class Mode { GROUND = 0, WALL = 1, OBSTACLE = 2, HALFPIPE = 3, MAX_MODE = 4 };
   enum class Material {
     NONE = 0,
@@ -167,33 +178,6 @@ struct PatSurface {
     SLIPPERY = 14,
     MAX_EVENT = 15,
   };
-
-  void set_noentity(bool x) {
-    if (x) {
-      val |= (1 << 0);
-    } else {
-      val &= ~(1 << 0);
-    }
-  }
-  bool get_noentity() const { return val & (1 << 0); }
-
-  void set_nocamera(bool x) {
-    if (x) {
-      val |= (1 << 1);
-    } else {
-      val &= ~(1 << 1);
-    }
-  }
-  bool get_nocamera() const { return val & (1 << 1); }
-
-  void set_noedge(bool x) {
-    if (x) {
-      val |= (1 << 2);
-    } else {
-      val &= ~(1 << 2);
-    }
-  }
-  bool get_noedge() const { return val & (1 << 2); }
 
   void set_nogrind(bool x) {
     if (x) {
@@ -302,19 +286,13 @@ struct PatSurface {
     }
   }
   bool get_noprobe() const { return val & (1 << 28); }
-
-  bool operator==(const PatSurface& other) const { return val == other.val; }
-  u32 val = 0;
 };
 
-struct CollideFace {
-  math::Vector3f v[3];
-  PatSurface pat;
-};
+struct CollideFace : public collide::CollideFaceBaseT<jak2::PatSurface> {};
 }  // namespace jak2
 
 namespace jak3 {
-struct PatSurface {
+struct PatSurface : public collide::PatSurfaceT {
   enum class Mode { GROUND = 0, WALL = 1, OBSTACLE = 2, HALFPIPE = 3, MAX_MODE = 4 };
   enum class Material {
     NONE = 0,
@@ -377,33 +355,6 @@ struct PatSurface {
     SLIME = 19,
     MAX_EVENT = 20
   };
-
-  void set_noentity(bool x) {
-    if (x) {
-      val |= (1 << 0);
-    } else {
-      val &= ~(1 << 0);
-    }
-  }
-  bool get_noentity() const { return val & (1 << 0); }
-
-  void set_nocamera(bool x) {
-    if (x) {
-      val |= (1 << 1);
-    } else {
-      val &= ~(1 << 1);
-    }
-  }
-  bool get_nocamera() const { return val & (1 << 1); }
-
-  void set_noedge(bool x) {
-    if (x) {
-      val |= (1 << 2);
-    } else {
-      val &= ~(1 << 2);
-    }
-  }
-  bool get_noedge() const { return val & (1 << 2); }
 
   void set_nogrind(bool x) {
     if (x) {
@@ -521,13 +472,7 @@ struct PatSurface {
     }
   }
   bool get_board() const { return val & (1 << 4); }
-
-  bool operator==(const PatSurface& other) const { return val == other.val; }
-  u32 val = 0;
 };
 
-struct CollideFace {
-  math::Vector3f v[3];
-  PatSurface pat;
-};
+struct CollideFace : public collide::CollideFaceBaseT<jak3::PatSurface> {};
 }  // namespace jak3
