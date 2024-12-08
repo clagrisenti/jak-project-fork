@@ -95,12 +95,15 @@ bool DgoTool::run(const ToolInput& task, const PathMap& path_map) {
 
 std::vector<std::string> DgoTool::get_additional_dependencies(const ToolInput& task,
                                                               const PathMap& path_map) {
-  std::vector<std::string> result;
   auto desc = parse_desc_file(task.input.at(0), m_reader);
-  for (auto& x : desc.entries) {
-    // todo out
-    result.push_back(fmt::format("out/{}obj/{}", path_map.output_prefix, x.file_name));
-  }
+
+  std::vector<std::string> result(desc.entries.size());
+
+  std::transform(desc.entries.begin(), desc.entries.end(), result.begin(),
+                 [&path_map](const auto& x) -> std::string {
+                   return fmt::format("out/{}obj/{}", path_map.output_prefix, x.file_name);
+                 });
+
   return result;
 }
 
@@ -144,12 +147,16 @@ bool TextTool::needs_run(const ToolInput& task, const PathMap& path_map) {
     throw std::runtime_error(fmt::format("Invalid amount of inputs to {} tool", name()));
   }
 
-  std::vector<std::string> deps;
   std::vector<GameTextDefinitionFile> files;
   open_text_project("text", task.input.at(0), files);
-  for (auto& file : files) {
-    deps.push_back(path_map.apply_remaps(file.file_path));
-  }
+
+  std::vector<std::string> deps(files.size());
+
+  std::transform(files.begin(), files.end(), deps.begin(),
+                 [&path_map](const auto& file) -> std::string {
+                   return path_map.apply_remaps(file.file_path);
+                 });
+
   return Tool::needs_run({task.input, deps, task.output, task.arg}, path_map);
 }
 

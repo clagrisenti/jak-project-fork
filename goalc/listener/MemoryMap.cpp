@@ -105,23 +105,30 @@ std::string MemoryMap::print() const {
 }
 
 const MemoryMapEntry& MemoryMap::lookup(u32 addr) {
-  for (auto& entry : m_entries) {
-    if (addr >= entry.start_addr && addr < entry.end_addr) {
-      return entry;
-    }
-  }
-  ASSERT(false);
-  throw std::runtime_error("MemoryMap::lookup failed");
+  auto it = std::find_if(m_entries.begin(), m_entries.end(), [addr](const auto& entry) -> bool {
+    return addr >= entry.start_addr && addr < entry.end_addr;
+  });
+
+  bool res = it != m_entries.end();
+
+  ASSERT(res);
+
+  return *it.base();
 }
 
 bool MemoryMap::lookup(const std::string& obj_name, u8 seg_id, MemoryMapEntry* out) {
-  for (auto& entry : m_entries) {
-    if (!entry.empty && entry.obj_name == obj_name && entry.seg_id == seg_id) {
-      *out = entry;
-      return true;
-    }
+  auto it = std::find_if(
+      m_entries.begin(), m_entries.end(), [&obj_name, seg_id](const auto& entry) -> bool {
+        return !entry.empty && entry.obj_name == obj_name && entry.seg_id == seg_id;
+      });
+
+  bool res = it != m_entries.end();
+
+  if (res) {
+    *out = *it.base();
   }
-  return false;
+
+  return res;
 }
 
 bool LoadEntry::overlaps_with(const LoadEntry& other) const {

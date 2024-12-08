@@ -90,7 +90,7 @@ UncompressedJointAnim extract_anim_from_gltf(const tinygltf::Model& model,
   }
 
   size_t max_frames = 0;
-  for (auto& joint : out.joints) {
+  for (const auto& joint : out.joints) {
     max_frames = std::max(max_frames, joint.quat_frames.size());
     max_frames = std::max(max_frames, joint.trans_frames.size());
     max_frames = std::max(max_frames, joint.scale_frames.size());

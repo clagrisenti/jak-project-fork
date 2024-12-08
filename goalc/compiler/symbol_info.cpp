@@ -313,12 +313,11 @@ std::vector<SymbolInfo*> SymbolInfoMap::lookup_exact_name(const std::string& nam
 std::vector<SymbolInfo*> SymbolInfoMap::lookup_exact_name(const std::string& name,
                                                           const Kind sym_kind) const {
   const auto query_results = m_symbol_map.retrieve_with_exact(name);
-  std::vector<SymbolInfo*> filtered_results = {};
-  for (const auto& result : query_results) {
-    if (result->m_kind == sym_kind) {
-      filtered_results.push_back(result);
-    }
-  }
+  std::vector<SymbolInfo*> filtered_results;
+
+  std::copy_if(query_results.begin(), query_results.end(), filtered_results.begin(),
+               [&sym_kind](const auto& result) -> bool { return result->m_kind == sym_kind; });
+
   return filtered_results;
 }
 
@@ -326,12 +325,14 @@ std::vector<SymbolInfo*> SymbolInfoMap::lookup_exact_method_name(
     const std::string& name,
     const std::string& defining_type_name) const {
   const auto query_results = m_symbol_map.retrieve_with_exact(name);
-  std::vector<SymbolInfo*> filtered_results = {};
-  for (const auto& result : query_results) {
-    if (result->m_kind == Kind::METHOD && result->m_method_info.type_name == defining_type_name) {
-      filtered_results.push_back(result);
-    }
-  }
+  std::vector<SymbolInfo*> filtered_results;
+
+  std::copy_if(query_results.begin(), query_results.end(), filtered_results.begin(),
+               [&defining_type_name](const auto& result) -> bool {
+                 return result->m_kind == Kind::METHOD &&
+                        result->m_method_info.type_name == defining_type_name;
+               });
+
   return filtered_results;
 }
 
@@ -339,23 +340,24 @@ std::vector<SymbolInfo*> SymbolInfoMap::lookup_exact_virtual_state_name(
     const std::string& name,
     const std::string& defining_type_name) const {
   const auto query_results = m_symbol_map.retrieve_with_exact(name);
-  std::vector<SymbolInfo*> filtered_results = {};
-  for (const auto& result : query_results) {
-    if (result->m_kind == Kind::STATE && result->m_state_virtual &&
-        result->m_state_related_type == defining_type_name) {
-      filtered_results.push_back(result);
-    }
-  }
+  std::vector<SymbolInfo*> filtered_results;
+
+  std::copy_if(query_results.begin(), query_results.end(), filtered_results.begin(),
+               [&defining_type_name](const auto& result) -> bool {
+                 return result->m_kind == Kind::STATE && result->m_state_virtual &&
+                        result->m_state_related_type == defining_type_name;
+               });
+
   return filtered_results;
 }
 
 std::vector<SymbolInfo*> SymbolInfoMap::lookup_symbols_starting_with(
     const std::string& prefix) const {
-  std::vector<SymbolInfo*> symbols;
-  const auto lookup = m_symbol_map.retrieve_with_prefix(prefix);
-  for (const auto& result : lookup) {
-    symbols.push_back(result);
-  }
+  const std::vector<SymbolInfo*> lookup = m_symbol_map.retrieve_with_prefix(prefix);
+  std::vector<SymbolInfo*> symbols(lookup.size());
+
+  std::copy(lookup.begin(), lookup.end(), symbols.begin());
+
   return symbols;
 }
 

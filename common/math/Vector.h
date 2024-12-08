@@ -10,6 +10,9 @@ template <typename T, std::size_t Size>
 class Vector {
  public:
   Vector() = default;
+
+  constexpr std::size_t size() const { return Size; }
+
   static Vector<T, Size> zero() {
     Vector<T, Size> result;
     for (auto& x : result.m_data) {

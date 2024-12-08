@@ -91,7 +91,7 @@ size_t generate_adgif_shader_array(const AdgifShaderArray& adgifs, DataObjectGen
   gen.add_word(adgifs.adgifs.size());
   gen.add_word(adgifs.adgifs.size());
   gen.add_word(0);
-  for (auto& adgif : adgifs.adgifs) {
+  for (const auto& adgif : adgifs.adgifs) {
     for (size_t i = 0; i < sizeof(AdGifData) / sizeof(u32); i++) {
       u32 data;
       memcpy(&data, (u32*)&adgif + i, sizeof(u32));

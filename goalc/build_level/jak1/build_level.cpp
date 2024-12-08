@@ -154,14 +154,15 @@ bool run_build_level(const std::string& input_file,
       return false;
     }
 
-    std::vector<fs::path> dgos, objs;
-    for (const auto& dgo_name : config.dgo_names) {
-      dgos.push_back(iso_folder / dgo_name);
-    }
+    std::vector<fs::path> dgos(config.dgo_names.size()), objs(config.object_file_names.size());
 
-    for (const auto& obj_name : config.object_file_names) {
-      objs.push_back(iso_folder / obj_name);
-    }
+    std::transform(
+        config.dgo_names.begin(), config.dgo_names.end(), dgos.begin(),
+        [&iso_folder](const auto& dgo_name) -> fs::path { return iso_folder / dgo_name; });
+
+    std::transform(
+        config.object_file_names.begin(), config.object_file_names.end(), objs.begin(),
+        [&iso_folder](const auto& obj_name) -> fs::path { return iso_folder / obj_name; });
 
     decompiler::ObjectFileDB db(dgos, fs::path(config.obj_file_name_map_file), objs, {}, {}, {},
                                 config);
@@ -220,11 +221,11 @@ bool run_build_level(const std::string& input_file,
               file.texture_ids.resize(level_file.texture_page_count);
               memcpy(file.texture_ids.data(), level_file.texture_ids.data(),
                      sizeof(u32) * level_file.texture_page_count);
-              std::vector<u32> tex_ids;
-              tex_ids.reserve(level_file.texture_page_count);
-              for (auto& id : level_file.texture_ids) {
-                tex_ids.push_back(id >> 20);
-              }
+              std::vector<u32> tex_ids(level_file.texture_page_count);
+
+              std::transform(level_file.texture_ids.begin(), level_file.texture_ids.end(),
+                             tex_ids.begin(), [](const auto id) -> u32 { return id >> 20; });
+
               lg::info("custom level: login tpages automatically set to [{}]",
                        fmt::join(tex_ids, ", "));
             }

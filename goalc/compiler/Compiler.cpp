@@ -387,7 +387,6 @@ void Compiler::setup_goos_forms() {
                                             const std::shared_ptr<goos::EnvironmentObject>& env) {
     m_goos.eval_args(&args, env);
     va_check(form, args, {goos::ObjectType::SYMBOL}, {});
-    std::vector<Object> enum_vals;
 
     const auto& enum_name = args.unnamed.at(0).as_symbol().name_ptr;
     auto enum_type = m_ts.try_enum_lookup(enum_name);
@@ -406,10 +405,13 @@ void Compiler::setup_goos_forms() {
                 return a.second < b.second;
               });
 
-    for (auto& thing : sorted_values) {
-      enum_vals.push_back(PairObject::make_new(m_goos.intern(thing.first),
-                                               goos::Object::make_integer(thing.second)));
-    }
+    std::vector<Object> enum_vals(sorted_values.size());
+
+    std::transform(sorted_values.begin(), sorted_values.end(), enum_vals.begin(),
+                   [this](auto& thing) -> Object {
+                     return PairObject::make_new(m_goos.intern(thing.first),
+                                                 goos::Object::make_integer(thing.second));
+                   });
 
     return goos::build_list(enum_vals);
   });

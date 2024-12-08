@@ -16,8 +16,12 @@ namespace jak2 {
  * An axis-aligned bounding box
  */
 struct BoundingBox {
-  math::Vector3f min = math::Vector3f::zero();
-  math::Vector3f max = math::Vector3f::zero();
+  typedef math::Vector3f point;
+
+  point min = math::Vector3f::zero();
+  point max = math::Vector3f::zero();
+
+  constexpr std::size_t point_size() const { return point().size(); }
 };
 
 /*!
@@ -91,34 +95,39 @@ bool triangle_bounding_box(const BoundingBox& bbox_w,
   }
 
   // all three edges of the triangle
-  const math::Vector3f tri_edges[3] = {
+  const std::array<math::Vector3f, 3> tri_edges = {
       a - b,
       a - c,
       c - b,
   };
 
+  constexpr std::size_t trie_edges_size = tri_edges.size();
+
+  bool res = true;
+
   // check each triangle edge
-  for (auto tri_edge : tri_edges) {
+  for (std::size_t i = 0; res && i < trie_edges_size; i++) {
+    const math::Vector3f& tri_edge = tri_edges[i];
+
     // against each box edge
-    for (int box_axis = 0; box_axis < 3; box_axis++) {
+    for (std::size_t box_axis = 0; res && box_axis < tri_edge.size(); box_axis++) {
       const math::Vector3f axis = math::Vector3f::unit(box_axis).cross(tri_edge);
-      if (separating_axis_test(half_side_length, axis, a, b, c)) {
-        return false;
-      }
+
+      res = !separating_axis_test(half_side_length, axis, a, b, c);
     }
   }
 
-  // all possible separating axes failed, there is intersection.
-  return true;
+  return res;
 }
 
 bool bounding_box_bounding_box(const BoundingBox& a, const BoundingBox& b) {
-  for (int i = 0; i < 3; i++) {
-    if ((a.min[i] > b.max[i]) || (a.max[i] < b.min[i])) {
-      return false;
-    }
+  bool res = true;
+
+  for (std::size_t i = 0; res && i < a.point_size(); i++) {
+    res = (a.min[i] > b.max[i]) || (a.max[i] < b.min[i]);
   }
-  return true;
+
+  return res;
 }
 
 /*!
