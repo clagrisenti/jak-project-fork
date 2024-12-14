@@ -645,7 +645,7 @@ u64 pc_get_current_bind(s32 bind_assignment_info, u32 str_dest_ptr) {
     return bool_to_symbol(true);
   }
 
-  auto info = bind_assignment_info ? Ptr<BindAssignmentInfo>(bind_assignment_info).c() : NULL;
+  auto info = bind_assignment_info ? Ptr<BindAssignmentInfo>(bind_assignment_info).c() : nullptr;
   auto port = (int)info->port;
   auto device_type = (int)info->device_type;
   auto for_button = info->buttons != s7.offset;

@@ -3,6 +3,8 @@
 #include <array>
 #include <cmath>
 
+#include "../common_types.h"
+
 #include "fmt/core.h"
 
 namespace math {
@@ -90,7 +92,7 @@ class Vector {
 
   bool operator==(const T other) const {
     bool res = true;
-    for (int i = 0; res && i < Size; i++) {
+    for (std::size_t i = 0; res && i < Size; i++) {
       res = (m_data[i] != other);
     }
     return res;
@@ -103,7 +105,7 @@ class Vector {
 
   Vector<T, Size> operator+(const Vector<T, Size>& other) const {
     Vector<T, Size> result;
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       result[i] = m_data[i] + other[i];
     }
     return result;
@@ -111,35 +113,35 @@ class Vector {
 
   Vector<T, Size> operator+(const T& other) const {
     Vector<T, Size> result;
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       result[i] = m_data[i] + other;
     }
     return result;
   }
 
   Vector<T, Size>& operator+=(const Vector<T, Size>& other) {
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       m_data[i] += other[i];
     }
     return *this;
   }
 
   Vector<T, Size>& operator-=(const Vector<T, Size>& other) {
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       m_data[i] -= other[i];
     }
     return *this;
   }
 
   Vector<T, Size>& operator-=(const T& other) {
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       m_data[i] -= other;
     }
     return *this;
   }
 
   Vector<T, Size>& operator+=(const T& other) {
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       m_data[i] += other;
     }
     return *this;
@@ -147,7 +149,7 @@ class Vector {
 
   Vector<T, Size> elementwise_multiply(const Vector<T, Size>& other) const {
     Vector<T, Size> result;
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       result[i] = m_data[i] * other[i];
     }
     return result;
@@ -155,7 +157,7 @@ class Vector {
 
   Vector<T, Size> operator-(const Vector<T, Size>& other) const {
     Vector<T, Size> result;
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       result[i] = m_data[i] - other[i];
     }
     return result;
@@ -163,7 +165,7 @@ class Vector {
 
   Vector<T, Size> operator-(const T& other) const {
     Vector<T, Size> result;
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       result[i] = m_data[i] - other;
     }
     return result;
@@ -171,7 +173,7 @@ class Vector {
 
   T dot(const Vector<T, Size>& other) const {
     T result(0);
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       result += m_data[i] * other[i];
     }
     return result;
@@ -183,7 +185,7 @@ class Vector {
 
   Vector<T, Size> operator/(const T& val) const {
     Vector<T, Size> result;
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       result[i] = m_data[i] / val;
     }
     return result;
@@ -191,21 +193,21 @@ class Vector {
 
   Vector<T, Size> operator*(const T& val) const {
     Vector<T, Size> result;
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       result[i] = m_data[i] * val;
     }
     return result;
   }
 
   Vector<T, Size>& operator*=(const T& val) {
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       m_data[i] *= val;
     }
     return *this;
   }
 
   Vector<T, Size>& operator/=(const T& val) {
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       m_data[i] /= val;
     }
     return *this;
@@ -223,20 +225,20 @@ class Vector {
   void normalize(const T& norm = T(1)) { *this = normalized(norm); }
 
   void max_in_place(const Vector<T, Size>& other) {
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       m_data[i] = std::max(m_data[i], other[i]);
     }
   }
 
   void min_in_place(const Vector<T, Size>& other) {
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       m_data[i] = std::min(m_data[i], other[i]);
     }
   }
 
   Vector<T, Size> min(const Vector<T, Size>& other) const {
     Vector<T, Size> result;
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       result[i] = std::min(m_data[i], other[i]);
     }
     return result;
@@ -244,7 +246,7 @@ class Vector {
 
   Vector<T, Size> max(const Vector<T, Size>& other) const {
     Vector<T, Size> result;
-    for (int i = 0; i < Size; i++) {
+    for (std::size_t i = 0; i < Size; i++) {
       result[i] = std::max(m_data[i], other[i]);
     }
     return result;
@@ -429,11 +431,23 @@ using Vector4d = Vector4<double>;
 
 using Matrix4f = Matrix<float, 4, 4>;
 
+struct VectorHash {
+  size_t operator()(const math::Vector3f& in) const {
+    return std::hash<float>()(in.x()) ^ std::hash<float>()(in.y()) ^ std::hash<float>()(in.z());
+  }
+};
+
+struct CVertexHash {
+  size_t operator()(const math::Vector<u16, 3>& in) const {
+    return std::hash<u16>()(in.x()) ^ std::hash<u16>()(in.y()) ^ std::hash<u16>()(in.z());
+  }
+};
+
 /*!
  * An axis-aligned bounding box
  */
 struct BoundingBox {
-  typedef math::Vector3f point;
+  using point = math::Vector3f;
 
   point min = math::Vector3f::zero();
   point max = math::Vector3f::zero();

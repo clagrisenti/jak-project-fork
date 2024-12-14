@@ -33,12 +33,12 @@ const GfxRendererModule* GetRenderer(GfxPipeline pipeline) {
   switch (pipeline) {
     case GfxPipeline::Invalid:
       lg::error("Requested invalid renderer", fmt::underlying(pipeline));
-      return NULL;
+      return nullptr;
     case GfxPipeline::OpenGL:
       return &gRendererOpenGL;
     default:
       lg::error("Requested unknown renderer {}", fmt::underlying(pipeline));
-      return NULL;
+      return nullptr;
   }
 }
 

@@ -162,7 +162,7 @@ FramebufferCopier::FramebufferCopier() {
   glBindTexture(GL_TEXTURE_2D, m_fbo_texture);
 
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_fbo_width, m_fbo_height, 0, GL_RGB, GL_UNSIGNED_BYTE,
-               NULL);
+               nullptr);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -189,7 +189,7 @@ void FramebufferCopier::copy_now(int render_fb_w, int render_fb_h, GLuint render
     glBindTexture(GL_TEXTURE_2D, m_fbo_texture);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_fbo_width, m_fbo_height, 0, GL_RGB, GL_UNSIGNED_BYTE,
-                 NULL);
+                 nullptr);
 
     glBindTexture(GL_TEXTURE_2D, 0);
   }

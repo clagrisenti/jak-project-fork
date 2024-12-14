@@ -7,9 +7,9 @@
 double FrameLimiter::round_to_nearest_60fps(double current) {
   double one_frame = 1.f / 60.f;
   int frames_missed = (current / one_frame);  // rounds down
-  if (frames_missed > 4) {
-    frames_missed = 4;
-  }
+
+  frames_missed %= 4;
+
   return (frames_missed + 1) * one_frame;
 }
 

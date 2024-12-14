@@ -871,7 +871,7 @@ const char* Debugger::get_symbol_name_from_offset(s32 ofs) const {
   if (kv != m_symbol_offset_to_name_map.end()) {
     return kv->second.c_str();
   }
-  return NULL;
+  return nullptr;
 }
 
 /*!

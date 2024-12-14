@@ -419,7 +419,7 @@ void update_discord_rpc(u32 discord_info) {
     char large_image_text[128];
     char small_image_key[128];
     char small_image_text[128];
-    auto info = discord_info ? Ptr<DiscordInfo>(discord_info).c() : NULL;
+    auto info = discord_info ? Ptr<DiscordInfo>(discord_info).c() : nullptr;
     if (info) {
       int cells = (int)*Ptr<float>(info->fuel).c();
       int orbs = (int)*Ptr<float>(info->money_total).c();

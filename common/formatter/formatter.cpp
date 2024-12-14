@@ -471,7 +471,7 @@ std::optional<std::string> formatter::format_code(const std::string& source) {
 
   // Build a syntax tree based on source code stored in a string.
   std::shared_ptr<TSTree> tree(
-      ts_parser_parse_string(parser.get(), NULL, source.c_str(), source.length()),
+      ts_parser_parse_string(parser.get(), nullptr, source.c_str(), source.length()),
       TreeSitterTreeDeleter());
 
   // Get the root node of the syntax tree.

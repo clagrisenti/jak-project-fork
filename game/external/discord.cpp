@@ -53,7 +53,7 @@ void init_discord_rpc() {
   handlers.joinGame = handleDiscordJoin;
   handlers.joinRequest = handleDiscordJoinRequest;
   handlers.spectateGame = handleDiscordSpectate;
-  Discord_Initialize(rpc_client_ids.at(g_game_version).c_str(), &handlers, 1, NULL);
+  Discord_Initialize(rpc_client_ids.at(g_game_version).c_str(), &handlers, 1, nullptr);
 }
 
 void set_discord_rpc(int state) {

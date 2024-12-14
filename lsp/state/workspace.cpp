@@ -411,7 +411,7 @@ void WorkspaceOGFile::parse_content(const std::string& content) {
     // Get the AST for the current state of the file
     // TODO - eventually, we should consider doing partial updates of the AST
     // but right now the LSP just receives the entire document so that's a larger change.
-    m_ast.reset(ts_parser_parse_string(parser, NULL, m_content.c_str(), m_content.length()),
+    m_ast.reset(ts_parser_parse_string(parser, nullptr, m_content.c_str(), m_content.length()),
                 TreeSitterTreeDeleter());
   }
   ts_parser_delete(parser);

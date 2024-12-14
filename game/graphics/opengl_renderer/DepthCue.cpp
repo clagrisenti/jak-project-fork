@@ -34,7 +34,7 @@ void DepthCue::opengl_setup() {
   glGenTextures(1, &m_ogl.framebuffer_sample_tex);
   glBindTexture(GL_TEXTURE_2D, m_ogl.framebuffer_sample_tex);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -56,7 +56,7 @@ void DepthCue::opengl_setup() {
   glGenTextures(1, &m_ogl.fbo_texture);
   glBindTexture(GL_TEXTURE_2D, m_ogl.fbo_texture);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -374,7 +374,7 @@ void DepthCue::setup(SharedRenderState* render_state, ScopedProfilerNode& /*prof
 
   glBindTexture(GL_TEXTURE_2D, m_ogl.framebuffer_sample_tex);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pc_fb_sample_width, pc_fb_sample_height, 0, GL_RGB,
-               GL_UNSIGNED_BYTE, NULL);
+               GL_UNSIGNED_BYTE, nullptr);
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // DEPTH CUE BASE PAGE FRAMEBUFFER
@@ -399,7 +399,7 @@ void DepthCue::setup(SharedRenderState* render_state, ScopedProfilerNode& /*prof
 
   glBindTexture(GL_TEXTURE_2D, m_ogl.fbo_texture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pc_depth_cue_fb_width, pc_depth_cue_fb_height, 0, GL_RGB,
-               GL_UNSIGNED_BYTE, NULL);
+               GL_UNSIGNED_BYTE, nullptr);
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // DEPTH CUE BASE PAGE VERTEX DATA

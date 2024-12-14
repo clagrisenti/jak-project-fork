@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <iostream>
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
@@ -289,7 +290,7 @@ FragStats compute_frag_stats(const std::vector<jak3::CollideFace>& tris,
   for (int i = 0; i < 3; i++) {
     std::vector<float> vx;
     vx.reserve(tris.size() * 3);
-    for (auto idx : indices) {
+    for (const auto idx : indices) {
       for (const auto& vtx : tris[idx].v) {
         vx.push_back(vtx[i]);
       }
@@ -302,24 +303,12 @@ FragStats compute_frag_stats(const std::vector<jak3::CollideFace>& tris,
   return ret;
 }
 
-struct VectorHash {
-  size_t operator()(const math::Vector3f& in) const {
-    return std::hash<float>()(in.x()) ^ std::hash<float>()(in.y()) ^ std::hash<float>()(in.z());
-  }
-};
-
-struct CVertexHash {
-  size_t operator()(const math::Vector<u16, 3>& in) const {
-    return std::hash<u16>()(in.x()) ^ std::hash<u16>()(in.y()) ^ std::hash<u16>()(in.z());
-  }
-};
-
 /*!
  * How many unique vertices are there in this frag?
  * (currently using float equality, however, a smarter version could look at quantized vertices)
  */
 int unique_vertex_count(const Frag& frag, const std::vector<jak3::CollideFace>& tris) {
-  std::unordered_set<math::Vector3f, VectorHash> vmap;
+  std::unordered_set<math::Vector3f, math::VectorHash> vmap;
   for (auto i : frag.tri_indices) {
     for (const auto& v : tris[i].v) {
       vmap.insert(v);
@@ -414,20 +403,7 @@ SplitStats compute_split_stats(const Frag& frag,
 }
 
 int idx_of_max(float a, float b, float c) {
-  if (a > b) {
-    if (a > c) {
-      return 0;
-    } else {
-      // a > b, c > a.
-      return 2;
-    }
-  } else {
-    if (b > c) {
-      return 1;
-    } else {
-      return 2;
-    }
-  }
+  return (a > b && a > c) * 0 + (a > b && c > a) * 2 + (b > a && b > c) * 1 + (b > a && c > b) * 2;
 }
 
 FragSplit pick_best_frag_split(const Frag& frag,
@@ -711,7 +687,7 @@ jak3::CollideFragment build_grid_for_frag(const std::vector<jak3::CollideFace>& 
   std::vector<CollideFragmentPoly> polys;
   std::vector<jak3::PatSurface> pats;
 
-  std::unordered_map<math::Vector<u16, 3>, size_t, CVertexHash> vertex_to_vertex_array_index;
+  std::unordered_map<math::Vector<u16, 3>, size_t, math::CVertexHash> vertex_to_vertex_array_index;
   std::unordered_map<u32, size_t> pat_to_pat_array_index;
 
   for (auto ti : frag.tri_indices) {

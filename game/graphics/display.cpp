@@ -46,8 +46,9 @@ namespace Display {
 std::vector<std::shared_ptr<GfxDisplay>> g_displays;
 std::shared_ptr<GfxDisplay> GetMainDisplay() {
   if (g_displays.size() == 0)
-    return NULL;
-  return g_displays.front()->get_display_manager()->is_window_active() ? g_displays.front() : NULL;
+    return nullptr;
+  return g_displays.front()->get_display_manager()->is_window_active() ? g_displays.front()
+                                                                       : nullptr;
 }
 
 int InitMainDisplay(int width,
@@ -55,14 +56,14 @@ int InitMainDisplay(int width,
                     const char* title,
                     GfxGlobalSettings& settings,
                     GameVersion version) {
-  if (GetMainDisplay() != NULL) {
+  if (GetMainDisplay() != nullptr) {
     lg::warn("InitMainDisplay called when main display already exists.");
     return 1;
   }
 
   auto display =
       Gfx::GetCurrentRenderer()->make_display(width, height, title, settings, version, true);
-  if (display == NULL) {
+  if (display == nullptr) {
     lg::error("Failed to make main display.");
     return 1;
   }

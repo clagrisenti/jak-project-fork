@@ -15,7 +15,7 @@ bool KeyboardDevice::is_action_already_active(const u32 sdl_keycode) {
 
 void KeyboardDevice::poll_state(std::shared_ptr<PadData> data) {
   const auto& binds = m_settings->keyboard_binds;
-  const auto keyboard_state = SDL_GetKeyboardState(NULL);
+  const auto keyboard_state = SDL_GetKeyboardState(nullptr);
   const auto keyboard_modifier_state = SDL_GetModState();
 
   // Iterate binds, see if there are any new actions we need to track

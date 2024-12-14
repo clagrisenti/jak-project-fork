@@ -59,7 +59,7 @@ int select_and_accept_socket(int socket, sockaddr* addr, socklen_t* addrLen, int
   fd_set read_sockets;
   FD_ZERO(&read_sockets);
   FD_SET(socket, &read_sockets);
-  auto activity = select(socket + 1, &read_sockets, NULL, NULL, &timeout);
+  auto activity = select(socket + 1, &read_sockets, nullptr, nullptr, &timeout);
   if (activity > 0) {
     return accept(socket, addr, addrLen);
   }
@@ -96,7 +96,7 @@ int select_and_accept_socket(int socket, sockaddr* addr, int* addrLen, int micro
   fd_set read_sockets;
   FD_ZERO(&read_sockets);
   FD_SET(socket, &read_sockets);
-  auto activity = select(socket + 1, &read_sockets, NULL, NULL, &timeout);
+  auto activity = select(socket + 1, &read_sockets, nullptr, nullptr, &timeout);
   if (activity > 0) {
     return accept(socket, addr, addrLen);
   }

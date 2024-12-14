@@ -63,8 +63,8 @@ Val* Compiler::compile_define_state_hook(const goos::Object& form,
     docstring = args.unnamed.at(3).as_string()->data;
   }
 
-  Val* code_value = NULL;
-  Val* enter_value = NULL;
+  Val* code_value = nullptr;
+  Val* enter_value = nullptr;
 
   // check parent
   auto& state_parent = args.unnamed.at(1).as_symbol();
@@ -183,8 +183,8 @@ Val* Compiler::compile_define_virtual_state_hook(const goos::Object& form,
     docstring = args.unnamed.at(3).as_string()->data;
   }
 
-  Val* code_value = NULL;
-  Val* enter_value = NULL;
+  Val* code_value = nullptr;
+  Val* enter_value = nullptr;
 
   // check parent
   auto& state_parent = args.unnamed.at(1).as_symbol();

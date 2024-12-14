@@ -198,7 +198,7 @@ GlowRenderer::GlowRenderer() {
                m_ogl.probe_fbo_h,    // height
                0,                    // border
                GL_DEPTH_STENCIL,     // format
-               GL_UNSIGNED_INT_24_8, NULL);
+               GL_UNSIGNED_INT_24_8, nullptr);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
                          m_ogl.probe_fbo_depth_tex, 0);
 

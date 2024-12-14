@@ -143,7 +143,7 @@ std::string get_current_executable_path() {
 #ifdef _WIN32
   // NOTE - MAX_PATH is kinda wrong here as you can have a path longer than 260 in windows
   wchar_t path[MAX_PATH];
-  GetModuleFileNameW(NULL, path, MAX_PATH);
+  GetModuleFileNameW(nullptr, path, MAX_PATH);
   std::string file_path = wide_string_to_utf8_string(path);
   if (file_path.rfind("\\\\?\\", 0) == 0) {
     return file_path.substr(4);

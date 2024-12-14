@@ -26,7 +26,7 @@ void update_discord_rpc(u32 discord_info) {
     char large_image_text[128];
     char small_image_key[128];
     char small_image_text[128];
-    auto info = discord_info ? Ptr<DiscordInfo>(discord_info).c() : NULL;
+    auto info = discord_info ? Ptr<DiscordInfo>(discord_info).c() : nullptr;
     if (info) {
       // Get the data from GOAL
       int orbs = (int)info->orb_count;
@@ -790,7 +790,7 @@ void pc_sr_mode_init_practice_info(s32 entry_index, u32 speedrun_practice_obj_pt
 
   auto objective = speedrun_practice_obj_ptr
                        ? Ptr<SpeedrunPracticeObjective>(speedrun_practice_obj_ptr).c()
-                       : NULL;
+                       : nullptr;
   if (objective) {
     const auto& json_info = g_speedrun_practice_entries.at(entry_index);
 
@@ -801,14 +801,14 @@ void pc_sr_mode_init_practice_info(s32 entry_index, u32 speedrun_practice_obj_pt
     objective->vehicles = json_info.vehicles;
     objective->secrets = json_info.secrets;
     auto starting_position =
-        objective->starting_position ? Ptr<Vector>(objective->starting_position).c() : NULL;
+        objective->starting_position ? Ptr<Vector>(objective->starting_position).c() : nullptr;
     if (starting_position) {
       for (int i = 0; i < 4; i++) {
         starting_position->data[i] = json_info.starting_position.at(i) * METER_LENGTH;
       }
     }
     auto starting_rotation =
-        objective->starting_rotation ? Ptr<Vector>(objective->starting_rotation).c() : NULL;
+        objective->starting_rotation ? Ptr<Vector>(objective->starting_rotation).c() : nullptr;
     if (starting_rotation) {
       for (int i = 0; i < 4; i++) {
         starting_rotation->data[i] = json_info.starting_rotation.at(i);
@@ -816,7 +816,7 @@ void pc_sr_mode_init_practice_info(s32 entry_index, u32 speedrun_practice_obj_pt
     }
     auto starting_camera_position = objective->starting_camera_position
                                         ? Ptr<Vector>(objective->starting_camera_position).c()
-                                        : NULL;
+                                        : nullptr;
     if (starting_camera_position) {
       for (int i = 0; i < 4; i++) {
         starting_camera_position->data[i] = json_info.starting_camera_position.at(i) * 4096.0;
@@ -824,7 +824,7 @@ void pc_sr_mode_init_practice_info(s32 entry_index, u32 speedrun_practice_obj_pt
     }
     auto starting_camera_rotation = objective->starting_camera_rotation
                                         ? Ptr<Vector>(objective->starting_camera_rotation).c()
-                                        : NULL;
+                                        : nullptr;
     if (starting_camera_rotation) {
       for (int i = 0; i < 16; i++) {
         starting_camera_rotation->data[i] = json_info.starting_camera_rotation.at(i);
@@ -839,7 +839,7 @@ void pc_sr_mode_init_practice_info(s32 entry_index, u32 speedrun_practice_obj_pt
 
     auto starting_zone = objective->start_zone_init_params
                              ? Ptr<ObjectiveZoneInitParams>(objective->start_zone_init_params).c()
-                             : NULL;
+                             : nullptr;
     if (starting_zone) {
       starting_zone->v1[0] = json_info.start_zone_v1.at(0) * METER_LENGTH;
       starting_zone->v1[1] = json_info.start_zone_v1.at(1) * METER_LENGTH;
@@ -854,7 +854,7 @@ void pc_sr_mode_init_practice_info(s32 entry_index, u32 speedrun_practice_obj_pt
     if (json_info.end_zone_v1 && json_info.end_zone_v2) {
       auto ending_zone = objective->end_zone_init_params
                              ? Ptr<ObjectiveZoneInitParams>(objective->end_zone_init_params).c()
-                             : NULL;
+                             : nullptr;
       if (ending_zone) {
         ending_zone->v1[0] = json_info.end_zone_v1->at(0) * METER_LENGTH;
         ending_zone->v1[1] = json_info.end_zone_v1->at(1) * METER_LENGTH;
@@ -913,7 +913,7 @@ void pc_sr_mode_init_custom_category_info(s32 entry_index, u32 speedrun_custom_c
 
   auto category = speedrun_custom_category_ptr
                       ? Ptr<SpeedrunCustomCategory>(speedrun_custom_category_ptr).c()
-                      : NULL;
+                      : nullptr;
   if (category) {
     const auto& json_info = g_speedrun_custom_categories.at(entry_index);
     category->index = entry_index;
@@ -939,7 +939,7 @@ void pc_sr_mode_dump_new_custom_category(u32 speedrun_custom_category_ptr) {
 
   auto category = speedrun_custom_category_ptr
                       ? Ptr<SpeedrunCustomCategory>(speedrun_custom_category_ptr).c()
-                      : NULL;
+                      : nullptr;
   if (category) {
     SpeedrunCustomCategoryEntry new_category;
     new_category.name = fmt::format("custom-category-{}", g_speedrun_custom_categories.size());

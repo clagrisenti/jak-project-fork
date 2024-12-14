@@ -324,7 +324,8 @@ void win_print_last_error(const std::string& msg) {
 
   FormatMessage(
       FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS,
-      NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&lpMsgBuf, 0, NULL);
+      nullptr, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&lpMsgBuf, 0,
+      nullptr);
 
   printf("[Debugger] %s Win Err: %s", msg.c_str(), lpMsgBuf);
 }
@@ -547,7 +548,7 @@ bool read_goal_memory(u8* dest_buffer,
   SIZE_T read;
   HANDLE hProc = OpenProcess(PROCESS_VM_READ, FALSE, context.tid.pid);
 
-  if (hProc == NULL) {
+  if (hProc == nullptr) {
     win_print_last_error("OpenProcess read_goal_memory");
     return false;
   }
@@ -572,7 +573,7 @@ bool write_goal_memory(const u8* src_buffer,
   SIZE_T written;
   HANDLE hProc = OpenProcess(PROCESS_VM_WRITE, FALSE, context.tid.pid);
 
-  if (hProc == NULL) {
+  if (hProc == nullptr) {
     win_print_last_error("OpenProcess write_goal_memory");
     return false;
   }
@@ -594,7 +595,7 @@ bool get_regs_now(const ThreadID& tid, Regs* out) {
   context.ContextFlags = CONTEXT_FULL;
   HANDLE hThr = OpenThread(THREAD_GET_CONTEXT, FALSE, tid.tid);
 
-  if (hThr == NULL) {
+  if (hThr == nullptr) {
     win_print_last_error("OpenThread get_regs_now");
     return false;
   }
@@ -634,7 +635,7 @@ bool set_regs_now(const ThreadID& tid, const Regs& out) {
   context.ContextFlags = CONTEXT_FULL;
   HANDLE hThr = OpenThread(THREAD_GET_CONTEXT, FALSE, tid.tid);
 
-  if (hThr == NULL) {
+  if (hThr == nullptr) {
     win_print_last_error("OpenThread set_regs_now");
     return false;
   }
@@ -667,7 +668,7 @@ bool set_regs_now(const ThreadID& tid, const Regs& out) {
 
   hThr = OpenThread(THREAD_SET_CONTEXT, FALSE, tid.tid);
 
-  if (hThr == NULL) {
+  if (hThr == nullptr) {
     win_print_last_error("OpenThread set_regs_now set");
     return false;
   }

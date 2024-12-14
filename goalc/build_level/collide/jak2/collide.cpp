@@ -266,24 +266,12 @@ FragStats compute_frag_stats(const std::vector<jak2::CollideFace>& tris,
   return ret;
 }
 
-struct VectorHash {
-  size_t operator()(const math::Vector3f& in) const {
-    return std::hash<float>()(in.x()) ^ std::hash<float>()(in.y()) ^ std::hash<float>()(in.z());
-  }
-};
-
-struct CVertexHash {
-  size_t operator()(const math::Vector<u16, 3>& in) const {
-    return std::hash<u16>()(in.x()) ^ std::hash<u16>()(in.y()) ^ std::hash<u16>()(in.z());
-  }
-};
-
 /*!
  * How many unique vertices are there in this frag?
  * (currently using float equality, however, a smarter version could look at quantized vertices)
  */
 int unique_vertex_count(const Frag& frag, const std::vector<jak2::CollideFace>& tris) {
-  std::unordered_set<math::Vector3f, VectorHash> vmap;
+  std::unordered_set<math::Vector3f, math::VectorHash> vmap;
   for (auto i : frag.tri_indices) {
     for (const auto& v : tris[i].v) {
       vmap.insert(v);
@@ -651,7 +639,7 @@ CollideHash build_grid_for_main_hash(std::vector<CollideFragment>&& frags) {
   result.qwc_id_bits = (frags.size() + 127) / 128;
   result.fragments = std::move(frags);
 
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < grid_dimension.size(); i++) {
     result.dimension_array[i] = grid_dimension[i];
   }
   return result;
@@ -665,7 +653,7 @@ CollideFragment build_grid_for_frag(const std::vector<jak2::CollideFace>& tris, 
 
   // find the bounding box
   BBoxBuilder bbox;
-  for (auto i : frag.tri_indices) {
+  for (const auto i : frag.tri_indices) {
     bbox.add_tri(tris[i]);
   }
 
@@ -674,7 +662,7 @@ CollideFragment build_grid_for_frag(const std::vector<jak2::CollideFace>& tris, 
   std::vector<CollideFragmentPoly> polys;
   std::vector<jak2::PatSurface> pats;
 
-  std::unordered_map<math::Vector<u16, 3>, size_t, CVertexHash> vertex_to_vertex_array_index;
+  std::unordered_map<math::Vector<u16, 3>, size_t, math::CVertexHash> vertex_to_vertex_array_index;
   std::unordered_map<u32, size_t> pat_to_pat_array_index;
 
   for (auto ti : frag.tri_indices) {

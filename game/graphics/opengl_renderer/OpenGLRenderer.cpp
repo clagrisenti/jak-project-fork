@@ -1432,7 +1432,8 @@ void win_print_last_error(const std::string& msg) {
 
   FormatMessage(
       FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS,
-      NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&lpMsgBuf, 0, NULL);
+      nullptr, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&lpMsgBuf, 0,
+      nullptr);
 
   lg::error("[OpenGLRenderer] {} Win Err: {}", msg, lpMsgBuf);
 }
@@ -1467,7 +1468,7 @@ void copy_texture_to_clipboard(int width, int height, const std::vector<u32>& te
   header.biClrImportant = 0;
 
   // Open the clipboard
-  if (!OpenClipboard(NULL)) {
+  if (!OpenClipboard(nullptr)) {
     win_print_last_error("Failed to open the clipboard.");
     return;
   }
@@ -1481,7 +1482,7 @@ void copy_texture_to_clipboard(int width, int height, const std::vector<u32>& te
 
   // Create a global memory object to hold the image data
   HGLOBAL hClipboardData = GlobalAlloc(GMEM_MOVEABLE, sizeof(header) + image_size);
-  if (hClipboardData == NULL) {
+  if (hClipboardData == nullptr) {
     win_print_last_error("Failed to allocate memory for clipboard data.");
     CloseClipboard();
     return;
@@ -1489,7 +1490,7 @@ void copy_texture_to_clipboard(int width, int height, const std::vector<u32>& te
 
   // Get a pointer to the global memory object
   void* pData = GlobalLock(hClipboardData);
-  if (pData == NULL) {
+  if (pData == nullptr) {
     win_print_last_error("Failed to lock clipboard memory.");
     CloseClipboard();
     GlobalFree(hClipboardData);

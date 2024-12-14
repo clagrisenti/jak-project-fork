@@ -2,9 +2,6 @@
 #include "common/common_types.h"
 #include "common/math/Vector.h"
 
-struct CollideVertex {
-  float x, y, z;
-};
 namespace collide {
 
 template <typename PatSurfaceEnum>
@@ -50,6 +47,7 @@ struct PatSurfaceT {
 
   bool operator==(const PatSurfaceT& other) const { return val == other.val; }
 };
+
 }  // namespace collide
 
 namespace jak1 {

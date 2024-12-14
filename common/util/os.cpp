@@ -118,7 +118,7 @@ std::optional<double> get_macos_version() {
 #else
   char buffer[128];
   size_t bufferlen = 128;
-  auto ok = sysctlbyname("kern.osproductversion", &buffer, &bufferlen, NULL, 0);
+  auto ok = sysctlbyname("kern.osproductversion", &buffer, &bufferlen, nullptr, 0);
   if (ok != 0) {
     lg::warn("Unable to check for `kern.osproductversion` to determine macOS version");
     return {};

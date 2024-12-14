@@ -71,7 +71,7 @@ std::optional<std::string> ReplServer::get_msg() {
 
   // Wait for activity on _something_, with a timeout so we don't get stuck here on exit.
   struct timeval timeout = {0, 100000};
-  auto activity = select(max_sd + 1, &read_sockets, NULL, NULL, &timeout);
+  auto activity = select(max_sd + 1, &read_sockets, nullptr, nullptr, &timeout);
   if (activity < 0 && errno != EINTR) {
     lg::error("[nREPL:{}] select error, returned: {}, errno: {}", tcp_port, activity,
               strerror(errno));

@@ -359,7 +359,7 @@ void DisplayManager::update_video_modes() {
 
     std::string display_name_str = "";
     const auto display_name = SDL_GetDisplayName(display_id);
-    if (display_name == NULL) {
+    if (display_name == nullptr) {
       sdl_util::log_error(fmt::format("couldn't retrieve display name with id {}", display_id));
     } else {
       display_name_str = display_name;

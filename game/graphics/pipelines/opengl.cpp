@@ -231,7 +231,7 @@ static std::shared_ptr<GfxDisplay> gl_make_display(int width,
         "Critical Error Encountered",
         "Unable to create OpenGL window.\nOpenGOAL requires OpenGL 4.3.\nEnsure your GPU "
         "supports this and your drivers are up to date.");
-    return NULL;
+    return nullptr;
   }
 
   // Make an OpenGL Context
@@ -244,7 +244,7 @@ static std::shared_ptr<GfxDisplay> gl_make_display(int width,
         "Critical Error Encountered",
         "Unable to create OpenGL context.\nOpenGOAL requires OpenGL 4.3.\nEnsure your GPU "
         "supports this and your drivers are up to date.");
-    return NULL;
+    return nullptr;
   }
 
   {
@@ -255,7 +255,7 @@ static std::shared_ptr<GfxDisplay> gl_make_display(int width,
                                            "Unable to create OpenGL window with context.\nOpenGOAL "
                                            "requires OpenGL 4.3.\nEnsure your GPU "
                                            "supports this and your drivers are up to date.");
-      return NULL;
+      return nullptr;
     }
   }
 
@@ -269,7 +269,7 @@ static std::shared_ptr<GfxDisplay> gl_make_display(int width,
                                              "Unable to initialize OpenGL API.\nOpenGOAL requires "
                                              "OpenGL 4.3.\nEnsure your GPU "
                                              "supports this and your drivers are up to date.");
-        return NULL;
+        return nullptr;
       }
     }
     {
@@ -287,7 +287,7 @@ static std::shared_ptr<GfxDisplay> gl_make_display(int width,
     float dpi = 1.0f;
     int window_display_idx = SDL_GetWindowDisplayIndex(window);
     if (window_display_idx >= 0) {
-      SDL_GetDisplayDPI(window_display_idx, &dpi, NULL, NULL);
+      SDL_GetDisplayDPI(window_display_idx, &dpi, nullptr, nullptr);
       dpi /= 96.0f;
 
       if (dpi <= 0.0f) {
