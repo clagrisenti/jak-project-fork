@@ -142,13 +142,7 @@ class TypeSpec {
     return m_arguments->back();
   }
 
-  bool empty() const {
-    if (!m_arguments) {
-      return true;
-    } else {
-      return m_arguments->empty();
-    }
-  }
+  bool empty() const { return m_arguments == nullptr || m_arguments->empty(); }
 
   const std::vector<TypeTag>& tags() const { return m_tags; }
 

@@ -1,5 +1,7 @@
 #include "bitfields.h"
 
+#include <algorithm>
+
 #include "common/goos/PrettyPrinter.h"
 #include "common/log/log.h"
 #include "common/util/BitUtils.h"
@@ -731,11 +733,12 @@ BitFieldDef BitFieldDef::from_constant(const BitFieldConstantDef& constant, Form
   bfd.is_signed = constant.is_signed;
   bfd.is_float = constant.is_float;
   if (constant.nested_field) {
-    std::vector<BitFieldDef> defs;
-    defs.reserve(constant.nested_field->fields.size());
-    for (const auto& x : constant.nested_field->fields) {
-      defs.push_back(BitFieldDef::from_constant(x, pool));
-    }
+    std::vector<BitFieldDef> defs(constant.nested_field->fields.size());
+
+    std::transform(
+        constant.nested_field->fields.begin(), constant.nested_field->fields.end(), defs.begin(),
+        [&pool](const auto& x) -> BitFieldDef { return BitFieldDef::from_constant(x, pool); });
+
     bfd.value = pool.form<BitfieldStaticDefElement>(constant.nested_field->field_type, defs);
   } else if (constant.enum_constant) {
     bfd.value = pool.form<ConstantTokenElement>(*constant.enum_constant);
@@ -799,7 +802,6 @@ std::optional<std::vector<BitFieldDef>> get_field_defs_from_expr(const BitFieldT
 
   if (!args.empty()) {
     std::vector<BitFieldDef> field_defs;
-
     for (auto it = args.begin(); it != args.end(); it++) {
       auto constant = get_goal_integer_constant(*it, env);
       if (constant) {
@@ -808,10 +810,11 @@ std::optional<std::vector<BitFieldDef>> get_field_defs_from_expr(const BitFieldT
         if (!constant_defs) {
           return std::nullopt;  // failed
         }
-        field_defs.reserve(constant_defs->size());
-        for (const auto& x : *constant_defs) {
-          field_defs.push_back(BitFieldDef::from_constant(x, pool));
-        }
+
+        field_defs.resize(constant_defs->size());
+        std::transform(
+            constant_defs->begin(), constant_defs->end(), field_defs.begin(),
+            [&pool](const auto& x) -> BitFieldDef { return BitFieldDef::from_constant(x, pool); });
 
         args.erase(it);
         break;
