@@ -484,15 +484,17 @@ void ObjectFileDB::add_obj_from_dgo(const std::string& obj_name,
 std::string ObjectFileDB::generate_dgo_listing() {
   std::string result = ";; DGO File Listing\n\n";
   std::vector<std::string> dgo_names;
-  for (auto& kv : obj_files_by_dgo) {
-    dgo_names.push_back(kv.first);
+  dgo_names.reserve(obj_files_by_dgo.size());
+
+  for (const auto& [key, value] : obj_files_by_dgo) {
+    dgo_names.push_back(key);
   }
 
   std::sort(dgo_names.begin(), dgo_names.end());
 
   for (const auto& name : dgo_names) {
     result += "(\"" + name + "\"\n";
-    for (auto& obj_rec : obj_files_by_dgo[name]) {
+    for (const auto& obj_rec : obj_files_by_dgo[name]) {
       auto& obj = lookup_record(obj_rec);
       std::string extension = ".o";
       if (obj.obj_version == 4 || obj.obj_version == 2) {
@@ -520,7 +522,7 @@ std::string ObjectFileDB::generate_obj_listing(const std::unordered_set<std::str
   std::string result = "[";
   std::set<std::string> all_unique_names;
   int unique_count = 0;
-  for (auto& obj_file : obj_file_order) {
+  for (const auto& obj_file : obj_file_order) {
     for (auto& x : obj_files_by_name.at(obj_file)) {
       std::string dgos = "[";
       for (auto& name : x.dgo_names) {

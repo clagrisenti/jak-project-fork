@@ -275,12 +275,13 @@ std::string get_file_path(const std::vector<std::string>& input) {
   // the project path should be explicitly provided by whatever if needed
   // TEMP HACK
   // - if the provided path is absolute, don't add the project path
-  if (input.size() == 1 && fs::path(input.at(0)).is_absolute()) {
-    return input.at(0);
+  if (input.size() == 1 && fs::path(input[0]).is_absolute()) {
+    return input[0];
   }
 
-  auto current_path = file_util::get_jak_project_dir();
-  for (auto& str : input) {
+  fs::path current_path = file_util::get_jak_project_dir();
+
+  for (const auto& str : input) {
     current_path /= str;
   }
 
@@ -397,9 +398,9 @@ std::vector<uint8_t> read_binary_file(const fs::path& path) {
 
 std::string read_text_file(const fs::path& path) {
   fs::ifstream file(path);
-  if (!file.good()) {
-    throw std::runtime_error("couldn't open " + path.string());
-  }
+
+  ASSERT_MSG(file.good(), "couldn't open " + path.string());
+
   std::stringstream ss;
   ss << file.rdbuf();
   return ss.str();
