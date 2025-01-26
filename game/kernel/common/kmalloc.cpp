@@ -4,6 +4,7 @@
 #include <cstring>
 
 #include "common/goal_constants.h"
+#include "common/log/log.h"
 
 #include "game/kernel/common/kprint.h"
 #include "game/kernel/common/kscheme.h"
@@ -90,7 +91,7 @@ Ptr<kheapinfo> kheapstatus(Ptr<kheapinfo> heap) {
   }
 
   for (int i = 0; i < NUM_CATEGORIES; i++) {
-    printf("  %d: %d %d\n", i, MemItemsCount[i], MemItemsSize[i]);
+    lg::info("  %d: %d %d\n", i, MemItemsCount[i], MemItemsSize[i]);
   }
 
   // might not have returned heap in jak 1

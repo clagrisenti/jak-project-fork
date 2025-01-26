@@ -1,5 +1,7 @@
 #include "formatter_tree.h"
 
+#include <algorithm>
+
 #include "common/util/string_util.h"
 
 #include "fmt/core.h"

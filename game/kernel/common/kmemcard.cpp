@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include "common/log/log.h"
 #include "common/util/Assert.h"
 #include "common/util/FileUtil.h"
 #include "common/util/Timer.h"
@@ -542,7 +543,7 @@ void MC_run() {
  * Why is this a memory card func?
  */
 void MC_set_language(s32 l) {
-  printf("Language set to %d\n", l);
+  lg::info("Language set to %d\n", l);
   language = l;
 }
 

@@ -411,7 +411,7 @@ int InitMachine() {
   if (status >= 0) {
     printf("InitListenerConnect\n");
     InitListenerConnect();
-    printf("InitCheckListener\n");
+    lg::info("InitCheckListener\n");
     InitCheckListener();
     Msg(6, "kernel: machine started\n");
     return 0;

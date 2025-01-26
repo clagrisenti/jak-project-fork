@@ -1,8 +1,11 @@
+
+
 #include "log.h"
 
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
+#include <filesystem>
 #include <mutex>
 
 #include "fmt/color.h"
@@ -44,6 +47,8 @@ const fmt::color log_colors[] = {
     fmt::color::red,  fmt::color::hot_pink,  fmt::color::hot_pink};
 
 void log_message(level log_level, const LogTime& now, const char* message) {
+#ifndef NO_LOG
+
 #ifdef __linux__
   char date_time_buffer[128];
   time_t now_seconds = now.tv.tv_sec;
@@ -92,9 +97,11 @@ void log_message(level log_level, const LogTime& now, const char* message) {
     }
     abort();
   }
+#endif
 }
 
 void log_print(const char* message) {
+#ifndef NO_LOG
   {
     // We always immediately flush prints because since it has no associated level
     // it could be anything from a fatal error to a useless debug log.
@@ -112,9 +119,11 @@ void log_print(const char* message) {
       fflush(stderr);
     }
   }
+#endif
 }
 
 void log_vprintf(const char* format, va_list arg_list) {
+#ifndef NO_LOG
   // We always immediately flush prints because since it has no associated level
   // it could be anything from a fatal error to a useless debug log.
   std::lock_guard<std::mutex> lock(gLogger.mutex);
@@ -131,6 +140,8 @@ void log_vprintf(const char* format, va_list arg_list) {
     fflush(stdout);
     fflush(stderr);
   }
+  va_end(arg_list_2);
+#endif
 }
 }  // namespace internal
 
@@ -145,8 +156,9 @@ void set_file(const std::string& filename,
               const bool should_rotate,
               const bool append,
               const std::string& dir) {
+#ifndef NO_LOG
   ASSERT(!gLogger.fp);
-  std::string file_path;
+  std::filesystem::path file_path;
   if (!dir.empty()) {
     file_path = file_util::combine_path(dir, filename);
   } else {
@@ -188,6 +200,7 @@ void set_file(const std::string& filename,
     gLogger.fp = file_util::open_file(complete_filename.c_str(), "w");
   }
   ASSERT(gLogger.fp);
+#endif
 }
 
 void set_flush_level(level log_level) {
@@ -213,6 +226,7 @@ void disable_ansi_colors() {
 }
 
 void initialize() {
+#ifndef NO_LOG
   ASSERT(!gLogger.initialized);
 
 #ifdef _WIN32
@@ -248,9 +262,11 @@ void initialize() {
 #endif
 
   gLogger.initialized = true;
+#endif
 }
 
 void finish() {
+#ifndef NO_LOG
   {
     std::lock_guard<std::mutex> lock(gLogger.mutex);
     if (gLogger.fp) {
@@ -258,6 +274,7 @@ void finish() {
       gLogger.fp = nullptr;
     }
   }
+#endif
 }
 
 }  // namespace lg

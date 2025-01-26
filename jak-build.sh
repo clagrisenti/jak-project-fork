@@ -7,6 +7,7 @@ buildModes=("Release")
 
 buildDir="build"
 assert=""
+log=""
 
 for mode in ${buildModes[@]}; do
 
@@ -20,6 +21,11 @@ for mode in ${buildModes[@]}; do
             echo "disabling custom asserts"
             assert="-DCMAKE_CXX_FLAGS=\"-DNO_ASSERT=1\""
         fi
+
+        if [ "$var" == "no_log" ]; then
+            echo "disabling log"
+            log="-DCMAKE_CXX_FLAGS=\"-DNO_LOG=1\""
+        fi
     done
 
     echo "building $mode"
@@ -32,6 +38,7 @@ for mode in ${buildModes[@]}; do
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     $assert \
+    $log \
     && \
     cmake \
     --build $buildDir \

@@ -1,5 +1,6 @@
 #include "formatting_rules.h"
 
+#include <algorithm>
 #include <set>
 
 #include "common/util/string_util.h"

@@ -12,15 +12,14 @@
 
 namespace lg {
 
+struct LogTime {
 #ifdef __linux__
-struct LogTime {
   timeval tv;
-};
 #else
-struct LogTime {
   time_t tim;
-};
+
 #endif
+};
 
 // Logging API
 enum class level {
