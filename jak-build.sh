@@ -5,10 +5,10 @@
 
 buildModes=("Release")
 
-for mode in ${buildModes[@]}; do
+buildDir="build"
+assert=""
 
-    buildDir="build"
-    assert=""
+for mode in ${buildModes[@]}; do
 
     for var in "$@"; do
         if [ "$var" == "clean" ]; then
@@ -23,6 +23,18 @@ for mode in ${buildModes[@]}; do
     done
 
     echo "building $mode"
-    cmake -B $buildDir -DCMAKE_BUILD_TYPE=$mode $assert && cmake --build $buildDir -j 15
+
+    cmake \
+    -B $buildDir \
+    -DCMAKE_BUILD_TYPE=$mode \
+    -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld" \
+    -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    $assert \
+    && \
+    cmake \
+    --build $buildDir \
+    -j 15
 
 done
