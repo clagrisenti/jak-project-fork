@@ -33,13 +33,6 @@ enum class level {
   off = 7
 };
 
-namespace internal {
-// log implementation stuff, not to be called by the user
-void log_message(level log_level, const LogTime& now, const char* message);
-void log_print(const char* message);
-void log_vprintf(const char* format, va_list arg_list);
-}  // namespace internal
-
 void set_file(const std::string& filename,
               const bool should_rotate = true,
               const bool append = false,
@@ -52,6 +45,10 @@ void disable_ansi_colors();
 void initialize();
 void finish();
 
+void log_message(level log_level, const LogTime& now, const char* message);
+void log_print(const char* message);
+void log_print_essential(const char* message);
+
 template <typename... Args>
 void log(level log_level, const std::string& format, Args&&... args) {
   LogTime now;
@@ -61,18 +58,35 @@ void log(level log_level, const std::string& format, Args&&... args) {
   now.tim = time(nullptr);
 #endif
   std::string formatted_message = fmt::format(fmt::runtime(format), std::forward<Args>(args)...);
-  internal::log_message(log_level, now, formatted_message.c_str());
+  log_message(log_level, now, formatted_message.c_str());
 }
 
 template <typename... Args>
 void print(const std::string& format, Args&&... args) {
+#ifndef NO_LOG
   std::string formatted_message = fmt::format(fmt::runtime(format), std::forward<Args>(args)...);
-  internal::log_print(formatted_message.c_str());
+  log_print(formatted_message.c_str());
+#endif
 }
+
 template <typename... Args>
 void print(const fmt::text_style& ts, const std::string& format, Args&&... args) {
+#ifndef NO_LOG
   std::string formatted_message = fmt::format(ts, format, std::forward<Args>(args)...);
-  internal::log_print(formatted_message.c_str());
+  log_print(formatted_message.c_str());
+#endif
+}
+
+template <typename... Args>
+void print_essential(const std::string& format, Args&&... args) {
+  std::string formatted_message = fmt::format(fmt::runtime(format), std::forward<Args>(args)...);
+  log_print_essential(formatted_message.c_str());
+}
+
+template <typename... Args>
+void print_essential(const fmt::text_style& ts, const std::string& format, Args&&... args) {
+  std::string formatted_message = fmt::format(ts, format, std::forward<Args>(args)...);
+  log_print_essential(formatted_message.c_str());
 }
 
 // same as print but uses the C printf instead of fmt
@@ -80,31 +94,48 @@ void printstd(const char* format, va_list arg_list);
 
 template <typename... Args>
 void trace(const std::string& format, Args&&... args) {
+#ifndef NO_LOG
   log(level::trace, format, std::forward<Args>(args)...);
+#endif
 }
 
 template <typename... Args>
 void debug(const std::string& format, Args&&... args) {
+#ifndef NO_LOG
   log(level::debug, format, std::forward<Args>(args)...);
+#endif
 }
 
 template <typename... Args>
 void info(const std::string& format, Args&&... args) {
+#ifndef NO_LOG
+  log(level::info, format, std::forward<Args>(args)...);
+#endif
+}
+
+template <typename... Args>
+void info_essential(const std::string& format, Args&&... args) {
   log(level::info, format, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
 void warn(const std::string& format, Args&&... args) {
+#ifndef NO_LOG
   log(level::warn, format, std::forward<Args>(args)...);
+#endif
 }
 
 template <typename... Args>
 void error(const std::string& format, Args&&... args) {
+#ifndef NO_LOG
   log(level::error, format, std::forward<Args>(args)...);
+#endif
 }
 
 template <typename... Args>
 void die(const std::string& format, Args&&... args) {
+#ifndef NO_LOG
   log(level::die, format, std::forward<Args>(args)...);
+#endif
 }
 }  // namespace lg

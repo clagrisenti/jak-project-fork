@@ -488,10 +488,10 @@ bool MakeSystem::make(const std::string& target_in, bool force, bool verbose, bo
     auto& tool = m_tools.at(rule->tool);
     int percent = (100.0 * (1 + (i++)) / (deps.size())) + 0.5;
     if (verbose) {
-      lg::print("[{:3d}%] [{:8s}] {}{}\n", percent, tool->name(), rule->input.at(0),
-                rule->input.size() > 1 ? ", ..." : "");
+      lg::info_essential("[{:3d}%] [{:8s}] {}{}\n", percent, tool->name(), rule->input.at(0),
+                         rule->input.size() > 1 ? ", ..." : "");
     } else {
-      lg::print("[{:3d}%] [{:8s}]       ", percent, tool->name());
+      lg::info_essential("[{:3d}%] [{:8s}]       ", percent, tool->name());
       print_input(rule->input, '\r');
     }
 

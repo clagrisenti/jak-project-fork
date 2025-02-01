@@ -424,7 +424,7 @@ void Loader::update(TexturePool& texture_pool) {
         Timer stage_timer;
         done = stage->run(loader_timer, loader_input);
         if (stage_timer.getMs() > 5.f) {
-          fmt::print("stage {} took {:.2f} ms\n", stage->name(), stage_timer.getMs());
+          lg::print("stage {} took {:.2f} ms\n", stage->name(), stage_timer.getMs());
         }
         if (!done) {
           break;
@@ -511,7 +511,7 @@ void Loader::update(TexturePool& texture_pool) {
     }
 
     if (unload_timer.getMs() > 5.f) {
-      fmt::print("Unload took {:.2f}ms\n", unload_timer.getMs());
+      lg::print("Unload took {:.2f}ms\n", unload_timer.getMs());
     }
 
     if (!m_garbage_buffers.empty()) {

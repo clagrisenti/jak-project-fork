@@ -47,8 +47,6 @@ const fmt::color log_colors[] = {
     fmt::color::red,  fmt::color::hot_pink,  fmt::color::hot_pink};
 
 void log_message(level log_level, const LogTime& now, const char* message) {
-#ifndef NO_LOG
-
 #ifdef __linux__
   char date_time_buffer[128];
   time_t now_seconds = now.tv.tv_sec;
@@ -97,11 +95,9 @@ void log_message(level log_level, const LogTime& now, const char* message) {
     }
     abort();
   }
-#endif
 }
 
 void log_print(const char* message) {
-#ifndef NO_LOG
   {
     // We always immediately flush prints because since it has no associated level
     // it could be anything from a fatal error to a useless debug log.
@@ -119,11 +115,9 @@ void log_print(const char* message) {
       fflush(stderr);
     }
   }
-#endif
 }
 
 void log_vprintf(const char* format, va_list arg_list) {
-#ifndef NO_LOG
   // We always immediately flush prints because since it has no associated level
   // it could be anything from a fatal error to a useless debug log.
   std::lock_guard<std::mutex> lock(gLogger.mutex);
@@ -141,9 +135,20 @@ void log_vprintf(const char* format, va_list arg_list) {
     fflush(stderr);
   }
   va_end(arg_list_2);
-#endif
 }
 }  // namespace internal
+
+void log_message(level log_level, const LogTime& now, const char* message) {
+  internal::log_message(log_level, now, message);
+}
+
+void log_print(const char* message) {
+  internal::log_print(message);
+}
+
+void log_print_essential(const char* message) {
+  internal::log_print(message);
+}
 
 void printstd(const char* format, va_list arg_list) {
   internal::log_vprintf(format, arg_list);
@@ -226,7 +231,6 @@ void disable_ansi_colors() {
 }
 
 void initialize() {
-#ifndef NO_LOG
   ASSERT(!gLogger.initialized);
 
 #ifdef _WIN32
@@ -262,11 +266,9 @@ void initialize() {
 #endif
 
   gLogger.initialized = true;
-#endif
 }
 
 void finish() {
-#ifndef NO_LOG
   {
     std::lock_guard<std::mutex> lock(gLogger.mutex);
     if (gLogger.fp) {
@@ -274,7 +276,6 @@ void finish() {
       gLogger.fp = nullptr;
     }
   }
-#endif
 }
 
 }  // namespace lg
