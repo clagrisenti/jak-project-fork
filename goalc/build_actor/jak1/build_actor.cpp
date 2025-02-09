@@ -548,7 +548,7 @@ std::vector<u8> ArtGroup::save_object_file() const {
     }
 
     for (size_t i = 2; i < elts.size(); i++) {
-      auto ja = (ArtJointAnim*)elts.at(i).get();
+      const auto ja = (ArtJointAnim*)elts.at(i).get();
       gen.link_word_to_byte((32 + i * 4) / 4, ja->generate(gen));
     }
   }

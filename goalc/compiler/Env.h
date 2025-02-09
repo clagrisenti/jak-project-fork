@@ -81,7 +81,7 @@ class GlobalEnv : public Env {
   void constrain_reg(IRegConstraint constraint) override;
   RegVal* lexical_lookup(goos::Object sym) override;
   BlockEnv* find_block(const std::string& name) override;
-  ~GlobalEnv() = default;
+  ~GlobalEnv();
 
   FileEnv* add_file(std::string name);
   // TODO - consider refactoring to use a Trie

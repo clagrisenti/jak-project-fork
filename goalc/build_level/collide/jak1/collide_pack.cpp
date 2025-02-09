@@ -177,7 +177,7 @@ std::vector<u8> make_dumb_strip_table(const IndexedFaces& faces) {
   ASSERT_MSG(
       faces.vertices_float.size() < UINT8_MAX,
       "somehow have UINT8_MAX deduped vertices in a single fragment, likely a bug somewhere.");
-  for (auto& face : faces.faces) {
+  for (const auto& face : faces.faces) {
     out.push_back(face.vertex_indices[0]);
     out.push_back(face.vertex_indices[1]);
     out.push_back(face.vertex_indices[2]);

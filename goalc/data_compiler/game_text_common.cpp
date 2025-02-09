@@ -97,7 +97,7 @@ void compile_text(GameTextDB& db, const std::string& output_prefix) {
  * Write game subtitle data to a file. Uses the V2 object format which is identical between GOAL and
  * OpenGOAL.
  */
-void compile_subtitles_v1(GameSubtitleDB& db, const std::string& output_prefix) {
+void compile_subtitles_v1(const GameSubtitleDB& db, const std::string& output_prefix) {
   for (const auto& [lang, bank] : db.m_banks) {
     // get font encoding information
     auto font = get_font_bank(bank->m_text_version);
@@ -167,7 +167,7 @@ void compile_subtitles_v1(GameSubtitleDB& db, const std::string& output_prefix) 
  * Write game subtitle2 data to a file. Uses the V2 object format which is identical between GOAL
  * and OpenGOAL.
  */
-void compile_subtitles_v2(GameSubtitleDB& db, const std::string& output_prefix) {
+void compile_subtitles_v2(const GameSubtitleDB& db, const std::string& output_prefix) {
   for (const auto& [lang, bank] : db.m_banks) {
     auto font = get_font_bank(bank->m_text_version);
     DataObjectGenerator gen;

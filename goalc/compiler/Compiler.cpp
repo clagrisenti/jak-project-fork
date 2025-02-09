@@ -258,7 +258,7 @@ void Compiler::color_object_file(FileEnv* env) {
       // input.debug_instruction_names.push_back(i->print());
     }
 
-    for (auto& reg_val : f->reg_vals()) {
+    for (const auto& reg_val : f->reg_vals()) {
       if (reg_val->forced_on_stack()) {
         input.force_on_stack_regs.insert(reg_val->ireg().id);
       }
@@ -310,7 +310,7 @@ std::vector<u8> Compiler::codegen_object_file(FileEnv* env) {
     CodeGenerator gen(env, debug_info, m_version);
     bool ok = true;
     auto result = gen.run(&m_ts);
-    for (auto& f : env->functions()) {
+    for (const auto& f : env->functions()) {
       if (f->settings.print_asm) {
         lg::print("{}\n", debug_info->disassemble_function_by_name(f->name(), &ok, &m_goos.reader));
       }

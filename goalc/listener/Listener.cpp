@@ -136,12 +136,9 @@ bool Listener::connect_to_target(int n_tries, const std::string& ip, int port) {
   }
 
   // connect!
-  int rv, i;
-  for (i = 0; i < n_tries; i++) {
+  int rv{0}, i;
+  for (i = 0; i < n_tries && rv == 0; i++) {
     rv = connect(listen_socket, (sockaddr*)&server_address, sizeof(server_address));
-    if (rv >= 0) {
-      break;
-    }
     std::this_thread::sleep_for(std::chrono::microseconds(100000));
   }
   if (rv < 0) {

@@ -35,7 +35,7 @@ ObjectFileData ObjectGenerator::generate_data_v3(const TypeSystem* ts) {
 
   // do functions (step 2, part 1)
   for (int seg = N_SEG; seg-- > 0;) {
-    auto& data = m_data_by_seg.at(seg);
+    const auto& data = m_data_by_seg.at(seg);
     // loop over functions in this segment
     for (auto& function : m_function_data_by_seg.at(seg)) {
       // align

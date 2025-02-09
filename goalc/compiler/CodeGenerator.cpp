@@ -73,7 +73,7 @@ void CodeGenerator::do_function(FunctionEnv* env, int f_idx) {
  * Generates prologues / epilogues.
  */
 void CodeGenerator::do_goal_function(FunctionEnv* env, int f_idx) {
-  bool use_new_xmms = true;
+  constexpr bool use_new_xmms = true;
   auto* debug = &m_debug_info->function_by_name(env->name());
 
   auto f_rec = m_gen.get_existing_function_record(f_idx);
@@ -96,7 +96,7 @@ void CodeGenerator::do_goal_function(FunctionEnv* env, int f_idx) {
   // only for new xmms. if n == 0, we don't use this at all.
   int xmm_backup_stack_offset = 8 + XMM_SIZE * n_xmm_backups;
 
-  if (use_new_xmms) {
+  if constexpr (use_new_xmms) {
     if (n_xmm_backups > 0) {
       // offset the stack
       stack_offset += xmm_backup_stack_offset;

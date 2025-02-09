@@ -124,7 +124,7 @@ void to_json(json& j, const MacroDocumentation& obj) {
 }
 
 std::vector<ArgumentDocumentation> get_args_from_docstring(
-    std::vector<symbol_info::ArgumentInfo> args,
+    const std::vector<symbol_info::ArgumentInfo>& args,
     std::string docstring) {
   std::vector<ArgumentDocumentation> arg_docs;
   for (const auto& arg : args) {

@@ -65,7 +65,7 @@ void allow_debugging() {
   // modern Linux has "security features" which prevent processes from accessing memory of others.
   // we disable these for the GOAL runtime process so the debugger can connect.
   if (prctl(PR_SET_PTRACER, PR_SET_PTRACER_ANY) < 0) {
-    printf("[Debugger] Failed to PR_SET_PTRACER %s\n", strerror(errno));
+    lg::warn("[Debugger] Failed to PR_SET_PTRACER %s\n", strerror(errno));
   }
 }
 

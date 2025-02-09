@@ -61,7 +61,7 @@ void dedup_tie_vertices(TieOutput& data) {
   data.color_indices.clear();
   data.vertices.reserve(new_verts.size());
   data.color_indices.reserve(new_verts.size());
-  for (auto& x : new_verts) {
+  for (const auto& x : new_verts) {
     data.vertices.push_back(x.vertex);
     data.color_indices.push_back(x.color_index);
   }
@@ -381,13 +381,11 @@ std::optional<std::vector<jak1::CollideFace>> subdivide_face_if_needed(jak1::Col
   v_min.min_in_place(face_in.v[1]);
   v_min.min_in_place(face_in.v[2]);
   v_min -= 16.f;
-  bool needs_subdiv = false;
-  for (auto& vert : face_in.v) {
-    if ((vert - v_min).squared_length() > 154.f * 154.f * 4096.f * 4096.f) {
-      needs_subdiv = true;
-      break;
-    }
-  }
+  std::span<math::Vector3f> span = face_in.v;
+
+  bool needs_subdiv = std::any_of(span.begin(), span.end(), [&v_min](const auto& vert) -> bool {
+    return (vert - v_min).squared_length() > 154.f * 154.f * 4096.f * 4096.f;
+  });
 
   if (needs_subdiv) {
     math::Vector3f a = (face_in.v[0] + face_in.v[1]) * 0.5f;
@@ -525,7 +523,7 @@ void extract(const Input& in,
 
           // get the positions
           for (int j = 0; j < 3; j++) {
-            auto& vtx = verts.vtx.at(prim_indices.at(iidx + j));
+            const auto& vtx = verts.vtx.at(prim_indices.at(iidx + j));
             face.v[j].x() = vtx.x;
             face.v[j].y() = vtx.y;
             face.v[j].z() = vtx.z;
@@ -567,7 +565,7 @@ void extract(const Input& in,
 
   std::vector<jak1::CollideFace> fixed_faces;
   int fix_count = 0;
-  for (auto& face : out.faces) {
+  for (const auto& face : out.faces) {
     auto try_fix = subdivide_face_if_needed(face);
     if (try_fix) {
       fix_count++;

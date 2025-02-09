@@ -68,6 +68,7 @@ void Env::emit(const goos::Object& form, std::unique_ptr<IR> ir) {
 // errors, or return that the items were not found.
 
 GlobalEnv::GlobalEnv() : Env(EnvKind::OTHER_ENV, nullptr) {}
+GlobalEnv::~GlobalEnv() {}
 
 std::string GlobalEnv::print() {
   return "global-env";

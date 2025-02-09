@@ -96,7 +96,7 @@ void for_each_node(Node& root, T&& func) {
 
 u32 count_leaves(Node& root) {
   u32 result = 0;
-  for_each_node(root, [&](Node& n) {
+  for_each_node(root, [&](const Node& n) {
     if (n.rgb_sum_count) {
       ASSERT(n.children.empty());
       result++;
@@ -151,8 +151,9 @@ void find_nodes_at_level(Node& n, std::vector<Node*>& out, u8 level) {
 void collapse_at_level(Node& root, u8 level, u32 target_leaf_count) {
   std::vector<Node*> nodes_at_level;
   find_nodes_at_level(root, nodes_at_level, level);
-  std::stable_sort(nodes_at_level.begin(), nodes_at_level.end(),
-                   [](Node* a, Node* b) { return a->leaves_under_me < b->leaves_under_me; });
+  std::stable_sort(
+      nodes_at_level.begin(), nodes_at_level.end(),
+      [](const Node* a, const Node* b) -> bool { return a->leaves_under_me < b->leaves_under_me; });
 
   size_t at_level_to_try = 0;
   while (root.leaves_under_me > target_leaf_count && at_level_to_try < nodes_at_level.size()) {

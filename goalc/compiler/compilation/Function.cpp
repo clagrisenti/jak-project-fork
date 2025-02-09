@@ -183,7 +183,7 @@ Val* Compiler::compile_lambda(const goos::Object& form, const goos::Object& rest
     // set up argument register constraints.
     std::vector<RegVal*> reset_args_for_coloring;
     std::vector<TypeSpec> arg_types;
-    for (auto& parm : lambda.params) {
+    for (const auto& parm : lambda.params) {
       arg_types.push_back(parm.type);
     }
     auto arg_regs = get_arg_registers(m_ts, arg_types);

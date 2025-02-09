@@ -44,7 +44,7 @@ void collect_vertices(const CNode& node, std::vector<math::Vector3f>& verts) {
   for (const CNode& child : node.child_nodes) {
     collect_vertices(child, verts);
   }
-  for (auto& face : node.faces) {
+  for (const auto& face : node.faces) {
     verts.push_back(face.v[0]);
     verts.push_back(face.v[1]);
     verts.push_back(face.v[2]);
@@ -204,7 +204,7 @@ void split_recursive(CNode& to_split) {
 
   bool has_leaves = false;
   bool has_not_leaves = false;
-  for (auto& child : to_split.child_nodes) {
+  for (const auto& child : to_split.child_nodes) {
     if (!child.faces.empty()) {
       has_leaves = true;
     }

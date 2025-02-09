@@ -418,7 +418,7 @@ RegAllocInstr IR_FunctionCall::to_rai() {
   rai.read.push_back(m_func->ireg());
   rai.write.push_back(m_func->ireg());  // todo, can we avoid this?
   rai.write.push_back(m_ret->ireg());
-  for (auto& arg : m_args) {
+  for (const auto& arg : m_args) {
     rai.read.push_back(arg->ireg());
   }
 

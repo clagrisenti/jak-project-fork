@@ -595,7 +595,8 @@ void Debugger::read_symbol_table_jak1() {
       }
 
       // now get the info
-      auto info = (SymUpper*)(mem.data() + i * sizeof(SymLower) + SYM_INFO_OFFSET + BASIC_OFFSET);
+      const auto info =
+          (SymUpper*)(mem.data() + i * sizeof(SymLower) + SYM_INFO_OFFSET + BASIC_OFFSET);
 
       // now get the string.
       char str_buff[128];
