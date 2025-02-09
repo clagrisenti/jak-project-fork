@@ -42,6 +42,6 @@ for mode in ${buildModes[@]}; do
     && \
     cmake \
     --build $buildDir \
-    -j 15
+    -j $(($(nproc --all)-1))
 
 done

@@ -5,6 +5,7 @@
 #include "gltf_mesh_extract.h"
 
 #include <optional>
+#include <span>
 
 #include "color_quantization.h"
 
