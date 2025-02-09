@@ -543,7 +543,7 @@ void MC_run() {
  * Why is this a memory card func?
  */
 void MC_set_language(s32 l) {
-  lg::info("Language set to %d\n", l);
+  lg::info("Language set to {}", l);
   language = l;
 }
 

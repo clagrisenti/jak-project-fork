@@ -4,6 +4,7 @@
 
 #include "common/goal_constants.h"
 #include "common/listener_common.h"
+#include "common/log/log.h"
 #include "common/symbols.h"
 
 #include "all_jak1_symbols.h"
@@ -341,7 +342,7 @@ TEST(Kernel, PrintBuffer) {
   auto mem = new u8[size];
   setup_hack_heaps(mem, size);
   clear_print();
-  cprintf("test!\n");
+  lg::info("test!\n");
 
   std::string result = PrintBufArea.cast<char>().c() + sizeof(ListenerMessageHeader);
   EXPECT_EQ(result, "test!\n");

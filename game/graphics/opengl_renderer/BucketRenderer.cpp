@@ -1,5 +1,7 @@
 #include "BucketRenderer.h"
 
+#include "common/log/log.h"
+
 #include "fmt/core.h"
 #include "third-party/imgui/imgui.h"
 
@@ -84,15 +86,15 @@ void PrintRenderer::render(DmaFollower& dma,
   while (dma.current_tag_offset() != render_state->next_bucket) {
     auto dmatag = dma.current_tag();
     auto data = dma.read_and_advance();
-    printf(
+    lg::warn(
         "dma transfer %d:\n%ssize: %d\nvif0: %s, data: %d\nvif1: %s, data: %d, imm: "
-        "%d\n\n",
+        "%d",
         transfers, dmatag.print().c_str(), data.size_bytes, data.vifcode0().print().c_str(),
         data.vif0(), data.vifcode1().print().c_str(), data.vifcode1().num,
         data.vifcode1().immediate);
     transfers++;
   }
-  printf("transfers: %d\n\n", transfers);
+  lg::info("transfers: %d\n\n", transfers);
 }
 
 void SharedRenderState::reset() {

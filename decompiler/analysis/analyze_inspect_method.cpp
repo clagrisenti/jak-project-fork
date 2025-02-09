@@ -955,7 +955,7 @@ int identify_float_field(int idx,
   auto& float_move = function.ir2.atomic_ops->ops.at(idx++);
   if (!is_op_2(float_move.get(), SimpleExpression::Kind::FPR_TO_GPR, make_gpr(Reg::A2),
                make_fpr(0))) {
-    printf("bad float move: %s\n", float_move->to_string(function.ir2.env).c_str());
+    lg::warn("bad float move: %s\n", float_move->to_string(function.ir2.env).c_str());
     ASSERT(false);
   }
 
@@ -1053,7 +1053,7 @@ int identify_array_field(int idx,
   }
 
   if (!ptr) {
-    printf("bad get ptr offset %s\n", get_op->to_string(function.ir2.env).c_str());
+    lg::warn("bad get ptr offset %s\n", get_op->to_string(function.ir2.env).c_str());
     ASSERT(false);
   }
   if (result->is_basic) {
@@ -1096,7 +1096,7 @@ int identify_struct_inline_field(int idx,
   auto& get_op = function.ir2.atomic_ops->ops.at(idx++);
   int offset = 0;
   if (!get_ptr_offset(get_op.get(), make_gpr(Reg::A2), make_gpr(Reg::GP), &offset)) {
-    printf("bad get ptr offset %s\n", get_op->to_string(function.ir2.env).c_str());
+    lg::warn("bad get ptr offset %s\n", get_op->to_string(function.ir2.env).c_str());
     // ASSERT(false);
   }
   if (result->is_basic) {
@@ -1192,7 +1192,7 @@ int identify_cstring_field(int idx,
       offset = load_info.offset;
       comment = "field uses ~g print with a quadword load!";
     } else {
-      printf("bad get ptr offset %s\n", get_op->to_string(function.ir2.env).c_str());
+      lg::warn("bad get ptr offset %s\n", get_op->to_string(function.ir2.env).c_str());
       ASSERT(false);
     }
   }
@@ -1291,8 +1291,8 @@ int detect(int idx, Function& function, LinkedObjectFile& file, TypeInspectorRes
   }
 
   else {
-    printf("couldn't do %s, %s, adding unknown field\n", sstr->c_str(),
-           first_get_op->to_string(function.ir2.env).c_str());
+    lg::warn("couldn't do %s, %s, adding unknown field\n", sstr->c_str(),
+             first_get_op->to_string(function.ir2.env).c_str());
     // if all else fails, create an unknown field so the rest of the inspect can pass.
     Field unknown("UNKNOWN", TypeSpec("UNKNOWN"), -1);
     unknown.set_comment("field could not be read.");
@@ -1334,7 +1334,7 @@ int detect(int idx, Function& function, LinkedObjectFile& file, TypeInspectorRes
   }
 
   if (!call_op) {
-    printf("bad call\n");
+    lg::warn("bad call\n");
     // ASSERT(false);
     return -1;
   }

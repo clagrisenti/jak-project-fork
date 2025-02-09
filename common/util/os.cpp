@@ -99,11 +99,11 @@ void setup_cpu_info() {
     gCpuInfo.has_avx = result[2] & (1 << 28);
   }
 
-  printf("-------- CPU Information --------\n");
-  printf(" Brand: %s\n", gCpuInfo.brand.c_str());
-  printf(" Model: %s\n", gCpuInfo.model.c_str());
-  printf(" AVX  : %s\n", gCpuInfo.has_avx ? "true" : "false");
-  printf(" AVX2 : %s\n", gCpuInfo.has_avx2 ? "true" : "false");
+  lg::info("-------- CPU Information --------");
+  lg::info(" Brand: {}", gCpuInfo.brand.c_str());
+  lg::info(" Model: {}", gCpuInfo.model.c_str());
+  lg::info(" AVX  : {}", gCpuInfo.has_avx ? "true" : "false");
+  lg::info(" AVX2 : {}", gCpuInfo.has_avx2 ? "true" : "false");
   fflush(stdout);
 
   gCpuInfo.initialized = true;

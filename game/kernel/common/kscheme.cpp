@@ -71,7 +71,7 @@ u32 crc32(const u8* data, s32 size) {
  * Prints an error to stdout and returns false.
  */
 u64 delete_illegal(u32 obj) {
-  MsgErr("dkernel: illegal attempt to call delete method of static object @ #x%x\n", obj);
+  MsgErr("dkernel: illegal attempt to call delete method of static object @ #x%x", obj);
   return s7.offset;  // todo, maybe don't return anything?
 }
 

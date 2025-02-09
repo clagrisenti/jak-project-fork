@@ -9,6 +9,7 @@
 #include <cstring>
 
 #include "common/goal_constants.h"
+#include "common/log/log.h"
 #include "common/util/Timer.h"
 
 #include "fmt/core.h"
@@ -76,13 +77,13 @@ bool attach_and_break(const ThreadID& tid) {
   // SEIZE attaches without halting, but is required to use PTRACE_INTERRUPT in the future.
   auto rv = ptrace(PTRACE_SEIZE, tid.id, nullptr, nullptr);
   if (rv == -1) {
-    printf("[Debugger] Failed to attach %s\n", strerror(errno));
+    lg::warn("[Debugger] Failed to attach %s\n", strerror(errno));
     return false;
   } else {
     // we attached, now send break
-    printf("[Debugger] PTRACE_ATTACHED! Waiting for process to stop...\n");
+    lg::warn("[Debugger] PTRACE_ATTACHED! Waiting for process to stop...\n");
     if (ptrace(PTRACE_INTERRUPT, tid.id, nullptr, nullptr) < 0) {
-      printf("[Debugger] Failed to PTRACE_INTERRUPT %s\n", strerror(errno));
+      lg::warn("[Debugger] Failed to PTRACE_INTERRUPT %s\n", strerror(errno));
       return false;
     }
 
@@ -105,7 +106,7 @@ bool check_stopped(const ThreadID& tid, SignalInfo* out) {
       out->kind = SignalInfo::DISAPPEARED;
       return true;
     }
-    printf("[Debugger] Failed to waitpid: %s.\n", strerror(errno));
+    lg::warn("[Debugger] Failed to waitpid: %s.\n", strerror(errno));
     //    ASSERT(false);  // todo, temp because I think we should never hit this.
     return false;
   }
@@ -147,7 +148,7 @@ bool check_stopped(const ThreadID& tid, SignalInfo* out) {
 bool open_memory(const ThreadID& tid, MemoryHandle* out) {
   int fd = open(fmt::format("/proc/{}/mem", tid.id).c_str(), O_RDWR);
   if (fd < -1) {
-    printf("[Debugger] Failed to open memory: %s.\n", strerror(errno));
+    lg::warn("[Debugger] Failed to open memory: %s.\n", strerror(errno));
     return false;
   }
   out->fd = fd;
@@ -160,7 +161,7 @@ bool open_memory(const ThreadID& tid, MemoryHandle* out) {
 bool close_memory(const ThreadID& tid, MemoryHandle* handle) {
   (void)tid;
   if (close(handle->fd) < 0) {
-    printf("[Debugger] Failed to close memory: %s.\n", strerror(errno));
+    lg::warn("[Debugger] Failed to close memory: %s.\n", strerror(errno));
     return false;
   }
   return true;
@@ -175,7 +176,7 @@ bool read_goal_memory(u8* dest_buffer,
                       const DebugContext& context,
                       const MemoryHandle& mem) {
   if (pread(mem.fd, dest_buffer, size, context.base + goal_addr) != size) {
-    printf("[Debugger] Failed to read memory: %s.\n", strerror(errno));
+    lg::warn("[Debugger] Failed to read memory: %s.\n", strerror(errno));
     return false;
   }
   return true;
@@ -190,7 +191,7 @@ bool write_goal_memory(const u8* src_buffer,
                        const DebugContext& context,
                        const MemoryHandle& mem) {
   if (pwrite(mem.fd, src_buffer, size, context.base + goal_addr) != size) {
-    printf("[Debugger] Failed to write memory: %s.\n", strerror(errno));
+    lg::warn("[Debugger] Failed to write memory: %s.\n", strerror(errno));
     return false;
   }
   return true;
@@ -201,7 +202,7 @@ bool write_goal_memory(const u8* src_buffer,
  */
 bool detach_and_resume(const ThreadID& tid) {
   if (ptrace(PTRACE_DETACH, tid.id, nullptr, nullptr) < 0) {
-    printf("[Debugger] Failed to detach: %s\n", strerror(errno));
+    lg::warn("[Debugger] Failed to detach: %s\n", strerror(errno));
     return false;
   }
   return true;
@@ -213,7 +214,7 @@ bool detach_and_resume(const ThreadID& tid) {
 bool get_regs_now(const ThreadID& tid, Regs* out) {
   user regs = {};
   if (ptrace(PTRACE_GETREGS, tid.id, nullptr, &regs) < 0) {
-    printf("[Debugger] Failed to PTRACE_GETREGS %s\n", strerror(errno));
+    lg::warn("[Debugger] Failed to PTRACE_GETREGS %s\n", strerror(errno));
     return false;
   }
 
@@ -245,7 +246,7 @@ bool get_regs_now(const ThreadID& tid, Regs* out) {
 bool set_regs_now(const ThreadID& tid, const Regs& out) {
   user regs = {};
   if (ptrace(PTRACE_GETREGS, tid.id, nullptr, &regs) < 0) {
-    printf("[Debugger] Failed to PTRACE_GETREGS %s\n", strerror(errno));
+    lg::warn("[Debugger] Failed to PTRACE_GETREGS %s\n", strerror(errno));
     return false;
   }
 
@@ -268,7 +269,7 @@ bool set_regs_now(const ThreadID& tid, const Regs& out) {
   regs.regs.rip = out.rip;
 
   if (ptrace(PTRACE_SETREGS, tid.id, nullptr, &regs) < 0) {
-    printf("[Debugger] Failed to PTRACE_SETREGS %s\n", strerror(errno));
+    lg::warn("[Debugger] Failed to PTRACE_SETREGS %s\n", strerror(errno));
     return false;
   }
   // todo, set fprs.
@@ -283,7 +284,7 @@ bool set_regs_now(const ThreadID& tid, const Regs& out) {
  */
 bool break_now(const ThreadID& tid) {
   if (ptrace(PTRACE_INTERRUPT, tid.id, nullptr, nullptr) < 0) {
-    printf("[Debugger] Failed to PTRACE_INTERRUPT %s\n", strerror(errno));
+    lg::warn("[Debugger] Failed to PTRACE_INTERRUPT %s\n", strerror(errno));
     return false;
   }
 
@@ -295,7 +296,7 @@ bool break_now(const ThreadID& tid) {
  */
 bool cont_now(const ThreadID& tid) {
   if (ptrace(PTRACE_CONT, tid.id, nullptr, nullptr) < 0) {
-    printf("[Debugger] Failed to PTRACE_CONT %s\n", strerror(errno));
+    lg::warn("[Debugger] Failed to PTRACE_CONT %s\n", strerror(errno));
     return false;
   }
   return true;
@@ -327,7 +328,7 @@ void win_print_last_error(const std::string& msg) {
       nullptr, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&lpMsgBuf, 0,
       nullptr);
 
-  printf("[Debugger] %s Win Err: %s", msg.c_str(), lpMsgBuf);
+  lg::warn("[Debugger] %s Win Err: %s", msg.c_str(), lpMsgBuf);
 }
 
 /*!
@@ -521,7 +522,7 @@ bool check_stopped(const ThreadID& tid, SignalInfo* out) {
         out->kind = SignalInfo::DISAPPEARED;
         break;
       default:
-        printf("[Debugger] unhandled debug event %lu\n", debugEvent.dwDebugEventCode);
+        lg::warn("[Debugger] unhandled debug event %lu\n", debugEvent.dwDebugEventCode);
         out->kind = SignalInfo::UNKNOWN;
         break;
     }
@@ -697,7 +698,7 @@ ThreadID get_current_thread_id() {
 bool attach_and_break(const ThreadID& tid);
 
 void allow_debugging() {
-  printf("allow_debugging not implemented on macOS\n");
+  lg::warn("allow_debugging not implemented on macOS\n");
 }
 
 bool detach_and_resume(const ThreadID& tid) {

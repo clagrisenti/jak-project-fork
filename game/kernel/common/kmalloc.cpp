@@ -71,27 +71,27 @@ Ptr<u8> ksmalloc(Ptr<kheapinfo> heap, s32 size, u32 flags, char const* name) {
  */
 Ptr<kheapinfo> kheapstatus(Ptr<kheapinfo> heap) {
   Msg(6,
-      "[%8x] kheap\n"
-      "\tbase: #x%x\n"
-      "\ttop-base: #x%x\n"
-      "\tcur: #x%x\n"
-      "\ttop: #x%x\n",
+      "[{}] kheap\n"
+      "\tbase: {}\n"
+      "\ttop-base: {}\n"
+      "\tcur: {}\n"
+      "\ttop: {}",
       heap.offset, heap->base.offset, heap->top_base.offset, heap->current.offset,
       heap->top.offset);
   // note: max symbols here is game-version dependent
   Msg(6,
-      "\t used bot: %d of %d bytes\n"
-      "\t used top: %d of %d bytes\n"
-      "\t symbols: %d of %d\n",
+      "\t used bot: {} of {} bytes\n"
+      "\t used top: {} of {} bytes\n"
+      "\t symbols: {} of {}",
       heap->current - heap->base, heap->top_base - heap->base, heap->top_base - heap->top,
       heap->top_base - heap->base, NumSymbols, max_symbols(g_game_version));
 
   if (heap == kglobalheap) {
-    Msg(6, "\t %d bytes before stack\n", GLOBAL_HEAP_END - heap->current.offset);
+    Msg(6, "\t {} bytes before stack", GLOBAL_HEAP_END - heap->current.offset);
   }
 
   for (int i = 0; i < NUM_CATEGORIES; i++) {
-    lg::info("  %d: %d %d\n", i, MemItemsCount[i], MemItemsSize[i]);
+    lg::info("  {}: {} {}", i, MemItemsCount[i], MemItemsSize[i]);
   }
 
   // might not have returned heap in jak 1
@@ -134,7 +134,7 @@ Ptr<u8> kmalloc(Ptr<kheapinfo> heap, s32 size, u32 flags, char const* name) {
   // if we got a null heap, put it on the global heap, but warn about it
   if (!heap.offset) {
     // the 0 is uninitialized in jak1, set to zero in jak 2. might just be compiler differences.
-    Msg(6, "-----------> kmalloc: alloc %s,  mem %s #x%x (a:%d  %dbytes)\n", "DEBUG", name, 0,
+    Msg(6, "-----------> kmalloc: alloc %s,  mem %s #x%x (a:%d  %dbytes)", "DEBUG", name, 0,
         alignment_flag, size);
     heap = kglobalheap;
   }
@@ -151,7 +151,7 @@ Ptr<u8> kmalloc(Ptr<kheapinfo> heap, s32 size, u32 flags, char const* name) {
       memstart = (0xfffffff0 & (heap->current.offset + 0x10 - 1));
 
     if (size == 0) {
-      Msg(6, "[WARNING] kmalloc : size 0 allocation from bottom.\n");
+      Msg(6, "[WARNING] kmalloc : size 0 allocation from bottom.");
       return Ptr<u8>(memstart);
     }
 
@@ -159,7 +159,7 @@ Ptr<u8> kmalloc(Ptr<kheapinfo> heap, s32 size, u32 flags, char const* name) {
 
     if (heap->top.offset < memend) {
       kheapstatus(heap);
-      Msg(6, "kmalloc: !alloc mem %s (%d bytes) heap %x\n", name, size, heap.offset);
+      Msg(6, "kmalloc: !alloc mem %s (%d bytes) heap %x", name, size, heap.offset);
       return Ptr<u8>(0);
     }
 
@@ -176,12 +176,12 @@ Ptr<u8> kmalloc(Ptr<kheapinfo> heap, s32 size, u32 flags, char const* name) {
     memstart = (heap->top.offset - size) & (-alignment_flag);
 
     if (size == 0) {
-      Msg(6, "[WARNING] kmalloc : size 0 allocation from top\n");
+      Msg(6, "[WARNING] kmalloc : size 0 allocation from top");
       return Ptr<u8>(memstart);
     }
 
     if (heap->current.offset >= memstart) {
-      Msg(6, "kmalloc: !alloc mem from top %s (%d bytes) heap %x\n", name, size, heap.offset);
+      Msg(6, "kmalloc: !alloc mem from top %s (%d bytes) heap %x", name, size, heap.offset);
       kheapstatus(heap);
       return Ptr<u8>(0);
     }
@@ -212,5 +212,5 @@ Ptr<u8> kmalloc(Ptr<kheapinfo> heap, s32 size, u32 flags, char const* name) {
  */
 void kfree(Ptr<u8> a) {
   (void)a;
-  Msg(6, "[ERROR] kmalloc: kfree called\n");
+  Msg(6, "[ERROR] kmalloc: kfree called");
 }

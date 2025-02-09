@@ -205,7 +205,7 @@ uint32_t link_control::jak1_work_v3() {
             ofh->code_infos[seg_id].offset =
                 kmalloc(kdebugheap, ofh->code_infos[seg_id].size, 0, "debug-segment").offset;
             if (ofh->code_infos[seg_id].offset == 0) {
-              MsgErr("dkernel: unable to malloc %d bytes for debug-segment\n",
+              MsgErr("dkernel: unable to malloc %d bytes for debug-segment",
                      ofh->code_infos[seg_id].size);
               return 1;
             }
@@ -221,7 +221,7 @@ uint32_t link_control::jak1_work_v3() {
           ofh->code_infos[seg_id].offset =
               kmalloc(m_heap, ofh->code_infos[seg_id].size, 0, "main-segment").offset;
           if (ofh->code_infos[seg_id].offset == 0) {
-            MsgErr("dkernel: unable to malloc %d bytes for main-segment\n",
+            MsgErr("dkernel: unable to malloc %d bytes for main-segment",
                    ofh->code_infos[seg_id].size);
             return 1;
           }
@@ -237,7 +237,7 @@ uint32_t link_control::jak1_work_v3() {
               kmalloc(m_heap, ofh->code_infos[seg_id].size, KMALLOC_TOP, "top-level-segment")
                   .offset;
           if (ofh->code_infos[seg_id].offset == 0) {
-            MsgErr("dkernel: unable to malloc %d bytes for top-level-segment\n",
+            MsgErr("dkernel: unable to malloc %d bytes for top-level-segment",
                    ofh->code_infos[seg_id].size);
             return 1;
           }
@@ -330,11 +330,11 @@ uint32_t link_control::jak1_work_v2() {
     if (m_heap_gap <
         OBJ_V2_CLOSE_ENOUGH) {  // close enough, don't relocate the object, just expand the heap
       if (link_debug_printfs) {
-        printf("[work_v2] close enough, not moving\n");
+        printf("[work_v2] close enough, not moving");
       }
       m_heap->current = m_object_data + m_code_size;
       if (m_heap->top.offset <= m_heap->current.offset) {
-        MsgErr("dkernel: heap overflow\n");  // game has ~% instead of \n :P
+        MsgErr("dkernel: heap overflow");  // game has ~% instead of \n :P
         return 1;
       }
     } else {  // not close enough, need to move the object
@@ -345,11 +345,11 @@ uint32_t link_control::jak1_work_v2() {
         // allocate on heap, will have no gap
         m_object_data = kmalloc(m_heap, m_code_size, 0, "data-segment");
         if (link_debug_printfs) {
-          printf("[work_v2] moving from 0x%x to 0x%x\n", m_original_object_location.offset,
+          printf("[work_v2] moving from 0x%x to 0x%x", m_original_object_location.offset,
                  m_object_data.offset);
         }
         if (!m_object_data.offset) {
-          MsgErr("dkernel: unable to malloc %d bytes for data-segment\n", m_code_size);
+          MsgErr("dkernel: unable to malloc %d bytes for data-segment", m_code_size);
           return 1;
         }
       }

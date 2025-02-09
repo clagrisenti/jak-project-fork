@@ -334,7 +334,7 @@ uint32_t link_control::jak3_work_v5() {
         auto new_data = kmalloc(m_heap, m_link_segments_table[0].size, 0, "main-segment");
         m_link_segments_table[0].data = new_data.offset;
         if (!new_data.offset) {
-          MsgErr("dkernel: unable to malloc %d bytes for main-segment\n",
+          MsgErr("dkernel: unable to malloc %d bytes for main-segment",
                  m_link_segments_table[0].size);
           return 1;
         }
@@ -343,7 +343,7 @@ uint32_t link_control::jak3_work_v5() {
       } else {
         m_heap->current = m_object_data + m_code_size;
         if (m_heap->top.offset <= m_heap->current.offset) {
-          MsgErr("dkernel: heap overflow\n");
+          MsgErr("dkernel: heap overflow");
           return 1;
         }
       }
@@ -627,7 +627,7 @@ uint32_t link_control::jak3_work_opengoal() {
             ofh->code_infos[seg_id].offset =
                 kmalloc(kdebugheap, ofh->code_infos[seg_id].size, 0, "debug-segment").offset;
             if (ofh->code_infos[seg_id].offset == 0) {
-              MsgErr("dkernel: unable to malloc %d bytes for debug-segment\n",
+              MsgErr("dkernel: unable to malloc %d bytes for debug-segment",
                      ofh->code_infos[seg_id].size);
               return 1;
             }
@@ -643,7 +643,7 @@ uint32_t link_control::jak3_work_opengoal() {
           ofh->code_infos[seg_id].offset =
               kmalloc(m_heap, ofh->code_infos[seg_id].size, 0, "main-segment").offset;
           if (ofh->code_infos[seg_id].offset == 0) {
-            MsgErr("dkernel: unable to malloc %d bytes for main-segment\n",
+            MsgErr("dkernel: unable to malloc %d bytes for main-segment",
                    ofh->code_infos[seg_id].size);
             return 1;
           }
@@ -659,7 +659,7 @@ uint32_t link_control::jak3_work_opengoal() {
               kmalloc(m_heap, ofh->code_infos[seg_id].size, KMALLOC_TOP, "top-level-segment")
                   .offset;
           if (ofh->code_infos[seg_id].offset == 0) {
-            MsgErr("dkernel: unable to malloc %d bytes for top-level-segment\n",
+            MsgErr("dkernel: unable to malloc %d bytes for top-level-segment",
                    ofh->code_infos[seg_id].size);
             return 1;
           }
@@ -667,7 +667,7 @@ uint32_t link_control::jak3_work_opengoal() {
                   ofh->code_infos[seg_id].size);
         }
       } else {
-        printf("UNHANDLED SEG ID IN WORK V3 STATE 1\n");
+        printf("UNHANDLED SEG ID IN WORK V3 STATE 1");
       }
     }
 
@@ -905,7 +905,7 @@ uint32_t link_control::jak3_work_v2_v4() {
       }
       m_heap->current = m_object_data + m_code_size;
       if (m_heap->top.offset <= m_heap->current.offset) {
-        MsgErr("dkernel: heap overflow\n");  // game has ~% instead of \n :P
+        MsgErr("dkernel: heap overflow");  // game has ~% instead of \n :P
         return 1;
       }
 
@@ -923,11 +923,11 @@ uint32_t link_control::jak3_work_v2_v4() {
         // allocate on heap, will have no gap
         m_object_data = kmalloc(m_heap, m_code_size, 0, "data-segment");
         if (link_debug_printfs) {
-          printf("[work_v2] moving from 0x%x to 0x%x\n", m_original_object_location.offset,
+          printf("[work_v2] moving from 0x%x to 0x%x", m_original_object_location.offset,
                  m_object_data.offset);
         }
         if (!m_object_data.offset) {
-          MsgErr("dkernel: unable to malloc %d bytes for data-segment\n", m_code_size);
+          MsgErr("dkernel: unable to malloc %d bytes for data-segment", m_code_size);
           return 1;
         }
       }

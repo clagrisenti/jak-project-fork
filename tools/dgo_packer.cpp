@@ -1,5 +1,6 @@
 #include <cstdio>
 
+#include "common/log/log.h"
 #include "common/util/BinaryWriter.h"
 #include "common/util/FileUtil.h"
 #include "common/util/unicode_util.h"
@@ -27,7 +28,7 @@ int main(int argc, char** argv) {
     auto x = nlohmann::json::parse(file_text);
     std::string out_file_name = x["file_name"];
     std::string internal_name = x["internal_name"];
-    printf("Packing %s\n", internal_name.c_str());
+    lg::info("Packing %s\n", internal_name.c_str());
 
     BinaryWriter writer;
     writer.add<u32>(x["objects"].size());
@@ -51,6 +52,6 @@ int main(int argc, char** argv) {
     writer.write_to_file(file_util::combine_path(out_path, "mod_" + out_file_name));
   }
 
-  printf("Done\n");
+  lg::info("Done\n");
   return 0;
 }

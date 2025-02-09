@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <stdexcept>
 
+#include "common/log/log.h"
 #include "common/util/DgoReader.h"
 #include "common/util/FileUtil.h"
 #include "common/util/unicode_util.h"
@@ -21,7 +22,7 @@ int run(int argc, char** argv) {
   for (int i = 2; i < argc; i++) {
     std::string file_name = argv[i];
     std::string base = file_util::base_name(file_name);
-    printf("Unpacking %s\n", base.c_str());
+    lg::info("Unpacking %s\n", base.c_str());
     // read the file
     auto data = file_util::read_binary_file(file_name);
     if (file_util::dgo_header_is_compressed(data)) {
@@ -55,7 +56,7 @@ int main(int argc, char** argv) {
   try {
     return run(argc, argv);
   } catch (const std::exception& e) {
-    printf("An error occurred: %s\n", e.what());
+    lg::info("An error occurred: %s\n", e.what());
     return 1;
   }
 }

@@ -579,7 +579,7 @@ u32 get_direct_qwc_or_nop(const VifCode& code) {
         return code.immediate;
       }
     default:
-      printf("expected direct, got %s\n", code.print().c_str());
+      lg::warn("expected direct, got %s", code.print().c_str());
       ASSERT(false);
   }
 }

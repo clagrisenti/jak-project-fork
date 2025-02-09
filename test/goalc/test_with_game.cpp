@@ -24,7 +24,7 @@ class WithGameTests : public ::testing::Test {
       shared_compiler->compiler.run_front_end_on_string(
           "(asm-text-file text :files (\"test/test_data/test_game_text.gp\"))");
     } catch (std::exception& e) {
-      fprintf(stderr, "caught exception %s\n", e.what());
+      lg::error("caught exception %s\n", e.what());
       EXPECT_TRUE(false);
     }
     shared_compiler->runtime_thread = std::thread(GoalTest::runtime_with_kernel_jak1);

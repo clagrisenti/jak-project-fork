@@ -39,8 +39,8 @@ void print_allocate_input(const AllocationInput& in) {
  * Print the result of register allocation for debugging.
  */
 void print_result(const AllocationInput& in, const AllocationResult& result) {
-  printf("[RegAlloc] result:\n");
-  printf("-----------------------------------------------------------------\n");
+  lg::info("[RegAlloc] result:\n");
+  lg::info("-----------------------------------------------------------------\n");
   for (uint32_t i = 0; i < in.instructions.size(); i++) {
     std::vector<bool> ids_live;
     std::string lives;
@@ -62,8 +62,8 @@ void print_result(const AllocationInput& in, const AllocationResult& result) {
       code_str.resize(0, 48);
       code_str.push_back('~');
     }
-    printf("[%03d] %30s | %30s | %30s\n", (int)i, code_str.c_str(), lives.c_str(),
-           result.stack_ops.at(i).print().c_str());
+    lg::info("[%03d] %30s | %30s | %30s\n", (int)i, code_str.c_str(), lives.c_str(),
+             result.stack_ops.at(i).print().c_str());
   }
 }
 
@@ -142,8 +142,8 @@ void find_basic_blocks(ControlFlowAnalysisCache* cache, const AllocationInput& i
       }
     }
     if (!found) {
-      printf("[RegAlloc Error] couldn't find basic block beginning with instr %d of %d\n", instr,
-             int(in.instructions.size()));
+      lg::info("[RegAlloc Error] couldn't find basic block beginning with instr {} of {}", instr,
+               int(in.instructions.size()));
     }
     ASSERT(found);
     return result;

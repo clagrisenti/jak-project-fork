@@ -1,7 +1,6 @@
 #pragma once
 
 #include <ctime>
-
 #ifdef __linux__
 #include <sys/time.h>
 #endif
@@ -101,8 +100,10 @@ void trace(const std::string& format, Args&&... args) {
 
 template <typename... Args>
 void debug(const std::string& format, Args&&... args) {
+#if DEBUG
 #ifndef NO_LOG
   log(level::debug, format, std::forward<Args>(args)...);
+#endif
 #endif
 }
 

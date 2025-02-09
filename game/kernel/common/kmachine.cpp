@@ -96,7 +96,7 @@ u64 CPadOpen(u64 cpad_info, s32 pad_number) {
     cpad->cpad_file =
         ee::scePadPortOpen(pad_number, 0, pad_dma_buf + pad_number * SCE_PAD_DMA_BUFFER_SIZE);
     if (cpad->cpad_file < 1) {
-      MsgErr("dkernel: !open cpad #%d (%d)\n", pad_number, cpad->cpad_file);
+      MsgErr("dkernel: !open cpad #%d (%d)", pad_number, cpad->cpad_file);
     }
     cpad->new_pad = 1;
     cpad->state = 0;

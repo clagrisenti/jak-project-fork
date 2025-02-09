@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include "common/common_types.h"
+#include "common/log/log.h"
 #include "common/util/Assert.h"
 
 #include "game/kernel/common/Ptr.h"
@@ -263,7 +264,7 @@ void FileCopy(const char* a, const char* b) {
 s32 FileLength(char* filename) {
   s32 fd = sceOpen(filename, SCE_RDONLY);
   if (fd < 0) {
-    MsgErr("dkernel: file length !open \'%s\' (%d)\n", filename, fd);
+    MsgErr("dkernel: file length !open \'%s\' (%d)", filename, fd);
     sceClose(fd);
     return 0xfffffffb;
   } else {
@@ -286,7 +287,7 @@ s32 FileLength(char* filename) {
 Ptr<u8> FileLoad(char* name, Ptr<kheapinfo> heap, Ptr<u8> memory, u32 malloc_flags, s32* size_out) {
   s32 fd = sceOpen(name, SCE_RDONLY);
   if (fd < 0) {
-    MsgErr("dkernel: file read !open \'%s\' (%d)\n", name, fd);
+    MsgErr("dkernel: file read !open \'%s\' (%d)", name, fd);
     sceClose(fd);
     return Ptr<u8>(0xfffffffb);
   }
@@ -301,7 +302,7 @@ Ptr<u8> FileLoad(char* name, Ptr<kheapinfo> heap, Ptr<u8> memory, u32 malloc_fla
       memory = kmalloc(heap, size + 0x40, malloc_flags, name);
     }
     if (memory.offset == 0) {
-      MsgErr("dkernel: mem full for file read: '%s' (%d bytes)\n", name, size);
+      MsgErr("dkernel: mem full for file read: '%s' (%d bytes)", name, size);
       return Ptr<u8>(0xfffffffd);
     }
 
@@ -312,7 +313,7 @@ Ptr<u8> FileLoad(char* name, Ptr<kheapinfo> heap, Ptr<u8> memory, u32 malloc_fla
         *size_out = size;
       return memory;
     } else {
-      MsgErr("dkernel: can't read full file (%d of %d): '%s'\n", read_amount, size, name);
+      MsgErr("dkernel: can't read full file ({} of {}): '{}'", read_amount, size, name);
       sceClose(fd);
       return Ptr<u8>(0xfffffffb);
     }
@@ -328,7 +329,7 @@ Ptr<u8> FileLoad(char* name, Ptr<kheapinfo> heap, Ptr<u8> memory, u32 malloc_fla
 s32 FileSave(char* name, u8* data, s32 size) {
   s32 fd = sceOpen(name, SCE_WRONLY | SCE_TRUNC | SCE_CREAT);
   if (fd < 0) {
-    MsgErr("dkernel: file write !open '%s'\n", name);
+    MsgErr("dkernel: file write !open '%s'", name);
     sceClose(fd);
     return 0xfffffffa;
   }
@@ -337,7 +338,7 @@ s32 FileSave(char* name, u8* data, s32 size) {
     // in jak 3, this became a loop over smaller writes for some reason.
     s32 written = sceWrite(fd, data, size);
     if (written != size) {
-      MsgErr("dkernel: can't write full file '%s'\n", name);
+      MsgErr("dkernel: can't write full file '%s'", name);
       sceClose(fd);
       return 0xfffffffa;
     }

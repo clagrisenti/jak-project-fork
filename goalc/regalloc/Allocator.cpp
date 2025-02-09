@@ -258,7 +258,7 @@ bool can_var_be_assigned(int var,
 
         if (!allowed_by_move_eliminator) {
           if (debug_trace >= 1) {
-            printf("at idx %d, %s conflicts\n", instr, other_lr.print_assignment().c_str());
+            lg::info("at idx %d, %s conflicts\n", instr, other_lr.print_assignment().c_str());
           }
 
           return false;
@@ -272,7 +272,7 @@ bool can_var_be_assigned(int var,
     for (auto clobber : in.instructions.at(instr).clobber) {
       if (ass.occupies_reg(clobber)) {
         if (debug_trace >= 1) {
-          printf("at idx %d clobber\n", instr);
+          lg::info("at idx %d clobber\n", instr);
         }
 
         return false;
@@ -284,7 +284,7 @@ bool can_var_be_assigned(int var,
     for (auto exclusive : in.instructions.at(instr).exclude) {
       if (ass.occupies_reg(exclusive)) {
         if (debug_trace >= 1) {
-          printf("at idx %d exclusive conflict\n", instr);
+          lg::info("at idx %d exclusive conflict\n", instr);
         }
 
         return false;
@@ -297,8 +297,8 @@ bool can_var_be_assigned(int var,
     if (lr.has_constraint && lr.assignment.at(instr - lr.min).is_assigned()) {
       if (!(ass.occupies_same_reg(lr.assignment.at(instr - lr.min)))) {
         if (debug_trace >= 1) {
-          printf("at idx %d self bad (%s) (%s)\n", instr,
-                 lr.assignment.at(instr - lr.min).to_string().c_str(), ass.to_string().c_str());
+          lg::info("at idx %d self bad (%s) (%s)\n", instr,
+                   lr.assignment.at(instr - lr.min).to_string().c_str(), ass.to_string().c_str());
         }
 
         return false;
@@ -349,7 +349,7 @@ bool assignment_ok_at(int var,
 
       if (!allowed_by_move_eliminator) {
         if (debug_trace >= 2) {
-          printf("at idx %d, %s conflicts\n", idx, other_lr.print_assignment().c_str());
+          lg::info("at idx %d, %s conflicts\n", idx, other_lr.print_assignment().c_str());
         }
         return false;
       }
@@ -361,7 +361,7 @@ bool assignment_ok_at(int var,
     for (auto clobber : in.instructions.at(idx).clobber) {
       if (ass.occupies_reg(clobber)) {
         if (debug_trace >= 2) {
-          printf("at idx %d clobber\n", idx);
+          lg::info("at idx %d clobber\n", idx);
         }
 
         return false;
@@ -372,7 +372,7 @@ bool assignment_ok_at(int var,
   for (auto exclusive : in.instructions.at(idx).exclude) {
     if (ass.occupies_reg(exclusive)) {
       if (debug_trace >= 2) {
-        printf("at idx %d exclusive conflict\n", idx);
+        lg::info("at idx %d exclusive conflict\n", idx);
       }
 
       return false;
@@ -383,7 +383,7 @@ bool assignment_ok_at(int var,
   if (lr.assignment.at(idx - lr.min).is_assigned()) {
     if (!(ass.occupies_same_reg(lr.assignment.at(idx - lr.min)))) {
       if (debug_trace >= 2) {
-        printf("at idx %d self bad\n", idx);
+        lg::info("at idx %d self bad\n", idx);
       }
 
       return false;
@@ -478,7 +478,7 @@ const std::vector<emitter::Register>& get_default_alloc_order_for_var(int v,
 bool try_spill_coloring(int var, RegAllocCache* cache, const AllocationInput& in, int debug_trace) {
   // todo, reject flagged "unspillables"
   if (debug_trace >= 1) {
-    printf("---- SPILL VAR %d ----\n", var);
+    lg::info("---- SPILL VAR %d ----\n", var);
   }
 
   auto& lr = cache->live_ranges.at(var);
@@ -503,7 +503,7 @@ bool try_spill_coloring(int var, RegAllocCache* cache, const AllocationInput& in
     // we have a constraint!
     if (current_assignment.is_assigned()) {
       if (debug_trace >= 2) {
-        printf("  [%02d] already assigned %s\n", instr, current_assignment.to_string().c_str());
+        lg::info("  [%02d] already assigned %s\n", instr, current_assignment.to_string().c_str());
       }
 
       // remember this assignment as a hint for later
@@ -511,8 +511,9 @@ bool try_spill_coloring(int var, RegAllocCache* cache, const AllocationInput& in
       // check that this assignment is ok
       if (!assignment_ok_at(var, instr, current_assignment, cache, in, debug_trace)) {
         // this shouldn't be possible with feasible constraints
-        printf("-- SPILL FAILED -- IMPOSSIBLE CONSTRAINT @ %d %s. This is likely a RegAlloc bug!\n",
-               instr, current_assignment.to_string().c_str());
+        lg::info(
+            "-- SPILL FAILED -- IMPOSSIBLE CONSTRAINT @ %d %s. This is likely a RegAlloc bug!\n",
+            instr, current_assignment.to_string().c_str());
         ASSERT(false);
         return false;
       }
@@ -524,7 +525,7 @@ bool try_spill_coloring(int var, RegAllocCache* cache, const AllocationInput& in
     } else {
       // not assigned.
       if (debug_trace >= 1) {
-        printf("  [%02d] nya rd? %d wr? %d\n", instr, is_read, is_written);
+        lg::info("  [%02d] nya rd? %d wr? %d\n", instr, is_read, is_written);
       }
 
       // We'd like to keep it on the stack if possible
@@ -540,13 +541,13 @@ bool try_spill_coloring(int var, RegAllocCache* cache, const AllocationInput& in
         // todo floats?
         if (hint_assignment.kind == Assignment::Kind::REGISTER) {
           if (debug_trace >= 2) {
-            printf("   try hint %s\n", hint_assignment.to_string().c_str());
+            lg::info("   try hint %s\n", hint_assignment.to_string().c_str());
           }
 
           if (assignment_ok_at(var, instr, hint_assignment, cache, in, debug_trace)) {
             // it's ok!
             if (debug_trace >= 2) {
-              printf("   it worked!\n");
+              lg::info("   it worked!\n");
             }
             spill_assignment.reg = hint_assignment.reg;
           }
@@ -561,12 +562,12 @@ bool try_spill_coloring(int var, RegAllocCache* cache, const AllocationInput& in
             ass.kind = Assignment::Kind::REGISTER;
             ass.reg = reg;
             if (debug_trace >= 2) {
-              printf("  try %s\n", ass.to_string().c_str());
+              lg::info("  try %s\n", ass.to_string().c_str());
             }
 
             if (assignment_ok_at(var, instr, ass, cache, in, debug_trace)) {
               if (debug_trace >= 2) {
-                printf("  it worked!\n");
+                lg::info("  it worked!\n");
               }
               spill_assignment.reg = ass.reg;
               break;
@@ -627,7 +628,7 @@ bool do_allocation_for_var(int var,
     if (lr.best_hint.is_assigned()) {
       colored = try_assignment_for_var(var, lr.best_hint, cache, in, debug_trace);
       if (debug_trace >= 2) {
-        printf("var %d reg %s ? %d\n", var, lr.best_hint.to_string().c_str(), colored);
+        lg::info("var %d reg %s ? %d\n", var, lr.best_hint.to_string().c_str(), colored);
       }
     }
 
@@ -664,7 +665,7 @@ bool do_allocation_for_var(int var,
       ass.reg = reg;
       colored = try_assignment_for_var(var, ass, cache, in, debug_trace);
       if (debug_trace >= 1) {
-        printf("var %d reg %s ? %d\n", var, ass.to_string().c_str(), colored);
+        lg::info("var %d reg %s ? %d\n", var, ass.to_string().c_str(), colored);
       }
     }
   }
@@ -678,13 +679,13 @@ bool do_allocation_for_var(int var,
 
   // todo, try spilling
   if (!colored) {
-    printf("[ERROR] var %d could not be colored:\n%s\n", var,
-           cache->live_ranges.at(var).print_assignment().c_str());
+    lg::error("[ERROR] var %d could not be colored:\n%s\n", var,
+              cache->live_ranges.at(var).print_assignment().c_str());
 
     return false;
   } else {
     if (debug_trace >= 2) {
-      printf("Colored var %d\n", var);
+      lg::info("Colored var %d\n", var);
     }
 
     cache->was_colored.at(var) = true;
@@ -726,15 +727,15 @@ void print_analysis(const AllocationInput& in, RegAllocCache* cache) {
     lg::print("{}\n", b.print(in.instructions));
   }
 
-  printf("[RegAlloc] Alive Info\n");
-  printf("-----------------------------------------------------------------\n");
+  lg::info("[RegAlloc] Alive Info\n");
+  lg::info("-----------------------------------------------------------------\n");
   // align to where we start putting live stuff
-  printf("      %30s    ", "");
+  lg::info("      %30s    ", "");
   for (int i = 0; i < cache->max_var; i++) {
-    printf("%2d ", i);
+    lg::info("%2d ", i);
   }
-  printf("\n");
-  printf("_________________________________________________________________\n");
+  lg::info("\n");
+  lg::info("_________________________________________________________________\n");
   for (uint32_t i = 0; i < in.instructions.size(); i++) {
     std::vector<bool> ids_live;
     std::string lives;
@@ -763,9 +764,9 @@ void print_analysis(const AllocationInput& in, RegAllocCache* cache) {
         code_str.resize(0, 48);
         code_str.push_back('~');
       }
-      printf("[%03d] %30s -> %s\n", (int)i, code_str.c_str(), lives.c_str());
+      lg::info("[%03d] %30s -> %s\n", (int)i, code_str.c_str(), lives.c_str());
     } else {
-      printf("[%03d] %30s -> %s\n", (int)i, "???", lives.c_str());
+      lg::info("[%03d] %30s -> %s\n", (int)i, "???", lives.c_str());
     }
   }
 }

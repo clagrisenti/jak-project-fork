@@ -4,6 +4,7 @@
 #include <cstring>
 #include <unordered_map>
 
+#include "common/log/log.h"
 #include "common/util/Assert.h"
 #include "common/util/FileUtil.h"
 
@@ -61,7 +62,7 @@ int sceSifLoadModule(const char* name, int arg_size, const char* args) {
 
     for (int i = 0; i < cnt; i++) {
       if (iop->overlord_argv[i])
-        printf("arg %d : %s\n", i, iop->overlord_argv[i]);
+        lg::info("arg {} : {}", i, iop->overlord_argv[i]);
     }
     iop->set_ee_main_mem(g_ee_main_mem);
     iop->send_status(IOP_Status::IOP_OVERLORD_INIT);

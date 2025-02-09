@@ -10,16 +10,16 @@ class Jak3KernelTest : public testing::Test {
  public:
   static void SetUpTestSuite() {
     shared_compiler = std::make_unique<SharedCompiler>(GameVersion::Jak3);
-    printf("Building kernel...\n");
+    lg::info("Building kernel...\n");
     try {
       // a macro in goal-lib.gc
       shared_compiler->compiler.run_front_end_on_string("(build-kernel)");
     } catch (std::exception& e) {
-      fprintf(stderr, "caught exception %s\n", e.what());
+      lg::info("caught exception %s\n", e.what());
       EXPECT_TRUE(false);
     }
 
-    printf("Starting GOAL Kernel...\n");
+    lg::info("Starting GOAL Kernel...\n");
     shared_compiler->runtime_thread = std::thread(GoalTest::runtime_with_kernel_jak3);
     shared_compiler->runner.c = &shared_compiler->compiler;
     shared_compiler->compiler.run_test_from_string("(set! *use-old-listener-print* #t)");

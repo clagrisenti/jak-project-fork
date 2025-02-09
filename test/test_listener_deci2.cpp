@@ -1,3 +1,5 @@
+#include "common/log/log.h"
+
 #include "game/system/Deci2Server.h"
 #include "goalc/listener/Listener.h"
 #include "gtest/gtest.h"
@@ -29,7 +31,7 @@ TEST(Listener, DeciInit) {
 TEST(Listener, ListenToNothing) {
   Listener l;
   if (l.connect_to_target()) {
-    printf(
+    lg::info(
         "~~~~~~ Test connected to a runtime when there shouldn't be anything running! Check that "
         "you don't have gk running in the background!\n");
   }

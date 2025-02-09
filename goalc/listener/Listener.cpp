@@ -59,7 +59,7 @@ Listener::~Listener() {
  */
 void Listener::disconnect() {
   if (m_debugger && m_debugger->is_halted()) {
-    printf(
+    lg::info(
         "[Listener] The listener was shut down while the debugger has paused the runtime, "
         "resuming\n");
     m_debugger->detach();
@@ -105,7 +105,7 @@ bool Listener::connect_to_target(int n_tries, const std::string& ip, int port) {
   // construct socket
   listen_socket = open_socket(AF_INET, SOCK_STREAM, 0);
   if (listen_socket < 0) {
-    printf("[Listener] Failed to create socket.\n");
+    lg::info("[Listener] Failed to create socket.\n");
     listen_socket = -1;
     return false;
   }
@@ -129,7 +129,7 @@ bool Listener::connect_to_target(int n_tries, const std::string& ip, int port) {
   server_address.sin_family = AF_INET;
   server_address.sin_port = htons(port);
   if (inet_pton(AF_INET, ip.c_str(), &server_address.sin_addr) <= 0) {
-    printf("[Listener] Invalid IP address.\n");
+    lg::info("[Listener] Invalid IP address.\n");
     close_socket(listen_socket);
     listen_socket = -1;
     return false;
@@ -142,12 +142,13 @@ bool Listener::connect_to_target(int n_tries, const std::string& ip, int port) {
     std::this_thread::sleep_for(std::chrono::microseconds(100000));
   }
   if (rv < 0) {
-    printf("[Listener] Failed to connect\n");
+    lg::info("[Listener] Failed to connect\n");
     close_socket(listen_socket);
     listen_socket = -1;
     return false;
   } else {
-    printf("[Listener] Socket connected established! (took %d tries). Waiting for version...\n", i);
+    lg::info("[Listener] Socket connected established! (took %d tries). Waiting for version...\n",
+             i);
   }
 
   // get the GOAL version number, to make sure we connected to the right thing
@@ -166,7 +167,7 @@ bool Listener::connect_to_target(int n_tries, const std::string& ip, int port) {
     }
   }
   if (!ok) {
-    printf("[Listener] Failed to get version number\n");
+    lg::info("[Listener] Failed to get version number\n");
     close_socket(listen_socket);
     listen_socket = -1;
     return false;
@@ -174,13 +175,13 @@ bool Listener::connect_to_target(int n_tries, const std::string& ip, int port) {
 
   printf("Got version %d.%d", version_buffer[0], version_buffer[1]);
   if (version_buffer[0] == GOAL_VERSION_MAJOR && version_buffer[1] == GOAL_VERSION_MINOR) {
-    printf(" OK!\n");
+    lg::info(" OK!\n");
     m_connected = true;
     rcv_thread = std::thread(&Listener::receive_func, this);
     receive_thread_running = true;
     return true;
   } else {
-    printf(", expected %d.%d. Cannot connect.\n", GOAL_VERSION_MAJOR, GOAL_VERSION_MINOR);
+    lg::info(", expected %d.%d. Cannot connect.\n", GOAL_VERSION_MAJOR, GOAL_VERSION_MINOR);
     close_socket(listen_socket);
     listen_socket = -1;
     return false;
@@ -217,7 +218,7 @@ void Listener::receive_func() {
 
     ListenerMessageHeader* hdr = (ListenerMessageHeader*)buff;
     if (debug_listener) {
-      printf("[T -> L] received %d bytes, kind %d\n", hdr->deci2_header.len, int(hdr->msg_kind));
+      lg::info("[T -> L] received %d bytes, kind %d\n", hdr->deci2_header.len, int(hdr->msg_kind));
     }
 
     switch (hdr->msg_kind) {
@@ -225,7 +226,7 @@ void Listener::receive_func() {
         // an "ack" message, sent by the target to indicate it got something.
         if (!waiting_for_ack) {
           if (hdr->msg_id == last_sent_id) {
-            printf("[Listener] Received ACK for most recent message late.\n");
+            lg::info("[Listener] Received ACK for most recent message late.\n");
             if (last_recvd_id != hdr->msg_id - 1) {
               lg::print(
                   "[Listener] WARNING: message ID jumped from {} to {}. Some messages may have "
@@ -233,7 +234,7 @@ void Listener::receive_func() {
                   last_recvd_id, hdr->msg_id);
             }
           } else {
-            printf("[Listener] Got an unexpcted ACK message.");
+            lg::info("[Listener] Got an unexpcted ACK message.");
           }
         }
 
@@ -260,7 +261,7 @@ void Listener::receive_func() {
                 last_recvd_id, last_sent_id);
           }
         } else {
-          printf("[Listener] got invalid ack!\n");
+          lg::info("[Listener] got invalid ack!\n");
         }
         break;
 
@@ -286,7 +287,7 @@ void Listener::receive_func() {
         str_buff[hdr->msg_size] = '\0';
 
         if (hdr->msg_kind == ListenerMessageKind::MSG_PRINT) {
-          printf("%s\n", str_buff);
+          lg::info("{}", str_buff);
         }
 
         rcv_mtx.lock();
@@ -302,7 +303,7 @@ void Listener::receive_func() {
       } break;
 
       default:
-        printf("unhandled message type %d from target\n", int(hdr->msg_kind));
+        lg::info("unhandled message type %d from target\n", int(hdr->msg_kind));
         break;
     }
   }
@@ -313,7 +314,7 @@ void Listener::receive_func() {
  */
 void Listener::record_messages(ListenerMessageKind kind) {
   if (filter != ListenerMessageKind::MSG_INVALID) {
-    printf("[Listener] Already recording!\n");
+    lg::info("[Listener] Already recording!\n");
   }
   filter = kind;
 }
@@ -351,7 +352,7 @@ void Listener::send_code(std::vector<uint8_t>& code, const std::optional<std::st
   got_ack = false;
   int total_size = code.size() + sizeof(ListenerMessageHeader);
   if (total_size > BUFFER_SIZE) {
-    printf("[ERROR] Listener send_code got too big of a message\n");
+    lg::info("[ERROR] Listener send_code got too big of a message\n");
     return;
   }
 
@@ -381,12 +382,12 @@ void Listener::send_code(std::vector<uint8_t>& code, const std::optional<std::st
  */
 void Listener::send_reset(bool shutdown) {
   if (!m_connected) {
-    printf("Not connected, so cannot reset target.\n");
+    lg::info("Not connected, so cannot reset target.\n");
     return;
   }
 
   if (m_debugger && m_debugger->is_halted()) {
-    printf("Tried to reset a halted target, detaching...\n");
+    lg::info("Tried to reset a halted target, detaching...\n");
     m_debugger->detach();
   }
 
@@ -404,7 +405,7 @@ void Listener::send_reset(bool shutdown) {
   send_buffer(sizeof(ListenerMessageHeader));
   disconnect();
   close_socket(listen_socket);
-  printf("[Listener] Closed connection to target\n");
+  lg::info("[Listener] Closed connection to target\n");
 }
 
 /*!
@@ -413,7 +414,7 @@ void Listener::send_reset(bool shutdown) {
  */
 void Listener::send_poke() {
   if (!m_connected) {
-    printf("Not connected, so cannot poke target.\n");
+    lg::info("Not connected, so cannot poke target.\n");
     return;
   }
   auto* header = (ListenerMessageHeader*)m_buffer;
@@ -450,17 +451,17 @@ void Listener::send_buffer(int sz) {
   }
 
   if (debug_listener) {
-    printf("  waiting for ack...\n");
+    lg::info("  waiting for ack...\n");
   }
 
   if (wait_for_ack()) {
     if (debug_listener) {
-      printf("ack buff:\n");
-      printf("%s\n", ack_recv_buff);
-      printf("  OK\n");
+      lg::info("ack buff:\n");
+      lg::info("{}", ack_recv_buff);
+      lg::info("  OK\n");
     }
   } else {
-    printf("  Timed out waiting for ack.\n");
+    lg::info("  Timed out waiting for ack.\n");
   }
 }
 
@@ -470,7 +471,7 @@ void Listener::send_buffer(int sz) {
 bool Listener::wait_for_ack() {
   // todo, check the message ID.
   if (!m_connected) {
-    printf("wait_for_ack called when not connected!\n");
+    lg::info("wait_for_ack called when not connected!\n");
     return false;
   }
 
@@ -518,7 +519,7 @@ void Listener::handle_output_message(const char* msg) {
       if (m_debugger) {
         m_debugger->set_context(std::stoul(s7_str.substr(3), nullptr, 16),
                                 std::stoull(base_str.substr(3), nullptr, 16), tid_str.substr(1));
-        printf("[Debugger] Context: %s\n", m_debugger->get_context_string().c_str());
+        lg::info("[Debugger] Context: %s\n", m_debugger->get_context_string().c_str());
       }
 
     } else if (kind == "load") {
@@ -557,7 +558,7 @@ void Listener::handle_output_message(const char* msg) {
       lg::info("SQL Query - '{}'", msg);
     } else {
       // todo unload
-      printf("[Listener Warning] unknown output message \"%s\"\n", msg);
+      lg::info("[Listener Warning] unknown output message \"%s\"\n", msg);
     }
   }
 }
