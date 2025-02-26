@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "common/common_types.h"
+#include "common/log/log.h"
 #include "common/util/compress.h"
 
 #include "gtest/gtest.h"
@@ -18,7 +19,7 @@ TEST(ZSTD, Basic) {
   }
 
   size_t in_size = all.size();
-  printf("size: %d\n", (int)in_size);
+  lg::info("size: %d\n", (int)in_size);
 
   size_t max_out_size = ZSTD_compressBound(in_size);
 
@@ -26,14 +27,14 @@ TEST(ZSTD, Basic) {
   auto result =
       ZSTD_compress(out.data(), out.size(), all.data(), all.length(), ZSTD_CLEVEL_DEFAULT);
   ASSERT_FALSE(ZSTD_isError(result));
-  printf("compressed: %d\n", (int)result);
+  lg::info("compressed: %d\n", (int)result);
 
   std::string uncompressed;
   uncompressed.resize(in_size);
 
   auto result2 = ZSTD_decompress(uncompressed.data(), uncompressed.size(), out.data(), result);
   if (ZSTD_isError(result2)) {
-    printf("err: %s\n", ZSTD_getErrorName(result2));
+    lg::warn("err: %s\n", ZSTD_getErrorName(result2));
   }
   ASSERT_FALSE(ZSTD_isError(result2));
   EXPECT_EQ(result2, in_size);

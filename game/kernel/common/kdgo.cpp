@@ -82,7 +82,7 @@ u32 RpcBusy(s32 channel) {
 void RpcSync(s32 channel) {
   if (RpcBusy(channel)) {
     if (sShowStallMsg) {
-      Msg(6, "STALL: [kernel] waiting for IOP on RPC port #%d\n", channel);
+      Msg(6, "STALL: [kernel] waiting for IOP on RPC port #%d", channel);
     }
     while (RpcBusy(channel)) {
       // an attempt to avoid spamming SIF?
@@ -100,10 +100,10 @@ void RpcSync(s32 channel) {
 u32 RpcBind(s32 channel, s32 id) {
   while (true) {
     if (sceSifBindRpc(&cd[channel], id, 1) < 0) {
-      MsgErr("Error: RpcBind failed on port #%d [%4.4X]\n", channel, id);
+      MsgErr("Error: RpcBind failed on port #%d [%4.4X]", channel, id);
       return 1;
     }
-    Msg(6, "kernel: RPC port #%d started [%4.4X]\n", channel, id);
+    Msg(6, "kernel: RPC port #{} started [{}]", channel, id);
     //    FlushCache(0);
     // In Jak 2 they do a sceSifCheckStatRpc, but we can just skip that.
 
@@ -116,7 +116,7 @@ u32 RpcBind(s32 channel, s32 id) {
     if (cd[channel].serve) {
       break;
     }
-    Msg(6, "kernel: RPC port #%d not responding.\n", channel);
+    Msg(6, "kernel: RPC port #%d not responding.", channel);
     // it might seem like looping here is a bad idea (unclear if sceSifBindRpc can be called
     // multiple times!) but this actually happens sometimes, at least on development hardware!
     // (also, it's not clear that the "serve" field having data in it really means anything - maybe

@@ -1,5 +1,7 @@
 #include "Shadow2.h"
 
+#include "common/log/log.h"
+
 #include "third-party/imgui/imgui.h"
 
 Shadow2::Shadow2(const std::string& name, int my_id) : BucketRenderer(name, my_id) {
@@ -189,7 +191,7 @@ void Shadow2::render(DmaFollower& dma, SharedRenderState* render_state, ScopedPr
           buffer_from_mscal6(current_input);
           break;
         default:
-          printf("mscal %d\n", mscal.immediate);
+          lg::info("mscal %d\n", mscal.immediate);
           ASSERT_NOT_REACHED();
       }
     } else if (vif0.kind == VifCode::Kind::FLUSHA && vif1.kind == VifCode::Kind::DIRECT) {

@@ -833,7 +833,7 @@ TPageResultStats process_tpage(ObjectFileData& data,
     }
 
     else {
-      printf("Unsupported texture 0x%x 0x%x\n", tex.psm, tex.clutpsm);
+      lg::warn("Unsupported texture 0x%x 0x%x\n", tex.psm, tex.clutpsm);
     }
   }
   return stats;

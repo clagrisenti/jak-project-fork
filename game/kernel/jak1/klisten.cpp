@@ -95,7 +95,7 @@ void ProcessListenerMessage(Ptr<char> msg) {
       return;  // don't ack yet, this will happen after the function runs.
     } break;
     default:
-      MsgErr("dkernel: unknown message error: <%d> of %d bytes\n", protoBlock.msg_kind, MessCount);
+      MsgErr("dkernel: unknown message error: <%d> of %d bytes", protoBlock.msg_kind, MessCount);
       break;
   }
   SendAck();

@@ -26,7 +26,7 @@ void kdsnetm_init_globals_common() {
 void InitGoalProto() {
   protoBlock.socket = ee::sceDeci2Open(DECI2_PROTOCOL, &protoBlock, GoalProtoHandler);
   if (protoBlock.socket < 0) {
-    MsgErr("gproto: open proto error\n");
+    MsgErr("gproto: open proto error");
   } else {
     protoBlock.send_buffer = nullptr;
     protoBlock.receive_buffer = MessBufArea.cast<ListenerMessageHeader>().c();
@@ -34,7 +34,7 @@ void InitGoalProto() {
     protoBlock.last_receive_size = -1;
     protoBlock.receive_progress = 0;
     protoBlock.deci2count.offset = 0;
-    Msg(6, "gproto: proto open at socket %d\n", protoBlock.socket);
+    Msg(6, "gproto: proto open at socket {}", protoBlock.socket);
   }
 }
 
@@ -58,7 +58,7 @@ void GoalProtoHandler(int event, int param, void* opt) {
   // like this?
   GoalProtoBlock* pb = (GoalProtoBlock*)opt;
   if (&protoBlock != pb) {
-    Msg(6, "gproto: BAD OPT POINTER PASSED IN!!!!\n");  // this print statement is in the game.
+    Msg(6, "gproto: BAD OPT POINTER PASSED IN!!!!");  // this print statement is in the game.
     pb = &protoBlock;
   }
 
@@ -209,6 +209,6 @@ s32 SendFromBufferD(s32 msg_kind, u64 msg_id, char* data, s32 size) {
  * Print GOAL Protocol status
  */
 void GoalProtoStatus() {
-  Msg(6, "gproto: got %d %d\n", protoBlock.most_recent_event, protoBlock.most_recent_param);
-  Msg(6, "gproto: %d %d\n", protoBlock.last_receive_size, protoBlock.send_remaining);
+  Msg(6, "gproto: got %d %d", protoBlock.most_recent_event, protoBlock.most_recent_param);
+  Msg(6, "gproto: %d %d", protoBlock.last_receive_size, protoBlock.send_remaining);
 }

@@ -71,7 +71,7 @@ void InitParms(int argc, const char* const* argv) {
 
     // the "cd" mode uses the DVD drive for everything. This is how the game runs in retail
     if (arg == "-cd") {
-      Msg(6, "dkernel: cd mode\n");
+      Msg(6, "dkernel: cd mode");
       isodrv = iso_cd;  // use the actual DVD drive for data files
       modsrc = 1;       // use the DVD drive data for IOP modules
       reboot_iop = 1;   // Reboot the IOP (load new IOP runtime)
@@ -79,39 +79,39 @@ void InitParms(int argc, const char* const* argv) {
 
     // the "cddata" uses the DVD drive for everything but IOP modules.
     if (arg == "-cddata") {
-      Msg(6, "dkernel: cddata mode\n");
+      Msg(6, "dkernel: cddata mode");
       isodrv = iso_cd;  // tell IOP to use actual DVD drive for data files
       modsrc = 0;       // don't use DVD drive for IOP modules
       reboot_iop = 0;   // no need to reboot the IOP
     }
 
     if (arg == "-demo") {
-      Msg(6, "dkernel: demo mode\n");
+      Msg(6, "dkernel: demo mode");
       kstrcpy(DebugBootMessage, "demo");
     }
 
     // new for jak 2
     if (arg == "-kiosk") {
-      Msg(6, "dkernel: kiosk mode\n");
+      Msg(6, "dkernel: kiosk mode");
       kstrcpy(DebugBootMessage, "kiosk");
     }
 
     // new for jak 2
     if (arg == "-preview") {
-      Msg(6, "dkernel: preview mode\n");
+      Msg(6, "dkernel: preview mode");
       kstrcpy(DebugBootMessage, "preview");
     }
 
     // the "deviso" mode is one of two modes for testing without the need for DVDs
     if (arg == "-deviso") {
-      Msg(6, "dkernel: deviso mode\n");
+      Msg(6, "dkernel: deviso mode");
       isodrv = deviso;  // IOP deviso mode
       modsrc = 2;       // now 2 for Jak 2
       reboot_iop = 0;
     }
     // the "fakeiso" mode is the other of two modes for testing without the need for DVDs
     if (arg == "-fakeiso") {
-      Msg(6, "dkernel: fakeiso mode\n");
+      Msg(6, "dkernel: fakeiso mode");
       isodrv = fakeiso;  // IOP fakeeiso mode
       modsrc = 0;        // no IOP module loading (there's no DVD to load from!)
       reboot_iop = 0;
@@ -119,7 +119,7 @@ void InitParms(int argc, const char* const* argv) {
 
     // the "boot" mode is used to set GOAL up for running the game in retail mode
     if (arg == "-boot") {
-      Msg(6, "dkernel: boot mode\n");
+      Msg(6, "dkernel: boot mode");
       MasterDebug = 0;
       DiskBoot = 1;
       DebugSegment = 0;
@@ -127,7 +127,7 @@ void InitParms(int argc, const char* const* argv) {
 
     // new for jak 2
     if (arg == "-debug-boot") {
-      Msg(6, "dkernel: debug-boot mode\n");
+      Msg(6, "dkernel: debug-boot mode");
       MasterDebug = 0;
       DebugSegment = 1;
       DiskBoot = 1;
@@ -135,14 +135,14 @@ void InitParms(int argc, const char* const* argv) {
 
     // traditional debug mode
     if (arg == "-debug") {
-      Msg(6, "dkernel: debug mode\n");
+      Msg(6, "dkernel: debug mode");
       MasterDebug = 1;
       DebugSegment = 1;
     }
 
     // the "debug-mem" mode is used to set up GOAL in debug mode, but not to load debug-segments
     if (arg == "-debug-mem") {
-      Msg(6, "dkernel: debug-mem mode\n");
+      Msg(6, "dkernel: debug-mem mode");
       MasterDebug = 1;
       DebugSegment = 0;
     }
@@ -152,7 +152,7 @@ void InitParms(int argc, const char* const* argv) {
     if (arg == "-level") {
       i++;
       std::string levelName = argv[i];
-      Msg(6, "dkernel: level %s\n", levelName.c_str());
+      Msg(6, "dkernel: level %s", levelName.c_str());
       kstrcpy(DebugBootLevel, levelName.c_str());
     }
 
@@ -160,7 +160,7 @@ void InitParms(int argc, const char* const* argv) {
     if (arg == "-user") {
       i++;
       std::string userName = argv[i];
-      Msg(6, "dkernel: user %s\n", userName.c_str());
+      Msg(6, "dkernel: user %s", userName.c_str());
       kstrcpy(DebugBootUser, userName.c_str());
     }
 
@@ -168,28 +168,28 @@ void InitParms(int argc, const char* const* argv) {
     if (arg == "-art") {
       i++;
       std::string artGroupName = argv[i];
-      Msg(6, "dkernel: art-group %s\n", artGroupName.c_str());
+      Msg(6, "dkernel: art-group %s", artGroupName.c_str());
       kstrcpy(DebugBootArtGroup, artGroupName.c_str());
       kstrcpy(DebugBootMessage, "art-group");
     }
 
     // an added mode to allow booting without a KERNEL.CGO for testing
     if (arg == "-nokernel") {
-      Msg(6, "dkernel: no kernel mode\n");
+      Msg(6, "dkernel: no kernel mode");
       MasterUseKernel = false;
     }
 
     // an added mode to allow booting without sound for testing
     if (arg == "-nosound") {
-      Msg(6, "dkernel: no sound mode\n");
+      Msg(6, "dkernel: no sound mode");
       masterConfig.disable_sound = true;
     }
   }
 }
 
 void InitIOP() {
-  Msg(6, "dkernel: boot:%d debug:%d mem:%d dev:%d mod:%d\n", DiskBoot, MasterDebug, DebugSegment,
-      isodrv, modsrc);
+  /*Msg(6, "dkernel: boot:{} debug:{} mem:{} dev:{} mod:{}", DiskBoot, MasterDebug, DebugSegment,
+      isodrv, modsrc);*/
   sceSifInitRpc(0);
 
   // init cd if we need it
@@ -199,16 +199,16 @@ void InitIOP() {
 
   if (reboot_iop == 0) {
     // iop with dev kernel
-    printf("Rebooting IOP...\n");
+    lg::info("Rebooting IOP...");
     while (!sceSifRebootIop("host0:/usr/local/sce/iop/modules/ioprp271.img")) {
-      printf("Failed, retrying...\n");
+      lg::info("Failed, retrying...\n");
     }
     while (!sceSifSyncIop()) {
     }
   } else {
-    printf("Rebooting IOP...\n");
+    lg::info("Rebooting IOP...");
     while (!sceSifRebootIop("cdrom0:\\DRIVERS\\IOPRP271.IMG")) {
-      printf("Failed, retrying...\n");
+      lg::info("Failed, retrying...");
     }
     while (!sceSifSyncIop()) {
     }
@@ -238,24 +238,24 @@ void InitIOP() {
 
   if (modsrc == 0) {
     if (sceSifLoadModule("host0:/usr/local/sce/iop/modules/sio2man.irx", 0, nullptr) < 0) {
-      MsgErr("loading sio2man.irx failed\n");
+      MsgErr("loading sio2man.irx failed");
       exit(0);
     }
 
     if (sceSifLoadModule("host0:/usr/local/sce/iop/modules/padman.irx", 0, nullptr) < 0) {
-      MsgErr("loading padman.irx failed\n");
+      MsgErr("loading padman.irx failed");
       exit(0);
     }
     if (sceSifLoadModule("host0:/usr/local/sce/iop/modules/libsd.irx", 0, nullptr) < 0) {
-      MsgErr("loading libsd.irx failed\n");
+      MsgErr("loading libsd.irx failed");
       exit(0);
     }
     if (sceSifLoadModule("host0:/usr/local/sce/iop/modules/mcman.irx", 0, nullptr) < 0) {
-      MsgErr("loading mcman.irx failed\n");
+      MsgErr("loading mcman.irx failed");
       exit(0);
     }
     if (sceSifLoadModule("host0:/usr/local/sce/iop/modules/mcserv.irx", 0, nullptr) < 0) {
-      MsgErr("loading mcserv.irx failed\n");
+      MsgErr("loading mcserv.irx failed");
       exit(0);
     }
     if (sceSifLoadModule("host0:/usr/home/src/989snd23/iop/sce27/989nostr.irx", 0, nullptr) < 0) {
@@ -266,10 +266,10 @@ void InitIOP() {
       sceSifLoadModule("host0:/usr/home/src/989snd23/iop/sce27/989err.irx", 0, nullptr);
     }
     if (sceSifLoadModule("host0:/usr/local/sce/iop/modules/scrtchpd.irx", 0, nullptr) < 0) {
-      MsgErr("loading scrtchpd.irx failed\n");
+      MsgErr("loading scrtchpd.irx failed");
       exit(0);
     }
-    printf("Initializing CD library in FAKEISO mode\n");
+    lg::info("Initializing CD library in FAKEISO mode");
     if (sceSifLoadModule("host0:bin/overlord.irx", total_len, overlord_boot_command) < 0) {
       MsgErr("loading overlord.irx <3> failed\n");
       exit(0);
@@ -277,79 +277,79 @@ void InitIOP() {
   } else {
     if (modsrc == 1) {
       if (sceSifLoadModule("cdrom0:\\DRIVERS\\SIO2MAN.IRX;1", 0, nullptr) < 0) {
-        MsgErr("loading SIO2MAN.IRX failed\n");
+        MsgErr("loading SIO2MAN.IRX failed");
         exit(0);
       }
       if (sceSifLoadModule("cdrom0:\\DRIVERS\\PADMAN.IRX;1", 0, nullptr) < 0) {
-        MsgErr("loading PADMAN.IRX failed\n");
+        MsgErr("loading PADMAN.IRX failed");
         exit(0);
       }
       if (sceSifLoadModule("cdrom0:\\DRIVERS\\LIBSD.IRX;1", 0, nullptr) < 0) {
-        MsgErr("loading LIBSD.IRX failed\n");
+        MsgErr("loading LIBSD.IRX failed");
         exit(0);
       }
       if (sceSifLoadModule("cdrom0:\\DRIVERS\\MCMAN.IRX;1", 0, nullptr) < 0) {
-        MsgErr("loading MCMAN.IRX failed\n");
+        MsgErr("loading MCMAN.IRX failed");
         exit(0);
       }
 
       if (sceSifLoadModule("cdrom0:\\DRIVERS\\MCSERV.IRX;1", 0, nullptr) < 0) {
-        MsgErr("loading MCSERV.IRX failed\n");
+        MsgErr("loading MCSERV.IRX failed");
         exit(0);
       }
       if (sceSifLoadModule("cdrom0:\\DRIVERS\\989NOSTR.IRX;1", 0, nullptr) < 0) {
-        MsgErr("loading 989SND.IRX failed\n");
+        MsgErr("loading 989SND.IRX failed");
         exit(0);
       }
       if (sceSifLoadModule("cdrom0:\\DRIVERS\\SCRTCHPD.IRX;1", 0, nullptr) < 0) {
-        MsgErr("loading SCRTCHPD.IRX failed\n");
+        MsgErr("loading SCRTCHPD.IRX failed");
         exit(0);
       }
-      printf("Initializing CD library in ISO_CD mode\n");
+      lg::info("Initializing CD library in ISO_CD mode");
       auto rv =
           sceSifLoadModule("cdrom0:\\DRIVERS\\OVERLORD.IRX;1", total_len, overlord_boot_command);
       if (rv < 0) {
-        MsgErr("loading OVERLORD.IRX failed %d\n", rv);
+        MsgErr("loading OVERLORD.IRX failed %d", rv);
         exit(0);
       }
     } else {
       if (modsrc == 2) {
         if (sceSifLoadModule("host0:isoimage/DRIVERS/SIO2MAN.IRX", 0, nullptr) < 0) {
-          MsgErr("loading sio2man.irx failed\n");
+          MsgErr("loading sio2man.irx failed");
           exit(0);
         }
         if (sceSifLoadModule("host0:isoimage/DRIVERS/PADMAN.IRX", 0, nullptr) < 0) {
-          MsgErr("loading padman.irx failed\n");
+          MsgErr("loading padman.irx failed");
           exit(0);
         }
         if (sceSifLoadModule("host0:isoimage/DRIVERS/LIBSD.IRX", 0, nullptr) < 0) {
-          MsgErr("loading libsd.irx failed\n");
+          MsgErr("loading libsd.irx failed");
           exit(0);
         }
         if (sceSifLoadModule("host0:isoimage/DRIVERS/MCMAN.IRX", 0, nullptr) < 0) {
-          MsgErr("loading mcman.irx failed\n");
+          MsgErr("loading mcman.irx failed");
           exit(0);
         }
         if (sceSifLoadModule("host0:isoimage/DRIVERS/MCSERV.IRX", 0, nullptr) < 0) {
-          MsgErr("loading mcserv.irx failed\n");
+          MsgErr("loading mcserv.irx failed");
           exit(0);
         }
         if (sceSifLoadModule("host:isoimage/DRIVERS/989NOSTR.IRX", 1, "do_rpc=0") < 0) {
-          MsgErr("loading 989snd.irx failed\n");
+          MsgErr("loading 989snd.irx failed");
           exit(0);
         }
         sceSifLoadModule("host0:/usr/home/src/989snd23/iop/sce27/989err.irx", 0, nullptr);
 
         if (sceSifLoadModule("host0:isoimage/DRIVERS/SCRTCHPD.IRX;1", 0, nullptr) < 0) {
-          MsgErr("loading scrtchpd.irx failed\n");
+          MsgErr("loading scrtchpd.irx failed");
           exit(0);
         }
-        printf("Initializing CD library in DEVISO mode\n");
+        lg::info("Initializing CD library in DEVISO mode");
 
         auto rv = sceSifLoadModule("host0:isoimage/DRIVERS/OVERLORD.IRX", total_len,
                                    overlord_boot_command);
         if (rv < 0) {
-          MsgErr("loading overlord.irx <2> failed\n");
+          MsgErr("loading overlord.irx <2> failed");
           exit(0);
         }
       }
@@ -357,10 +357,10 @@ void InitIOP() {
   }
   int rv = sceMcInit();
   if (rv < 0) {
-    MsgErr("MC driver init failed %d\n", rv);
+    MsgErr("MC driver init failed %d", rv);
     exit(0);
   }
-  printf("InitIOP OK\n");
+  lg::info("InitIOP OK");
 }
 
 int InitMachine() {
@@ -398,9 +398,9 @@ int InitMachine() {
     ee::sceDeci2Disable();
   }
 
-  printf("InitSound\n");
+  lg::info("InitSound");
   InitSound();
-  printf("InitRPC\n");
+  lg::info("InitRPC");
   InitRPC();
   reset_output();
   clear_print();
@@ -409,11 +409,11 @@ int InitMachine() {
   auto status = InitHeapAndSymbol();
   prof().end_event();
   if (status >= 0) {
-    printf("InitListenerConnect\n");
+    lg::info("InitListenerConnect");
     InitListenerConnect();
-    printf("InitCheckListener\n");
+    lg::info("InitCheckListener");
     InitCheckListener();
-    Msg(6, "kernel: machine started\n");
+    Msg(6, "kernel: machine started");
     return 0;
   } else {
     return status;
@@ -424,7 +424,7 @@ int InitMachine() {
  * Shutdown the runtime.
  */
 int ShutdownMachine() {
-  Msg(6, "kernel: machine shutdown (reason %d)\n", (int)MasterExit);
+  Msg(6, "kernel: machine shutdown (reason {})", (int)MasterExit);
 
   StopIOP();
   ShutdownSound();
@@ -713,7 +713,7 @@ void InitMachineScheme() {
     kernel_packages->value() =
         new_pair(s7.offset + FIX_SYM_GLOBAL_HEAP, *((s7 + FIX_SYM_PAIR_TYPE - 1).cast<u32>()),
                  make_string_from_c("common"), kernel_packages->value());
-    printf("calling play-boot!\n");
+    lg::info("calling play-boot!");
     auto p = scoped_prof("play-boot-func");
     call_goal_function_by_name("play-boot");  // new function for jak2!
   }

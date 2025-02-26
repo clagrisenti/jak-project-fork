@@ -784,7 +784,7 @@ s32 find_or_add_texture_to_level(tfrag3::Level& out,
 
     if (idx == left_id || idx == right_id) {
       if (!hdr.eye_ctrl) {
-        fmt::print("no eye ctrl, but expected one for {}\n", debug_name);
+        lg::print("no eye ctrl, but expected one for {}\n", debug_name);
         // it looks like these models have half-implemented eyes - the texture IDs are there, but
         // there's no eye control.
         if (debug_name != "kor-break-lod0" && debug_name != "errol-lowres-lod1" &&

@@ -1,6 +1,7 @@
 #include "disassemble.h"
 
 #include "common/goos/Reader.h"
+#include "common/log/log.h"
 
 #include "Zydis/Zydis.h"
 #include "goalc/compiler/Env.h"
@@ -133,8 +134,8 @@ std::string disassemble_x86_function(
             current_instruction_idx++;
           }
         } else {
-          printf("offset mess up, at %d, expected %d\n", offset,
-                 x86_instructions.at(current_instruction_idx + 1).offset);
+          lg::warn("offset mess up, at %d, expected %d\n", offset,
+                   x86_instructions.at(current_instruction_idx + 1).offset);
           warn_messed_up = true;
           if (had_failure) {
             *had_failure = true;

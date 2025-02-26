@@ -165,7 +165,7 @@ void load_and_link_dgo_from_c_fast(const char* name,
   if (fread(&header, sizeof(DgoHeader), 1, fp) != 1) {
     lg::die("failed to read dgo header");
   }
-  lg::info("got {} objects, name {}\n", header.object_count, header.name);
+  lg::info("got {} objects, name {}", header.object_count, header.name);
 
   // load all but the final
   for (int i = 0; i < (int)header.object_count - 1; i++) {
@@ -197,7 +197,7 @@ void load_and_link_dgo_from_c_fast(const char* name,
 
   heap->top = old_heap_top;
   fclose(fp);
-  lg::info("load_and_link_dgo_from_c_fast took {:.3f} s\n", timer.getSeconds());
+  lg::info("load_and_link_dgo_from_c_fast took {:.3f} s", timer.getSeconds());
 }
 
 /*!
@@ -272,7 +272,7 @@ void load_and_link_dgo_from_c(const char* name,
       ContinueLoadingDGO(buffer1, buffer2, Ptr<u8>((heap->current + 0x3f).offset & 0xffffffc0));
     }
   }
-  lg::info("load_and_link_dgo_from_c took {:.3f} s\n", timer.getSeconds());
+  lg::info("load_and_link_dgo_from_c took {:.3f} s", timer.getSeconds());
   sShowStallMsg = oldShowStall;
 }
 

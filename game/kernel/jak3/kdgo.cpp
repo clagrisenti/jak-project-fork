@@ -204,7 +204,7 @@ void load_and_link_dgo_from_c(const char* name,
       ContinueLoadingDGO(buffer1, buffer2, Ptr<u8>((heap->current + 0x3f).offset & 0xffffffc0));
     }
   }
-  lg::info("load_and_link_dgo_from_c took {:.3f} s\n", timer.getSeconds());
+  lg::info("load_and_link_dgo_from_c took {:.3f} s", timer.getSeconds());
   sShowStallMsg = oldShowStall;
 }
 
