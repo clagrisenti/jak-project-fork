@@ -60,7 +60,7 @@ void InitParms(int argc, const char* const* argv) {
 
     // the "cd" mode uses the DVD drive for everything. This is how the game runs in retail
     if (arg == "-cd") {
-      Msg(6, "dkernel: cd mode\n");
+      Msg(6, "dkernel: cd mode");
       isodrv = iso_cd;  // use the actual DVD drive for data files
       modsrc = 1;       // use the DVD drive data for IOP modules
       reboot_iop = 1;   // Reboot the IOP (load new IOP runtime)
@@ -68,39 +68,39 @@ void InitParms(int argc, const char* const* argv) {
 
     // the "cddata" uses the DVD drive for everything but IOP modules.
     if (arg == "-cddata") {
-      Msg(6, "dkernel: cddata mode\n");
+      Msg(6, "dkernel: cddata mode");
       isodrv = iso_cd;  // tell IOP to use actual DVD drive for data files
       modsrc = 0;       // don't use DVD drive for IOP modules
       reboot_iop = 0;   // no need to reboot the IOP
     }
 
     if (arg == "-demo") {
-      Msg(6, "dkernel: demo mode\n");
+      Msg(6, "dkernel: demo mode");
       kstrcpy(DebugBootMessage, "demo");
     }
 
     // new for jak 2
     if (arg == "-kiosk") {
-      Msg(6, "dkernel: kiosk mode\n");
+      Msg(6, "dkernel: kiosk mode");
       kstrcpy(DebugBootMessage, "kiosk");
     }
 
     // new for jak 2
     if (arg == "-preview") {
-      Msg(6, "dkernel: preview mode\n");
+      Msg(6, "dkernel: preview mode");
       kstrcpy(DebugBootMessage, "preview");
     }
 
     // the "deviso" mode is one of two modes for testing without the need for DVDs
     if (arg == "-deviso") {
-      Msg(6, "dkernel: deviso mode\n");
+      Msg(6, "dkernel: deviso mode");
       isodrv = deviso;  // IOP deviso mode
       modsrc = 2;       // now 2 for Jak 2
       reboot_iop = 0;
     }
     // the "fakeiso" mode is the other of two modes for testing without the need for DVDs
     if (arg == "-fakeiso") {
-      Msg(6, "dkernel: fakeiso mode\n");
+      Msg(6, "dkernel: fakeiso mode");
       isodrv = fakeiso;  // IOP fakeeiso mode
       modsrc = 0;        // no IOP module loading (there's no DVD to load from!)
       reboot_iop = 0;
@@ -108,7 +108,7 @@ void InitParms(int argc, const char* const* argv) {
 
     // the "boot" mode is used to set GOAL up for running the game in retail mode
     if (arg == "-boot") {
-      Msg(6, "dkernel: boot mode\n");
+      Msg(6, "dkernel: boot mode");
       MasterDebug = 0;
       DiskBoot = 1;
       DebugSegment = 0;
@@ -124,14 +124,14 @@ void InitParms(int argc, const char* const* argv) {
 
     // traditional debug mode
     if (arg == "-debug") {
-      Msg(6, "dkernel: debug mode\n");
+      Msg(6, "dkernel: debug mode");
       MasterDebug = 1;
       DebugSegment = 1;
     }
 
     // the "debug-mem" mode is used to set up GOAL in debug mode, but not to load debug-segments
     if (arg == "-debug-mem") {
-      Msg(6, "dkernel: debug-mem mode\n");
+      Msg(6, "dkernel: debug-mem mode");
       MasterDebug = 1;
       DebugSegment = 0;
     }
@@ -139,12 +139,12 @@ void InitParms(int argc, const char* const* argv) {
     // TODO overlord 1 vs. 2 switch
 
     if (arg == "-debug-symbols") {
-      Msg(6, "dkernel: debug-symbols on\n");
+      Msg(6, "dkernel: debug-symbols on");
       DebugSymbols = true;
     }
 
     if (arg == "-no-debug-symbols") {
-      Msg(6, "dkernel: debug-symbols off\n");
+      Msg(6, "dkernel: debug-symbols off");
       DebugSymbols = true;
     }
 
@@ -153,7 +153,7 @@ void InitParms(int argc, const char* const* argv) {
     if (arg == "-level") {
       i++;
       std::string levelName = argv[i];
-      Msg(6, "dkernel: level %s\n", levelName.c_str());
+      Msg(6, "dkernel: level %s", levelName.c_str());
       kstrcpy(DebugBootLevel, levelName.c_str());
       ASSERT_NOT_REACHED();  // symbol ID junk
     }
@@ -162,7 +162,7 @@ void InitParms(int argc, const char* const* argv) {
     if (arg == "-user") {
       i++;
       std::string userName = argv[i];
-      Msg(6, "dkernel: user %s\n", userName.c_str());
+      Msg(6, "dkernel: user %s", userName.c_str());
       kstrcpy(DebugBootUser, userName.c_str());
     }
 
@@ -170,20 +170,20 @@ void InitParms(int argc, const char* const* argv) {
     if (arg == "-art") {
       i++;
       std::string artGroupName = argv[i];
-      Msg(6, "dkernel: art-group %s\n", artGroupName.c_str());
+      Msg(6, "dkernel: art-group %s", artGroupName.c_str());
       kstrcpy(DebugBootArtGroup, artGroupName.c_str());
       kstrcpy(DebugBootMessage, "art-group");
     }
 
     // an added mode to allow booting without a KERNEL.CGO for testing
     if (arg == "-nokernel") {
-      Msg(6, "dkernel: no kernel mode\n");
+      Msg(6, "dkernel: no kernel mode");
       MasterUseKernel = false;
     }
 
     // an added mode to allow booting without sound for testing
     if (arg == "-nosound") {
-      Msg(6, "dkernel: no sound mode\n");
+      Msg(6, "dkernel: no sound mode");
       masterConfig.disable_sound = true;
     }
   }
@@ -193,8 +193,8 @@ void InitParms(int argc, const char* const* argv) {
  * This is mostly copy-pasted from jak2 and very simplified until we have overlord 2.
  */
 void InitIOP() {
-  Msg(6, "dkernel: boot:%d debug:%d mem:%d syms:%d dev:%d mod:%d\n", DiskBoot, MasterDebug,
-      DebugSegment, DebugSymbols, isodrv, modsrc);
+  /*Msg(6, "dkernel: boot:{} debug:{} mem:{} syms:{} dev:{} mod:{}", DiskBoot, MasterDebug,
+      DebugSegment, DebugSymbols, isodrv, modsrc);*/
   sceSifInitRpc(0);
 
   // init cd if we need it
@@ -224,7 +224,7 @@ void InitIOP() {
   int total_len = cmd - overlord_boot_command;
 
   if (modsrc == 0) {
-    printf("Initializing CD library in FAKEISO mode\n");
+    lg::info("Initializing CD library in FAKEISO mode");
     if (sceSifLoadModule("host0:bin/overlord.irx", total_len, overlord_boot_command) < 0) {
       MsgErr("loading overlord.irx <3> failed\n");
       exit(0);
@@ -237,7 +237,7 @@ void InitIOP() {
     MsgErr("MC driver init failed %d\n", rv);
     exit(0);
   }
-  printf("InitIOP OK\n");
+  lg::info("InitIOP OK");
 }
 
 int InitMachine() {
@@ -275,26 +275,26 @@ int InitMachine() {
   } else {
     ee::sceDeci2Disable();  // added
   }
-  printf("InitSound\n");
+  lg::info("InitSound");
   InitSound();
-  printf("InitRPC\n");
+  lg::info("InitRPC");
   InitRPC();
   reset_output();
   clear_print();
   auto status = InitHeapAndSymbol();
   if (status >= 0) {
-    printf("InitListenerConnect\n");
+    lg::info("InitListenerConnect");
     InitListenerConnect();
-    printf("InitCheckListener\n");
+    printf("InitCheckListener");
     InitCheckListener();
-    Msg(6, "kernel: machine started\n");
+    Msg(6, "kernel: machine started");
     return 0;
   }
   return status;
 }
 
 int ShutdownMachine() {
-  Msg(6, "kernel: machine shutdown (reason %d)\n", (int)MasterExit);
+  Msg(6, "kernel: machine shutdown (reason {})", (int)MasterExit);
 
   StopIOP();
   ShutdownSound();
@@ -515,7 +515,7 @@ void InitMachineScheme() {
     kernel_packages->value() =
         new_pair(s7.offset + FIX_SYM_GLOBAL_HEAP, *((s7 + FIX_SYM_PAIR_TYPE - 1).cast<u32>()),
                  make_string_from_c("common"), kernel_packages->value());
-    printf("calling play-boot!\n");
+    lg::info("calling play-boot!");
     call_goal_function_by_name("play-boot");  // new function for jak2!
   }
 }

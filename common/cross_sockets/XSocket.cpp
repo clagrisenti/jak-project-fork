@@ -5,6 +5,7 @@
 
 // clang-format off
 #include "common/common_types.h"
+#include "common/log/log.h"
 #ifdef OS_POSIX
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
@@ -86,7 +87,7 @@ int select_and_accept_socket(int socket, sockaddr* addr, int* addrLen, int micro
   // Initialize Winsock
   iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
   if (iResult != 0) {
-    printf("WSAStartup failed: %d\n", iResult);
+    lg::warn("WSAStartup failed: %d\n", iResult);
     return 1;
   }
   struct timeval timeout;
@@ -138,8 +139,8 @@ int set_socket_timeout(int socket, long microSeconds) {
   timeout.tv_usec = microSeconds;
   int ret = setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, (struct timeval*)&timeout, sizeof(timeout));
   if (ret < 0) {
-    printf("Failed to setsockopt(%d, %d, %d, _, _) - Error: %s\n", socket, SOL_SOCKET, SO_RCVTIMEO,
-           strerror(errno));
+    lg::warn("Failed to setsockopt(%d, %d, %d, _, _) - Error: %s\n", socket, SOL_SOCKET,
+             SO_RCVTIMEO, strerror(errno));
   }
   return ret;
 #elif _WIN32

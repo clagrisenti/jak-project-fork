@@ -66,7 +66,7 @@ void fixed_sym_set(u32 offset, u32 value) {
 
 u64 new_illegal(u32 allocation, u32 type) {
   (void)allocation;
-  MsgErr("dkernel: illegal attempt to call new method of static object type %s\n",
+  MsgErr("dkernel: illegal attempt to call new method of static object type %s",
          sym_to_string(Ptr<Type>(type)->symbol)->data());
   return s7.offset;
 }
@@ -103,7 +103,7 @@ u64 alloc_from_heap(u32 heap_symbol, u32 type, s32 size, u32 pp) {
       memset(Ptr<u8>(start).c(), 0, aligned_size);
       return start;
     } else {
-      MsgErr("kmalloc: !alloc mem in heap for #<process @ #x%x> (%d bytes)\n", pp, aligned_size);
+      MsgErr("kmalloc: !alloc mem in heap for #<process @ #x%x> (%d bytes)", pp, aligned_size);
       return 0;
     }
   } else if (heap_symbol == s7.offset + FIX_SYM_SCRATCH) {
@@ -675,7 +675,7 @@ Ptr<Symbol4<u32>> find_symbol_from_c(uint16_t sym_id, const char* name) {
     // the ID wasn't provided, so we have to use the name
     if (!name) {
       // always warn - no name or ID!
-      MsgErr("dkernel: attempted to find symbol with NULL name and id #x%x\n", sym_id);
+      MsgErr("dkernel: attempted to find symbol with NULL name and id #x%x", sym_id);
       return Ptr<Symbol4<u32>>(0);
     } else {
       // find the symbol
@@ -688,7 +688,7 @@ Ptr<Symbol4<u32>> find_symbol_from_c(uint16_t sym_id, const char* name) {
       if (!DebugSegment || u32_in_fixed_sym(FIX_SYM_KERNEL_SYMBOL_WARNINGS) != s7.offset) {
         if (lookup_result.offset == 0) {
           // lookup by the name failed.
-          MsgWarn("dkernel: doing a string->symbol on %s, but could not find the name\n", name);
+          MsgWarn("dkernel: doing a string->symbol on {}, but could not find the name", name);
         } else {
           auto sym_string = sym_to_string(lookup_result);
           // not sure how you could get unknown name here...
@@ -747,7 +747,7 @@ Ptr<Symbol4<u32>> intern_from_c(int sym_id, int flags, const char* name) {
 
   if (symbol.offset == 0) {
     // the function above can only fail if we didn't give an ID.
-    MsgErr("dkernel: attempted to intern symbol %s using the name, but could not find it\n", name);
+    MsgErr("dkernel: attempted to intern symbol %s using the name, but could not find it", name);
     kheaplogging = false;
     return Ptr<Symbol4<u32>>(0);
   }
@@ -779,7 +779,7 @@ Ptr<Symbol4<u32>> intern_from_c(int sym_id, int flags, const char* name) {
 
     // "upgrade" from the debug heap to global. (this could also trigger if the name was previously
     // unknown)
-    MsgWarn("dkernel: upgrading symbol %s (flags #x%x) from debug heap to global\n", name, flags);
+    MsgWarn("dkernel: upgrading symbol {} (flags #x{}) from debug heap to global", name, flags);
     *sptr = Ptr<String>(make_string_from_c(name));
     kheaplogging = false;
     return symbol;
@@ -875,7 +875,7 @@ Ptr<Type> alloc_and_init_type(Ptr<Symbol4<Ptr<Type>>> sym,
     u32 type_list_ptr = LevelTypeList->value();
     if (type_list_ptr == 0) {
       // we don't have a type-list... just alloc on global
-      MsgErr("dkernel: trying to init loading level type \'%s\' while type-list is undefined\n",
+      MsgErr("dkernel: trying to init loading level type \'%s\' while type-list is undefined",
              sym_to_string(sym)->data());
       type_mem = alloc_heap_object(s7.offset + FIX_SYM_GLOBAL_HEAP,
                                    u32_in_fixed_sym(FIX_SYM_TYPE_TYPE), type_size, UNKNOWN_PP);
@@ -1056,8 +1056,8 @@ u64 new_type(u32 symbol, u32 parent, u64 flags) {
   } else {
     if (original_type_list_value == 0) {
       // loading a level, but the type is global
-      MsgWarn("dkernel: loading-level init of type %s, but was interned global (this is okay)\n",
-              sym_to_string(new_type_obj->symbol)->data());
+      MsgWarn("dkernel: loading-level init of type {}, but was interned global (this is okay)",
+               sym_to_string(new_type_obj->symbol)->data());
     } else {
       new_type_obj->memusage_method.offset = original_type_list_value;
     }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common/common_types.h"
+#include "common/log/log.h"
 
 #include "game/kernel/common/Ptr.h"
 ///////////
@@ -81,46 +82,20 @@ void cprintf(const char* format, ...);
  */
 void reverse(char* s);
 
-#ifdef OS_POSIX
-/*!
- * Print directly to the C stdout
- * The "k" parameter is ignored, so this is just like printf
- */
-void Msg(s32 k, const char* format, ...) __attribute__((format(printf, 2, 3)));
-#elif _WIN32
-/*!
- * Print directly to the C stdout
- * The "k" parameter is ignored, so this is just like printf
- */
-void Msg(s32 k, const char* format, ...);
-#endif
+template <typename... Args>
+void Msg(s32 k, const char* format, Args&&... args) {
+  lg::info(format, args...);
+}
 
-#ifdef OS_POSIX
-/*!
- * Print directly to the C stdout
- * This is identical to Msg.
- */
-void MsgWarn(const char* format, ...) __attribute__((format(printf, 1, 2)));
-#elif _WIN32
-/*!
- * Print directly to the C stdout
- * This is identical to Msg.
- */
-void MsgWarn(const char* format, ...);
-#endif
-#ifdef OS_POSIX
-/*!
- * Print directly to the C stdout
- * This is identical to Msg.
- */
-void MsgErr(const char* format, ...) __attribute__((format(printf, 1, 2)));
-#elif _WIN32
-/*!
- * Print directly to the C stdout
- * This is identical to Msg.
- */
-void MsgErr(const char* format, ...);
-#endif
+template <typename... Args>
+void MsgWarn(const char* format, Args&&... args) {
+  lg::warn(format, args...);
+}
+
+template <typename... Args>
+void MsgErr(const char* format, Args&&... args) {
+  lg::error(format, args...);
+}
 
 /*!
  * Helper function for floating point to string conversion.

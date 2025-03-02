@@ -193,37 +193,52 @@ void cprintf(const char* format, ...) {
  * The "k" parameter is ignored, so this is just like printf
  * DONE, changed vprintf to lg::printstd
  */
-void Msg(s32 k, const char* format, ...) {
+/*
+template <typename... Args>
+void Msg(s32 k, const char* format, Args&&... args) {
+
   (void)k;
   va_list args;
   va_start(args, format);
   lg::printstd(format, args);
   va_end(args);
-}
+
+  lg::info(format, args);
+}*/
 
 /*!
  * Print directly to the C stdout
  * This is idential to Msg
  * DONE, changed vprintf to lg::printstd
  */
-void MsgWarn(const char* format, ...) {
+/*
+template <typename... Args>
+void MsgWarn(const char* format, Args&&... args) {
+
   va_list args;
   va_start(args, format);
   lg::printstd(format, args);
   va_end(args);
-}
+
+  lg::warn(format, args);
+}*/
 
 /*!
  * Print directly to the C stdout
  * This is idential to Msg
  * DONE, changed vprintf to lg::printstd
  */
-void MsgErr(const char* format, ...) {
+/*
+template <typename... Args>
+void MsgErr(const char* format, Args&&... args) {
+
   va_list args;
   va_start(args, format);
   lg::printstd(format, args);
   va_end(args);
-}
+
+  lg::error(format, args);
+}*/
 
 /*!
  * Reverse string in place.

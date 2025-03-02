@@ -48,7 +48,7 @@ void kscheme_init_globals() {
  */
 u64 new_illegal(u32 allocation, u32 type) {
   (void)allocation;
-  MsgErr("dkernel: illegal attempt to call new method of static object type %s\n",
+  MsgErr("dkernel: illegal attempt to call new method of static object type %s",
          symbol_name_cstr(*Ptr<Type>(type)->symbol));
   return s7.offset;
 }
@@ -112,7 +112,7 @@ u64 alloc_from_heap(u32 heap_symbol, u32 type, s32 size, u32 pp) {
       memset(Ptr<u8>(start).c(), 0, aligned_size);
       return start;
     } else {
-      MsgErr("kmalloc: !alloc mem in heap for #<process @ #x%x> (%d bytes)\n", pp, aligned_size);
+      MsgErr("kmalloc: !alloc mem in heap for #<process @ #x%x> (%d bytes)", pp, aligned_size);
       return 0;
     }
   } else if (heap_symbol == s7.offset + FIX_SYM_SCRATCH) {
@@ -763,7 +763,7 @@ Ptr<Type> alloc_and_init_type(Ptr<Symbol4<Ptr<Type>>> sym,
     u32 type_list_ptr = LevelTypeList->value();
     if (type_list_ptr == 0) {
       // we don't have a type-list... just alloc on global
-      MsgErr("dkernel: trying to init loading level type \'%s\' while type-list is undefined\n",
+      MsgErr("dkernel: trying to init loading level type \'%s\' while type-list is undefined",
              sym_to_string(sym)->data());
       type_mem = alloc_heap_object(s7.offset + FIX_SYM_GLOBAL_HEAP,
                                    u32_in_fixed_sym(FIX_SYM_TYPE_TYPE), type_size, UNKNOWN_PP);
@@ -981,8 +981,8 @@ u64 new_type(u32 symbol, u32 parent, u64 flags) {
   } else {
     if (original_type_list_value == 0) {
       // loading a level, but the type is global
-      MsgWarn("dkernel: loading-level init of type %s, but was interned global (this is okay)\n",
-              sym_to_string(new_type_obj->symbol)->data());
+      MsgWarn("dkernel: loading-level init of type {}, but was interned global (this is okay)",
+               sym_to_string(new_type_obj->symbol)->data());
     } else {
       new_type_obj->memusage_method.offset = original_type_list_value;
     }

@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 #include "common/link_types.h"
+#include "common/log/log.h"
 #include "common/util/Assert.h"
 #include "common/util/BitUtils.h"
 
@@ -58,10 +59,10 @@ MemoryMap::MemoryMap(const std::unordered_map<std::string, LoadEntry>& load_entr
   for (const auto& entry : entries) {
     if (entry.start_addr < last_addr) {
       // this is bad.
-      printf("[Listener Error] We could not build a memory map.\n");
+      lg::info("[Listener Error] We could not build a memory map.\n");
       MemoryMap temp(m_entries);
-      printf("%s\n", temp.print().c_str());
-      printf("Can't add %s\n", entry.print().c_str());
+      lg::info("{}", temp.print().c_str());
+      lg::info("Can't add {}", entry.print().c_str());
 
       ASSERT(false);  // todo, handle this more gracefully
     } else if (entry.start_addr > last_addr) {

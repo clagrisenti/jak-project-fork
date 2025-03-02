@@ -53,9 +53,11 @@ constexpr bool g_OverlordLogEnable[(int)LogCategory::NUM_CATETORIES] = {
 
 template <typename... Args>
 void ovrld_log(LogCategory category, const std::string& format, Args&&... args) {
+#ifndef NO_LOG
   if (g_OverlordLogEnable[(int)category]) {
     lg::info(format, std::forward<Args>(args)...);
   }
+#endif
 }
 
 }  // namespace jak3

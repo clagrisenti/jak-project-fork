@@ -4,6 +4,7 @@
 #include "common/util/FileUtil.h"
 #include "common/util/Timer.h"
 #include "common/util/compress.h"
+#include "common/log/log.h"
 
 #include "game/graphics/opengl_renderer/loader/LoaderStages.h"
 
@@ -233,8 +234,8 @@ void Loader::loader_thread() {
         }
       }
 
-      fmt::print(
-          "------------> Load from file: {:.3f}s, import {:.3f}s, decomp {:.3f}s unpack {:.3f}s\n",
+      lg::info(
+          "------------> Load from file: {:.3f}s, import {:.3f}s, decomp {:.3f}s unpack {:.3f}s",
           disk_load_time, import_time, decomp_time, unpack_timer.getSeconds());
 
       // grab the lock again
@@ -305,7 +306,7 @@ bool Loader::upload_textures(Timer& timer, LevelData& data, TexturePool& texture
 }
 
 void Loader::update_blocking(TexturePool& tex_pool) {
-  fmt::print("NOTE: coming out of blackout on next frame, doing all loads now...\n");
+  lg::info("NOTE: coming out of blackout on next frame, doing all loads now...");
 
   bool missing_levels = true;
   while (missing_levels) {
@@ -342,7 +343,7 @@ void Loader::update_blocking(TexturePool& tex_pool) {
       missing_levels = false;
       for (auto& des : m_desired_levels) {
         if (m_loaded_tfrag3_levels.find(des) == m_loaded_tfrag3_levels.end()) {
-          fmt::print("blackout loader doing additional level {}...\n", des);
+          lg::info("blackout loader doing additional level {}...", des);
           missing_levels = true;
         }
       }
@@ -356,7 +357,7 @@ void Loader::update_blocking(TexturePool& tex_pool) {
   fmt::print("Blackout loads done. Current status:");
   std::unique_lock<std::mutex> lk(m_loader_mutex);
   for (auto& ld : m_loaded_tfrag3_levels) {
-    fmt::print("  {} is loaded.\n", ld.first);
+    lg::info("  {} is loaded.", ld.first);
   }
 }
 
@@ -423,7 +424,7 @@ void Loader::update(TexturePool& texture_pool) {
         Timer stage_timer;
         done = stage->run(loader_timer, loader_input);
         if (stage_timer.getMs() > 5.f) {
-          fmt::print("stage {} took {:.2f} ms\n", stage->name(), stage_timer.getMs());
+          fmt::print("stage {} took {:.2f} ms", stage->name(), stage_timer.getMs());
         }
         if (!done) {
           break;
@@ -452,7 +453,7 @@ void Loader::update(TexturePool& texture_pool) {
       if (to_unload) {
         auto& lev = m_loaded_tfrag3_levels.at(*to_unload);
         std::unique_lock<std::mutex> lk(texture_pool.mutex());
-        fmt::print("------------------------- PC unloading {}\n", *to_unload);
+        lg::info("------------------------- PC unloading {}", *to_unload);
         for (size_t i = 0; i < lev->level->textures.size(); i++) {
           auto& tex = lev->level->textures[i];
           if (tex.load_to_pool) {
@@ -510,7 +511,7 @@ void Loader::update(TexturePool& texture_pool) {
     }
 
     if (unload_timer.getMs() > 5.f) {
-      fmt::print("Unload took {:.2f}ms\n", unload_timer.getMs());
+      fmt::print("Unload took {:.2f}ms", unload_timer.getMs());
     }
 
     if (!m_garbage_buffers.empty()) {

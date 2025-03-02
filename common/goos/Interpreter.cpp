@@ -208,9 +208,9 @@ void Interpreter::execute_repl(REPL::Wrapper& repl) {
       // evaluate
       Object evald = eval_with_rewind(*obj, global_environment.as_env_ptr());
       // print
-      printf("%s\n", evald.print().c_str());
+      lg::warn("%s\n", evald.print().c_str());
     } catch (std::exception& e) {
-      printf("REPL Error: %s\n", e.what());
+      lg::warn("REPL Error: %s\n", e.what());
     }
   }
 }
@@ -235,8 +235,9 @@ Object Interpreter::eval_with_rewind(const Object& obj,
     return eval(obj, env);
   } catch (std::runtime_error& e) {
     if (!disable_printing) {
-      printf("-----------------------------------------\n");
-      printf("From object %s\nat %s\n", obj.inspect().c_str(), reader.db.get_info_for(obj).c_str());
+      lg::info("-----------------------------------------\n");
+      lg::info("From object %s\nat %s\n", obj.inspect().c_str(),
+               reader.db.get_info_for(obj).c_str());
     }
     throw e;
   }
@@ -1275,7 +1276,7 @@ Object Interpreter::eval_print(const Object& form,
   vararg_check(form, args, {{}}, {});
 
   if (!disable_printing) {
-    printf("%s\n", args.unnamed.at(0).print().c_str());
+    lg::info("{}", args.unnamed.at(0).print().c_str());
   }
   return Object::make_empty_list();
 }
@@ -1291,7 +1292,7 @@ Object Interpreter::eval_inspect(const Object& form,
   vararg_check(form, args, {{}}, {});
 
   if (!disable_printing) {
-    printf("%s\n", args.unnamed.at(0).inspect().c_str());
+    lg::info("{}", args.unnamed.at(0).inspect().c_str());
   }
 
   return Object::make_empty_list();

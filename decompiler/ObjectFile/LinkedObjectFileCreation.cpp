@@ -725,7 +725,7 @@ static void link_v3(LinkedObjectFile& f,
               if ((old_code >> 24) == 0) {
                 f.stats.v3_word_pointers++;
                 if (!f.pointer_link_word(seg_id, data_ptr - base_ptr, seg_id, old_code)) {
-                  printf("WARNING bad pointer_link_word (2) in %s\n", name.c_str());
+                  lg::warn("WARNING bad pointer_link_word (2) in %s\n", name.c_str());
                 }
               } else {
                 f.stats.v3_split_pointers++;

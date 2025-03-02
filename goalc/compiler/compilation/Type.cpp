@@ -432,7 +432,7 @@ Val* Compiler::compile_deftype(const goos::Object& form, const goos::Object& res
         throw_compiler_error(form, "deftype would redefine the type of state {} from {} to {}.",
                              state.first, existing_type->print(), state.second.print());
       } else {
-        print_compiler_warning(
+        lg::warn(
             "[Warning] deftype has redefined the type of state {}\npreviously: {}\nnow: "
             "{}\n",
             state.first.c_str(), existing_type->print().c_str(), state.second.print().c_str());

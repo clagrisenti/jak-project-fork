@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <cstring>
 
+#include "common/log/log.h"
+
 #include "game/overlord/common/sbank.h"
 #include "game/overlord/jak1/ramdisk.h"
 #include "game/overlord/jak2/iso.h"
@@ -28,7 +30,7 @@ s32 SndPlayThread;
 int start_overlord(int, const char* const*) {
   sceSifInit();
   sceSifInitRpc(0);
-  printf("IOP: =========Startup===(%x)====\n", 0);
+  lg::info("IOP: =========Startup===(%x)====", 0);
   // removed memory prints.
 
   ScratchPadMemory = (u8*)AllocScratchPad(0);
@@ -80,7 +82,7 @@ int start_overlord(int, const char* const*) {
   StartThread(thread_server, 0);
   StartThread(thread_player, 0);
   StartThread(thread_loader, 0);
-  printf("IOP: =========After inits=============\n");
+  lg::info("IOP: =========After inits=============");
   // removed memory printing code
 
   return 0;

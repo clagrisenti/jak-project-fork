@@ -10,12 +10,12 @@ class Jak2KernelTest : public testing::Test {
  public:
   static void SetUpTestSuite() {
     shared_compiler = std::make_unique<SharedCompiler>(GameVersion::Jak2);
-    printf("Building kernel...\n");
+    lg::info("Building kernel...\n");
     try {
       // a macro in goal-lib.gc
       shared_compiler->compiler.run_front_end_on_string("(build-kernel)");
     } catch (std::exception& e) {
-      fprintf(stderr, "caught exception %s\n", e.what());
+      lg::error("caught exception %s\n", e.what());
       EXPECT_TRUE(false);
     }
 
