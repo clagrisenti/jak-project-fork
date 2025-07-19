@@ -4,11 +4,20 @@
  */
 
 #pragma once
+namespace assert {
+constexpr bool use_assert =
+#ifndef NO_ASSERT
+    true
+#else
+    false
+#endif
+    ;
+}  // namespace assert
 
 #ifndef NO_ASSERT
 
 #include <string_view>
-
+namespace assert {
 [[noreturn]] void private_assert_failed(const char* expr,
                                         const char* file,
                                         int line,
@@ -20,22 +29,25 @@
                                         int line,
                                         const char* function,
                                         const std::string_view& msg);
-
+}  // namespace assert
 #ifdef _WIN32
 #define __PRETTY_FUNCTION__ __FUNCSIG__
 #endif
 
 #define ASSERT(EX) \
-  (void)((EX) || (private_assert_failed(#EX, __FILE__, __LINE__, __PRETTY_FUNCTION__), 0))
+  (void)((EX) || (assert::private_assert_failed(#EX, __FILE__, __LINE__, __PRETTY_FUNCTION__), 0))
 
 #define ASSERT_NOT_REACHED() \
-  (void)((private_assert_failed("not reached", __FILE__, __LINE__, __PRETTY_FUNCTION__), 0))
+  (void)((assert::private_assert_failed("not reached", __FILE__, __LINE__, __PRETTY_FUNCTION__), 0))
 
 #define ASSERT_MSG(EXPR, STR) \
-  (void)((EXPR) || (private_assert_failed(#EXPR, __FILE__, __LINE__, __PRETTY_FUNCTION__, STR), 0))
+  (void)((EXPR) ||            \
+         (assert::private_assert_failed(#EXPR, __FILE__, __LINE__, __PRETTY_FUNCTION__, STR), 0))
 
-#define ASSERT_NOT_REACHED_MSG(STR) \
-  (void)((private_assert_failed("not reached", __FILE__, __LINE__, __PRETTY_FUNCTION__, STR), 0))
+#define ASSERT_NOT_REACHED_MSG(STR)                                                               \
+  (void)((                                                                                        \
+      assert::private_assert_failed("not reached", __FILE__, __LINE__, __PRETTY_FUNCTION__, STR), \
+      0))
 
 #define ASSERT_EQ_IMM(EXPR, EXPECTED) \
   ASSERT_MSG((EXPR) == (EXPECTED), fmt::format("result was {}, expected {}", (EXPR), (EXPECTED)))

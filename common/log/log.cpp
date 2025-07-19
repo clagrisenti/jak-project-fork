@@ -16,6 +16,7 @@
 #include "common/util/string_util.h"
 
 namespace lg {
+
 struct Logger {
   Logger() = default;
 
@@ -44,58 +45,60 @@ const fmt::color log_colors[] = {
     fmt::color::red,  fmt::color::hot_pink,  fmt::color::hot_pink};
 
 void log_message(level log_level, LogTime& now, const char* message) {
+  if constexpr (use_log) {
 #ifdef __linux__
-  char date_time_buffer[128];
-  time_t now_seconds = now.tv.tv_sec;
-  auto now_milliseconds = now.tv.tv_usec / 1000;
-  strftime(date_time_buffer, 128, "%M:%S", localtime(&now_seconds));
-  std::string time_string = fmt::format("[{}:{:03d}]", date_time_buffer, now_milliseconds);
+    char date_time_buffer[128];
+    time_t now_seconds = now.tv.tv_sec;
+    auto now_milliseconds = now.tv.tv_usec / 1000;
+    strftime(date_time_buffer, 128, "%M:%S", localtime(&now_seconds));
+    std::string time_string = fmt::format("[{}:{:03d}]", date_time_buffer, now_milliseconds);
 #else
-  char date_time_buffer[128];
-  strftime(date_time_buffer, 128, "%M:%S", localtime(&now.tim));
-  std::string time_string = fmt::format("[{}]", date_time_buffer);
+    char date_time_buffer[128];
+    strftime(date_time_buffer, 128, "%M:%S", localtime(&now.tim));
+    std::string time_string = fmt::format("[{}]", date_time_buffer);
 #endif
 
-  {
-    std::lock_guard<std::mutex> lock(gLogger.mutex);
-    if (gLogger.fp && log_level >= gLogger.file_log_level) {
-      // log to file
-      std::string file_string =
-          fmt::format("{} [{}] {}\n", time_string, log_level_names[int(log_level)], message);
-      fwrite(file_string.c_str(), file_string.length(), 1, gLogger.fp);
-      if (log_level >= gLogger.flush_level) {
+    {
+      std::lock_guard<std::mutex> lock(gLogger.mutex);
+      if (gLogger.fp && log_level >= gLogger.file_log_level) {
+        // log to file
+        std::string file_string =
+            fmt::format("{} [{}] {}\n", time_string, log_level_names[int(log_level)], message);
+        fwrite(file_string.c_str(), file_string.length(), 1, gLogger.fp);
+        if (log_level >= gLogger.flush_level) {
+          fflush(gLogger.fp);
+        }
+      }
+
+      if (log_level >= gLogger.stdout_log_level ||
+          (log_level == level::die && gLogger.stdout_log_level == level::off_unless_die)) {
+        fmt::print("{} [", time_string);
+        if (gLogger.disable_colors) {
+          fmt::print("{}", log_level_names[int(log_level)]);
+        } else {
+          fmt::print(fg(log_colors[int(log_level)]), "{}", log_level_names[int(log_level)]);
+        }
+        fmt::print("] {}\n", message);
+        if (log_level >= gLogger.flush_level) {
+          fflush(stdout);
+          fflush(stderr);
+        }
+      }
+    }
+
+    if (log_level == level::die) {
+      fflush(stdout);
+      fflush(stderr);
+      if (gLogger.fp) {
         fflush(gLogger.fp);
       }
+      abort();
     }
-
-    if (log_level >= gLogger.stdout_log_level ||
-        (log_level == level::die && gLogger.stdout_log_level == level::off_unless_die)) {
-      fmt::print("{} [", time_string);
-      if (gLogger.disable_colors) {
-        fmt::print("{}", log_level_names[int(log_level)]);
-      } else {
-        fmt::print(fg(log_colors[int(log_level)]), "{}", log_level_names[int(log_level)]);
-      }
-      fmt::print("] {}\n", message);
-      if (log_level >= gLogger.flush_level) {
-        fflush(stdout);
-        fflush(stderr);
-      }
-    }
-  }
-
-  if (log_level == level::die) {
-    fflush(stdout);
-    fflush(stderr);
-    if (gLogger.fp) {
-      fflush(gLogger.fp);
-    }
-    abort();
   }
 }
 
 void log_print(const char* message) {
-  {
+  if constexpr (use_log) {
     // We always immediately flush prints because since it has no associated level
     // it could be anything from a fatal error to a useless debug log.
     std::lock_guard<std::mutex> lock(gLogger.mutex);
@@ -115,7 +118,7 @@ void log_print(const char* message) {
 }
 
 void log_vprintf(const char* format, va_list arg_list) {
-  {
+  if constexpr (use_log) {
     // We always immediately flush prints because since it has no associated level
     // it could be anything from a fatal error to a useless debug log.
     std::lock_guard<std::mutex> lock(gLogger.mutex);
@@ -147,49 +150,52 @@ void set_file(const std::string& filename,
               const bool should_rotate,
               const bool append,
               const std::string& dir) {
-  ASSERT(!gLogger.fp);
-  std::string file_path;
-  if (!dir.empty()) {
-    file_path = file_util::combine_path(dir, filename);
-  } else {
-    file_path = file_util::get_file_path({"log", filename});
-  }
-  file_util::create_dir_if_needed_for_file(file_path);
-  std::string complete_filename = file_path;
-  if (should_rotate) {
-    complete_filename += "." + str_util::current_local_timestamp_no_colons() + ".log";
-    // remove any log files with the old format
-    auto old_log_files =
-        file_util::find_files_in_dir(fs::path(complete_filename).parent_path(),
-                                     std::regex(fmt::format("{}\\.(\\d\\.)?log", filename)));
-    for (const auto& file : old_log_files) {
-      lg::debug("removing {}", file.string());
-      fs::remove(file);
+  if constexpr (use_log) {
+    ASSERT(!gLogger.fp);
+    std::string file_path;
+    if (!dir.empty()) {
+      file_path = file_util::combine_path(dir, filename);
+    } else {
+      file_path = file_util::get_file_path({"log", filename});
     }
-    // remove the oldest log file if there are more than LOG_ROTATE_MAX
-    auto existing_log_files = file_util::find_files_in_dir(
-        fs::path(complete_filename).parent_path(), std::regex(fmt::format("{}.*\\.log", filename)));
-    // sort the names and remove them
-    existing_log_files = file_util::sort_filepaths(existing_log_files, true);
-    if (existing_log_files.size() > (LOG_ROTATE_MAX - 1)) {
-      lg::debug("removing {} log files", existing_log_files.size() - (LOG_ROTATE_MAX - 1));
-      for (int i = 0; i < (int)existing_log_files.size() - (LOG_ROTATE_MAX - 1); i++) {
-        lg::debug("removing {}", existing_log_files.at(i).string());
-        fs::remove(existing_log_files.at(i));
+    file_util::create_dir_if_needed_for_file(file_path);
+    std::string complete_filename = file_path;
+    if (should_rotate) {
+      complete_filename += "." + str_util::current_local_timestamp_no_colons() + ".log";
+      // remove any log files with the old format
+      auto old_log_files =
+          file_util::find_files_in_dir(fs::path(complete_filename).parent_path(),
+                                       std::regex(fmt::format("{}\\.(\\d\\.)?log", filename)));
+      for (const auto& file : old_log_files) {
+        lg::debug("removing {}", file.string());
+        fs::remove(file);
+      }
+      // remove the oldest log file if there are more than LOG_ROTATE_MAX
+      auto existing_log_files =
+          file_util::find_files_in_dir(fs::path(complete_filename).parent_path(),
+                                       std::regex(fmt::format("{}.*\\.log", filename)));
+      // sort the names and remove them
+      existing_log_files = file_util::sort_filepaths(existing_log_files, true);
+      if (existing_log_files.size() > (LOG_ROTATE_MAX - 1)) {
+        lg::debug("removing {} log files", existing_log_files.size() - (LOG_ROTATE_MAX - 1));
+        for (int i = 0; i < (int)existing_log_files.size() - (LOG_ROTATE_MAX - 1); i++) {
+          lg::debug("removing {}", existing_log_files.at(i).string());
+          fs::remove(existing_log_files.at(i));
+        }
+      }
+    } else {
+      if (!str_util::ends_with(complete_filename, ".log")) {
+        complete_filename += ".log";
       }
     }
-  } else {
-    if (!str_util::ends_with(complete_filename, ".log")) {
-      complete_filename += ".log";
-    }
-  }
 
-  if (append) {
-    gLogger.fp = file_util::open_file(complete_filename.c_str(), "a");
-  } else {
-    gLogger.fp = file_util::open_file(complete_filename.c_str(), "w");
+    if (append) {
+      gLogger.fp = file_util::open_file(complete_filename.c_str(), "a");
+    } else {
+      gLogger.fp = file_util::open_file(complete_filename.c_str(), "w");
+    }
+    ASSERT(gLogger.fp);
   }
-  ASSERT(gLogger.fp);
 }
 
 void set_flush_level(level log_level) {
@@ -253,7 +259,7 @@ void initialize() {
 }
 
 void finish() {
-  {
+  if constexpr (use_log) {
     std::lock_guard<std::mutex> lock(gLogger.mutex);
     if (gLogger.fp) {
       fclose(gLogger.fp);

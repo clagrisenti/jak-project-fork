@@ -3,6 +3,11 @@
  * Main for the game. Launches the runtime.
  */
 
+#include <algorithm>
+
+#include "common/util/Assert.h"
+
+#include "fmt/base.h"
 #define STBI_WINDOWS_UTF8
 
 #include <string>
@@ -264,6 +269,10 @@ int main(int argc, char** argv) {
 
     // run the runtime in a loop so we can reset the game and have it restart cleanly
     lg::info("OpenGOAL Runtime {}.{}", versions::GOAL_VERSION_MAJOR, versions::GOAL_VERSION_MINOR);
+
+    fmt::println("Use custom log: {}", lg::use_log);
+    fmt::println("Use custom assert: {}", assert::use_assert);
+
     try {
       MasterExit = RuntimeExitStatus::RUNNING;
       auto exit_status = exec_runtime(game_options, arg_ptrs.size(), arg_ptrs.data());

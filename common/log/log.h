@@ -12,6 +12,14 @@
 
 namespace lg {
 
+constexpr bool use_log =
+#ifndef NO_LOG
+    true
+#else
+    false
+#endif
+    ;
+
 #ifdef __linux__
 struct LogTime {
   timeval tv;

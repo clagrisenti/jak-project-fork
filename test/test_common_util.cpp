@@ -398,7 +398,7 @@ TEST(SmallVector, Construction) {
 
 #ifndef NO_ASSERT
 TEST(Assert, Death) {
-  EXPECT_DEATH(private_assert_failed("foo", "bar", 12, "aaa"), "");
+  EXPECT_DEATH(assert::private_assert_failed("foo", "bar", 12, "aaa"), "");
 }
 #endif
 

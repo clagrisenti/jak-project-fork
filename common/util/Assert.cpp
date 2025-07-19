@@ -7,6 +7,7 @@
 #include <string_view>
 
 #include "common/log/log.h"
+namespace assert {
 
 void private_assert_failed(const char* expr,
                            const char* file,
@@ -37,5 +38,6 @@ void private_assert_failed(const char* expr,
     private_assert_failed(expr, file, line, function, msg.data());
   }
 }
+}  // namespace assert
 
 #endif
