@@ -8,6 +8,9 @@
 
 #include "fmt/format.h"
 
+IR::IR() = default;
+IR::~IR() = default;
+
 using namespace emitter;
 namespace {
 Register get_reg(const RegVal* rv, const AllocationResult& allocs, emitter::IR_Record irec) {

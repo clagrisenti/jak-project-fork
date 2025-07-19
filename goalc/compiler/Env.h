@@ -44,7 +44,7 @@ class Env {
   RegVal* make_gpr(const TypeSpec& ts);
   RegVal* make_fpr(const TypeSpec& ts);
   RegVal* make_vfr(const TypeSpec& ts);
-  virtual ~Env() = default;
+  virtual ~Env();
   Env* parent() { return m_parent; }
 
   template <typename IR_Type, typename... Args>
@@ -81,7 +81,7 @@ class GlobalEnv : public Env {
   void constrain_reg(IRegConstraint constraint) override;
   RegVal* lexical_lookup(goos::Object sym) override;
   BlockEnv* find_block(const std::string& name) override;
-  ~GlobalEnv() = default;
+  virtual ~GlobalEnv();
 
   FileEnv* add_file(std::string name);
   // TODO - consider refactoring to use a Trie
@@ -115,7 +115,7 @@ class FileEnv : public Env {
   const std::string& name() { return m_name; }
 
   bool is_empty();
-  ~FileEnv() = default;
+  virtual ~FileEnv();
 
   template <typename T, class... Args>
   T* alloc_val(Args&&... args) {
@@ -154,7 +154,7 @@ class DeclareEnv : public Env {
  public:
   explicit DeclareEnv(EnvKind kind, Env* parent) : Env(kind, parent) {}
   virtual std::string print() = 0;
-  ~DeclareEnv() = default;
+  virtual ~DeclareEnv() {};
 
   struct Settings {
     bool is_set = false;             // has the user set these with a (declare)?
@@ -182,6 +182,7 @@ struct UnresolvedConditionalGoto {
 class FunctionEnv : public DeclareEnv {
  public:
   FunctionEnv(Env* parent, std::string name, const goos::Reader* reader);
+  virtual ~FunctionEnv();
   std::string print() override;
   std::unordered_map<std::string, Label>& get_label_map() override;
   void set_segment(int seg) { segment = seg; }

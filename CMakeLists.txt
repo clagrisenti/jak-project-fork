@@ -1,7 +1,7 @@
 # Top Level CMakeLists.txt
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.31)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(jak)
 include(CTest)
@@ -47,6 +47,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         -fexceptions \
         -fdiagnostics-color=always \
         -mavx \
+        -mavx2 \
         -Wall \
         -Wno-c++11-narrowing \
         -Wno-c++98-compat \
@@ -101,7 +102,8 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         -Wshadow \
         -Wsign-promo \
         -fdiagnostics-color=always \
-        -mavx")
+        -mavx
+        -mavx2")
 
     # additional c++ flags for release mode for our projects
     if(CMAKE_BUILD_TYPE MATCHES "Release")
@@ -131,7 +133,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
     # pin to AVX for macOS, hopefully all macOS runners have atleast this architecture
     # technically speaking, SSE4 is the cutoff for Apple Silicon so...only a matter of time!
     if(NOT CMAKE_CXX_COMPILER_TARGET STREQUAL "arm64-apple-darwin")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx -mavx2")
     endif()
 
     # additional c++ flags for release mode for our projects

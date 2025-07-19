@@ -3,6 +3,7 @@
  * Main for the game. Launches the runtime.
  */
 
+#include <algorithm>
 #define STBI_WINDOWS_UTF8
 
 #include <string>
@@ -49,6 +50,12 @@ void setup_logging(const std::string& game_name, bool verbose, bool disable_ansi
     lg::disable_ansi_colors();
   }
   lg::initialize();
+}
+
+void convert_gameargs_to_argptrs(const std::vector<std::string>& game_args,
+                                 std::vector<const char*>& arg_ptrs) {
+  std::transform(game_args.begin(), game_args.end(), arg_ptrs.begin(),
+                 [](const std::string& str) -> const char* { return str.data(); });
 }
 
 std::string game_arg_documentation() {
@@ -159,7 +166,7 @@ int main(int argc, char** argv) {
     json data = output;
     try {
       file_util::write_text_file(gpu_test_out_path, data.dump(2));
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
       return 1;
     }
     return 0;
@@ -241,9 +248,8 @@ int main(int argc, char** argv) {
   bool force_debug_next_time = false;
   // always start with an empty arg, as internally kmachine starts at `1` not `0`
   std::vector<const char*> arg_ptrs = {""};
-  for (auto& str : game_args) {
-    arg_ptrs.push_back(str.data());
-  }
+
+  convert_gameargs_to_argptrs(game_args, arg_ptrs);
 
   while (true) {
     if (force_debug_next_time) {
@@ -254,9 +260,8 @@ int main(int argc, char** argv) {
       game_args.push_back("-debug");
       force_debug_next_time = false;
       arg_ptrs = {""};  // see above for rationale
-      for (auto& str : game_args) {
-        arg_ptrs.push_back(str.data());
-      }
+
+      convert_gameargs_to_argptrs(game_args, arg_ptrs);
     }
 
     // run the runtime in a loop so we can reset the game and have it restart cleanly

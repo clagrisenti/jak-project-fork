@@ -20,7 +20,8 @@ class IR {
     (void)constraints;
     (void)my_id;
   }
-  virtual ~IR() = default;
+  IR();
+  virtual ~IR();
 };
 
 class IR_Return : public IR {

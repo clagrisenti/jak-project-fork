@@ -9,6 +9,11 @@
 
 #include "fmt/format.h"
 
+Env::~Env() = default;
+GlobalEnv::~GlobalEnv() = default;
+FileEnv::~FileEnv() = default;
+FunctionEnv::~FunctionEnv() = default;
+
 ///////////////////
 // Env
 ///////////////////
