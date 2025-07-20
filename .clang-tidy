@@ -1,0 +1,2 @@
+Checks: '-*,bugprone-*,performance-*,portability-*,google-*,concurrency-*,llvm-*,modernize-*clang-analyzer-*'
+FormatStyle: 'file'

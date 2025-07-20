@@ -58,7 +58,7 @@ void convert_gameargs_to_argptrs(const std::vector<std::string>& game_args,
                  [](const std::string& str) -> const char* { return str.data(); });
 }
 
-std::string game_arg_documentation() {
+constexpr std::string game_arg_documentation() {
   // clang-format off
   std::string output = fmt::format(fmt::emphasis::bold, "Game Args (passed through to the game runtime after '--')\n");
   output += fmt::format(fmt::fg(fmt::color::gray), "Order matters, some args will negate others (see kmachine.cpp for details)\n");
@@ -179,8 +179,9 @@ int main(int argc, char** argv) {
   GameLaunchOptions game_options;
   game_options.disable_display = disable_display;
   game_options.game_version = game_name_to_version(game_name);
-  game_options.server_port =
-      port_number == -1 ? DECI2_PORT - 1 + (int)game_options.game_version : port_number;
+  game_options.server_port = port_number == -1
+                                 ? DECI2_PORT - 1 + static_cast<int>(game_options.game_version)
+                                 : port_number;
 
   // Figure out if the CPU has AVX2 to enable higher performance AVX2 versions of functions.
   setup_cpu_info();
