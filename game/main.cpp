@@ -3,7 +3,6 @@
  * Main for the game. Launches the runtime.
  */
 
-#include <algorithm>
 #define STBI_WINDOWS_UTF8
 
 #include <string>
@@ -52,13 +51,7 @@ void setup_logging(const std::string& game_name, bool verbose, bool disable_ansi
   lg::initialize();
 }
 
-void convert_gameargs_to_argptrs(const std::vector<std::string>& game_args,
-                                 std::vector<const char*>& arg_ptrs) {
-  std::transform(game_args.begin(), game_args.end(), arg_ptrs.begin(),
-                 [](const std::string& str) -> const char* { return str.data(); });
-}
-
-constexpr std::string game_arg_documentation() {
+std::string game_arg_documentation() {
   // clang-format off
   std::string output = fmt::format(fmt::emphasis::bold, "Game Args (passed through to the game runtime after '--')\n");
   output += fmt::format(fmt::fg(fmt::color::gray), "Order matters, some args will negate others (see kmachine.cpp for details)\n");
@@ -166,7 +159,7 @@ int main(int argc, char** argv) {
     json data = output;
     try {
       file_util::write_text_file(gpu_test_out_path, data.dump(2));
-    } catch (const std::exception& e) {
+    } catch (std::exception& e) {
       return 1;
     }
     return 0;
@@ -179,9 +172,8 @@ int main(int argc, char** argv) {
   GameLaunchOptions game_options;
   game_options.disable_display = disable_display;
   game_options.game_version = game_name_to_version(game_name);
-  game_options.server_port = port_number == -1
-                                 ? DECI2_PORT - 1 + static_cast<int>(game_options.game_version)
-                                 : port_number;
+  game_options.server_port =
+      port_number == -1 ? DECI2_PORT - 1 + (int)game_options.game_version : port_number;
 
   // Figure out if the CPU has AVX2 to enable higher performance AVX2 versions of functions.
   setup_cpu_info();
@@ -249,8 +241,9 @@ int main(int argc, char** argv) {
   bool force_debug_next_time = false;
   // always start with an empty arg, as internally kmachine starts at `1` not `0`
   std::vector<const char*> arg_ptrs = {""};
-
-  convert_gameargs_to_argptrs(game_args, arg_ptrs);
+  for (auto& str : game_args) {
+    arg_ptrs.push_back(str.data());
+  }
 
   while (true) {
     if (force_debug_next_time) {
@@ -261,8 +254,9 @@ int main(int argc, char** argv) {
       game_args.push_back("-debug");
       force_debug_next_time = false;
       arg_ptrs = {""};  // see above for rationale
-
-      convert_gameargs_to_argptrs(game_args, arg_ptrs);
+      for (auto& str : game_args) {
+        arg_ptrs.push_back(str.data());
+      }
     }
 
     // run the runtime in a loop so we can reset the game and have it restart cleanly
