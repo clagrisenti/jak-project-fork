@@ -20,6 +20,7 @@
 #include "common/versions/versions.h"
 
 #include "game/common/game_common_types.h"
+#include "game/graphics/opengl_renderer/Profiler.h"
 #include "graphics/gfx_test.h"
 
 #include "third-party/CLI11.hpp"
@@ -266,7 +267,8 @@ int main(int argc, char** argv) {
     // run the runtime in a loop so we can reset the game and have it restart cleanly
     lg::info("OpenGOAL Runtime {}.{}", versions::GOAL_VERSION_MAJOR, versions::GOAL_VERSION_MINOR);
 
-    fmt::println("Use profiler: {}", use_profiler);
+    fmt::println("Use global profiler: {}", global_profiler::use_profiler);
+    fmt::println("Use profiler: {}", profiler::use_profiler);
 
     try {
       MasterExit = RuntimeExitStatus::RUNNING;

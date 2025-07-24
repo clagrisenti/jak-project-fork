@@ -17,6 +17,7 @@
 #include "fmt/format.h"
 #include "third-party/json.hpp"
 
+namespace global_profiler {
 constexpr bool use_profiler =
 #ifndef NO_PROFILER
     true
@@ -24,6 +25,7 @@ constexpr bool use_profiler =
     false
 #endif
     ;
+}  // namespace global_profiler
 
 struct ProfNode {
   u64 ts;
@@ -35,7 +37,7 @@ struct ProfNode {
 class GlobalProfiler {
  public:
   GlobalProfiler() {
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       m_t0 = get_current_ts();
       m_nodes.resize(m_max_events);
     }
@@ -43,14 +45,14 @@ class GlobalProfiler {
 
   size_t get_max_events() { return m_max_events; }
   void update_event_buffer_size(size_t new_size) {
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       m_max_events = new_size;
       m_nodes.resize(m_max_events);
     }
   }
 
   void set_waiting_for_event(const std::string& event_name) {
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       if (!event_name.empty()) {
         m_waiting_for_event = event_name;
       }
@@ -58,19 +60,19 @@ class GlobalProfiler {
   }
 
   void instant_event(const char* name) {
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       event(name, ProfNode::INSTANT);
     }
   }
 
   void begin_event(const char* name) {
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       event(name, ProfNode::BEGIN);
     }
   }
 
   void event(const char* name, ProfNode::Kind kind) {
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       if (m_waiting_for_event && m_waiting_for_event.value() == name) {
         m_ignore_events = true;
       }
@@ -88,7 +90,7 @@ class GlobalProfiler {
   }
 
   void end_event() {
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       if (!m_enabled || m_ignore_events) {
         return;
       }
@@ -102,19 +104,19 @@ class GlobalProfiler {
   }
 
   void clear() {
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       m_next_idx = 0;
     }
   }
 
   void set_enable(bool en) {
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       m_enabled = en;
     }
   }
 
   void dump_to_json() {
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       if (m_enabled) {
         set_enable(false);
       }
@@ -225,13 +227,13 @@ class GlobalProfiler {
   }
 
   void root_event() {
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       instant_event("ROOT");
     }
   }
 
   bool is_enabled() {
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       return m_enabled;
     } else {
       return false;
@@ -239,7 +241,7 @@ class GlobalProfiler {
   }
 
   size_t get_next_idx() {
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       return (m_next_idx % m_nodes.size());
     } else {
       return 0;

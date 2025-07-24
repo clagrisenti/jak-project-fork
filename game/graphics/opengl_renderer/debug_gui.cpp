@@ -5,6 +5,7 @@
 
 #include "game/graphics/display.h"
 #include "game/graphics/gfx.h"
+#include "game/graphics/opengl_renderer/Profiler.h"
 #include "game/graphics/screenshot.h"
 #include "game/overlord/jak3/dma.h"
 #include "game/system/hid/sdl_util.h"
@@ -102,8 +103,10 @@ void OpenGlDebugGui::draw(const DmaStats& dma_stats) {
     if (ImGui::BeginMenu("Debugging")) {
       ImGui::MenuItem("Frame Time Plot", nullptr, &m_draw_frame_time);
       ImGui::MenuItem("Render Debug", nullptr, &m_draw_debug);
-      ImGui::MenuItem("Profiler", nullptr, &m_draw_profiler);
-      ImGui::MenuItem("Small Profiler", nullptr, &small_profiler);
+      if (profiler::use_profiler) {
+        ImGui::MenuItem("Profiler", nullptr, &m_draw_profiler);
+        ImGui::MenuItem("Small Profiler", nullptr, &small_profiler);
+      }
       ImGui::MenuItem("Loader", nullptr, &m_draw_loader);
       ImGui::MenuItem("Overlord", nullptr, &m_draw_overlord);
       if (ImGui::MenuItem("Reboot In Debug Mode!")) {
@@ -187,7 +190,7 @@ void OpenGlDebugGui::draw(const DmaStats& dma_stats) {
       ImGui::EndMenu();
     }
 
-    if constexpr (use_profiler) {
+    if constexpr (global_profiler::use_profiler) {
       if (ImGui::BeginMenu("Event Profiler")) {
         if (ImGui::Checkbox("Record Events", &record_events)) {
           prof().set_enable(record_events);

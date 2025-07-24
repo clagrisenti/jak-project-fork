@@ -10,6 +10,16 @@
 
 #include "game/graphics/opengl_renderer/buckets.h"
 
+namespace profiler {
+constexpr bool use_profiler =
+#ifndef NO_PROFILER
+    true
+#else
+    false
+#endif
+    ;
+}  // namespace profiler
+
 enum class ProfilerSort { NONE = 0, TIME = 1, DRAW_CALLS = 2, TRIANGLES = 3 };
 
 struct ProfilerStats {
@@ -18,8 +28,10 @@ struct ProfilerStats {
   u32 triangles = 0;
 
   void add_draw_stats(const ProfilerStats& other) {
-    draw_calls += other.draw_calls;
-    triangles += other.triangles;
+    if constexpr (profiler::use_profiler) {
+      draw_calls += other.draw_calls;
+      triangles += other.triangles;
+    }
   }
 };
 
