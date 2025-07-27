@@ -1,4 +1,3 @@
-// clang-format off
 #include "GlobalProfiler.h"
 
 GlobalProfiler gprof;
