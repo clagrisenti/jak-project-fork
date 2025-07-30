@@ -1,2 +1,15 @@
-Checks: '-*,bugprone-*,performance-*,portability-*,google-*,concurrency-*,llvm-*,modernize-*clang-analyzer-*'
+Checks: 
+ -*,
+ bugprone-*,
+ performance-*,
+ portability-*,
+ google-*,
+ concurrency-*,
+ llvm-*,
+ modernize-*,
+ clang-analyzer-*,
+ clang-diagnostics-*,
+ -modernize-use-trailing-return-type,
+ -llvm-header-guard
+
 FormatStyle: 'file'
