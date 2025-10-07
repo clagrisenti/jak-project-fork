@@ -9,6 +9,7 @@ Checks:
  modernize-*,
  clang-analyzer-*,
  clang-diagnostics-*,
+ misc-*,
  -modernize-use-trailing-return-type,
  -llvm-header-guard
 

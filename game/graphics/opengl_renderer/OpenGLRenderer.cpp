@@ -442,8 +442,8 @@ void OpenGLRenderer::init_bucket_renderers_jak3() {
 
 void OpenGLRenderer::init_bucket_renderers_jak2() {
   using namespace jak2;
-  m_bucket_renderers.resize((int)BucketId::MAX_BUCKETS);
-  m_bucket_categories.resize((int)BucketId::MAX_BUCKETS, BucketCategory::OTHER);
+  m_bucket_renderers.resize(static_cast<int>(BucketId::MAX_BUCKETS));
+  m_bucket_categories.resize(static_cast<int>(BucketId::MAX_BUCKETS), BucketCategory::OTHER);
 
   // 0
   init_bucket_renderer<VisDataHandler>("vis", BucketCategory::OTHER, BucketId::BUCKET_2);
@@ -872,7 +872,7 @@ void OpenGLRenderer::init_bucket_renderers_jak1() {
   for (size_t i = 0; i < m_bucket_renderers.size(); i++) {
     if (!m_bucket_renderers[i]) {
       init_bucket_renderer<EmptyBucketRenderer>(fmt::format("bucket-{}", i), BucketCategory::OTHER,
-                                                (BucketId)i);
+                                                static_cast<BucketId>(i));
     }
 
     m_bucket_renderers[i]->init_shaders(m_render_state.shaders);
@@ -1040,7 +1040,8 @@ void OpenGLRenderer::render(DmaFollower dma, const RenderOptions& settings) {
     g_current_renderer = "screenshot";
     auto prof = m_profiler.root()->make_scoped_child("screenshot");
     int read_buffer;
-    int x, y, w, h, fbo_id;
+    int x, y, w, h;
+    GLuint fbo_id;
 
     if (settings.internal_res_screenshot) {
       Fbo* screenshot_src;
@@ -1148,7 +1149,7 @@ void OpenGLRenderer::draw_renderer_selection_window() {
   ImGui::InputText("Renderer Filter", &m_renderer_filter);
 
   for (size_t i = 0; i < m_bucket_renderers.size(); i++) {
-    auto renderer = m_bucket_renderers[i].get();
+    auto* renderer = m_bucket_renderers[i].get();
     if (!m_renderer_filter.empty() && !str_util::contains(renderer->name(), m_renderer_filter)) {
       continue;
     }
@@ -1568,7 +1569,7 @@ void OpenGLRenderer::finish_screenshot(const std::string& output_name,
                                        GLuint fbo,
                                        int read_buffer,
                                        bool quick_screenshot) {
-  std::vector<u32> buffer(width * height);
+  std::vector<u32> buffer(static_cast<size_t>(width * height));
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   GLint oldbuf, oldreadbuf;
   glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &oldbuf);

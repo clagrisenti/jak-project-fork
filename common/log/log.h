@@ -36,7 +36,7 @@ enum class level {
 
 namespace internal {
 // log implementation stuff, not to be called by the user
-void log_message(level log_level, LogTime& now, const char* message);
+void log_message(level log_level, const LogTime& now, const char* message);
 void log_print(const char* message);
 void log_vprintf(const char* format, va_list arg_list);
 }  // namespace internal

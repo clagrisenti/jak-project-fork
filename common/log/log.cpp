@@ -43,7 +43,7 @@ const fmt::color log_colors[] = {
     fmt::color::gray, fmt::color::turquoise, fmt::color::light_green, fmt::color::yellow,
     fmt::color::red,  fmt::color::hot_pink,  fmt::color::hot_pink};
 
-void log_message(level log_level, LogTime& now, const char* message) {
+void log_message(level log_level, const LogTime& now, const char* message) {
 #ifdef __linux__
   char date_time_buffer[128];
   time_t now_seconds = now.tv.tv_sec;
