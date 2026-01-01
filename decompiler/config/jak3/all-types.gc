@@ -69,6 +69,8 @@
   (portuguese 9)
   (dutch 10)
   (uk-english 11)
+  ;; custom
+  (finnish 12)
   )
 
 (defenum language-enum-s32
@@ -10294,6 +10296,7 @@
   (progress-controller-options-swap-r1-r2 #x134b)
   (progress-controller-options-enable-trigger-effects #x134c)
   (progress-misc-fix-projectile-focus #x134d)
+  (progress-controller-options-pacman-dpad #x134e)
   )
 ;; ---text-h:text-id
 
