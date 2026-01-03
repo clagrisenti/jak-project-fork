@@ -50,7 +50,7 @@ void to_json(json& j, const DebugSettings& obj);
 void from_json(const json& j, DebugSettings& obj);
 
 struct DisplaySettings {
-  enum class DisplayMode { Windowed = 0, Fullscreen = 1, Borderless = 2 };
+  enum class DisplayMode : u8 { Windowed = 0, Fullscreen = 1, Borderless = 2 };
 
   DisplaySettings();
 

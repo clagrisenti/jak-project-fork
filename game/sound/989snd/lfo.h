@@ -5,8 +5,8 @@
 
 namespace snd {
 
-enum class LFOType { OFF, SINE, SQUARE, TRIANGLE, SAW, RAND };
-enum class LFOTarget { NONE, VOLUME, PAN, PMOD, PBEND, UNK1, UNK2 };
+enum class LFOType : u8 { OFF, SINE, SQUARE, TRIANGLE, SAW, RAND };
+enum class LFOTarget : u8 { NONE, VOLUME, PAN, PMOD, PBEND, UNK1, UNK2 };
 
 class BlockSoundHandler;
 

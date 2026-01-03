@@ -44,7 +44,7 @@ struct SifRecord {
 };
 
 struct IopThread {
-  enum class State {
+  enum class State : u8 {
     Run,
     Ready,
     Wait,
@@ -53,7 +53,7 @@ struct IopThread {
     Dormant,
   };
 
-  enum class Wait { None, Sleep, Semaphore, Delay, Messagebox, EventFlag };
+  enum class Wait : u8 { None, Sleep, Semaphore, Delay, Messagebox, EventFlag };
 
   IopThread(std::string n, void (*f)(), s32 ID, u32 pri)
       : name(std::move(n)), function(f), priority(pri), thID(ID) {
@@ -75,7 +75,7 @@ struct IopThread {
 };
 
 struct Semaphore {
-  enum class attribute { fifo, prio };
+  enum class attribute : u8 { fifo, prio };
   Semaphore(attribute _attr, s32 _option, s32 init_count, s32 max_count)
       : attr(_attr),
         option(_option),

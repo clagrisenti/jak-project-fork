@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 
+#include "common/common_types.h"
 #include "common/util/Assert.h"
 
 #include "decompiler/VuDisasm/VuProgram.h"
@@ -9,7 +10,7 @@
 namespace decompiler {
 
 struct VuDecodeStep {
-  enum class FieldK {
+  enum class FieldK : u8 {
     IEMDT,
     DST_MASK,
     FT,
@@ -26,7 +27,7 @@ struct VuDecodeStep {
     NONE,
   } field;
 
-  enum class AtomK {
+  enum class AtomK : u8 {
     IEMDT,
     DST_MASK,
     DST_VF,
@@ -51,7 +52,7 @@ struct VuDecodeStep {
 
 class VuDisassembler {
  public:
-  enum VuKind {
+  enum VuKind : u8 {
     VU0,
     VU1,
   };

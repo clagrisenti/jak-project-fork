@@ -1,5 +1,6 @@
 #include "json_util.h"
 
+#include "common/common_types.h"
 #include "common/log/log.h"
 #include "common/util/Assert.h"
 
@@ -11,7 +12,7 @@
 std::string strip_cpp_style_comments(const std::string& input) {
   std::string output;
 
-  enum State { NORMAL, BLOCK_COMMENT, LINE_COMMENT, STRING } state = NORMAL;
+  enum State : u8 { NORMAL, BLOCK_COMMENT, LINE_COMMENT, STRING } state = NORMAL;
 
   for (size_t i = 0; i < input.size(); i++) {
     char c = input[i];

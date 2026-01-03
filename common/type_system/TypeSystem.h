@@ -75,7 +75,7 @@ constexpr double CONSTANT_INDEX_SCORE = -10.0;
 
 struct FieldReverseLookupOutput {
   struct Token {
-    enum class Kind { FIELD, CONSTANT_IDX, VAR_IDX } kind;
+    enum class Kind : u8 { FIELD, CONSTANT_IDX, VAR_IDX } kind;
     std::string name;
     int idx = -1;
     double field_score = 0.0;

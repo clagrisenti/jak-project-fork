@@ -12,7 +12,7 @@ namespace snd {
 
 class Voice {
  public:
-  enum class AllocationType {
+  enum class AllocationType : u8 {
     Managed,
     Permanent,
   };

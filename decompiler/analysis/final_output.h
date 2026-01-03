@@ -5,7 +5,7 @@
 
 namespace decompiler {
 
-enum class FunctionDefSpecials { NONE, DEFUN_DEBUG };
+enum class FunctionDefSpecials : u8 { NONE, DEFUN_DEBUG };
 
 std::string final_defun_out(const Function& func,
                             const Env& env,

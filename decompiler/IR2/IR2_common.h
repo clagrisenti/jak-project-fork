@@ -67,7 +67,7 @@ class RegisterAccess {
   RegisterAccess() = default;
   RegisterAccess(AccessMode mode, Register reg, int atomic_idx, bool allow_all = false);
 
-  enum class Print {
+  enum class Print : u8 {
     AS_REG,               // print as a PS2 register name
     FULL,                 // print as a register name, plus an index, plus read or write
     AS_VARIABLE,          // print local variable name, error if impossible
@@ -102,7 +102,7 @@ using RegAccessSet = std::unordered_set<RegisterAccess, RegisterAccess::hash>;
 template <typename T>
 using RegAccessMap = std::unordered_map<RegisterAccess, T, RegisterAccess::hash>;
 
-enum class FixedOperatorKind {
+enum class FixedOperatorKind : u8 {
   GPR_TO_FPR,
   DIVISION,
   ADDITION,

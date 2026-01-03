@@ -33,7 +33,7 @@ struct ISOFileDef;
 // the Cmsg will get send to the driver thread and handler will run on it here.
 
 struct CMsg {
-  enum class MsgKind {
+  enum class MsgKind : u8 {
     // LOCK = 0,
     READ_RAW = 1,
     CANCEL_READ = 2,

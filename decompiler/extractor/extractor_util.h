@@ -9,7 +9,7 @@
 
 #include "third-party/json.hpp"
 
-enum class ExtractorErrorCode {
+enum class ExtractorErrorCode : u8 {
   SUCCESS = 0,
   INVALID_CLI_INPUT = 3990,
   INVALID_CLI_INPUT_MISSING_FOLDER = 3991,

@@ -60,7 +60,7 @@ struct LocalVarOverride {
 struct StackStructureHint {
   std::string element_type;  // type of the thing stored
   // todo - is boxed array on the stack supported?
-  enum class ContainerType {
+  enum class ContainerType : u8 {
     NONE,         // just store the plain thing.
     ARRAY,        // for refs, array of refs. For values, array of values.
     INLINE_ARRAY  // for refs, array of values, for values, invalid

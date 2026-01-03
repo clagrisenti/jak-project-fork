@@ -1,17 +1,19 @@
 #include "sparticle_decompile.h"
 
+#include "common/common_types.h"
 #include "common/goos/PrettyPrinter.h"
 #include "common/util/Assert.h"
 #include "common/util/print_float.h"
 
 #include "decompiler/util/data_decompile.h"
+#include <sys/types.h>
 
 #include "fmt/format.h"
 
 namespace decompiler {
 // sparticle fields.
 // should match the enum in the game.
-enum class FieldId {
+enum class FieldId : u8 {
   MISC_FIELDS_START = 0,
   SPT_TEXTURE = 1,
   SPT_ANIM = 2,
@@ -83,7 +85,7 @@ enum class FieldId {
 };
 
 // jak2 version
-enum class FieldId2 {
+enum class FieldId2 : u8 {
   MISC_FIELDS_START = 0,
   SPT_TEXTURE = 1,
   SPT_ANIM = 2,
@@ -160,7 +162,7 @@ enum class FieldId2 {
 };
 
 // jakx version
-enum class FieldIdX {
+enum class FieldIdX : u8 {
   MISC_FIELDS_START = 0,
   SPT_TEXTURE = 1,
   SPT_ANIM = 2,
@@ -238,7 +240,7 @@ enum class FieldIdX {
 // NOTE : "per second" here means it's in 1/60th instead of the usual 1/300ths
 constexpr bool allow_per_sec = false;
 
-enum class FieldKind {
+enum class FieldKind : u8 {
   TEXTURE_ID,
   INT,
   SECONDS,

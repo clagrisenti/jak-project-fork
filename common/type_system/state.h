@@ -2,13 +2,14 @@
 
 #include <optional>
 
+#include "common/common_types.h"
 #include "common/type_system/TypeSpec.h"
 
 /*!
  * This contains type system utilities related to state and process
  */
 
-enum class StateHandler { ENTER, EXIT, CODE, TRANS, POST, EVENT };
+enum class StateHandler : u8 { ENTER, EXIT, CODE, TRANS, POST, EVENT };
 
 class TypeSystem;
 

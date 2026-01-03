@@ -56,7 +56,7 @@ class Envelope {
 
 class ADSR : Envelope {
  public:
-  enum class Phase {
+  enum class Phase : u8 {
     Attack,
     Decay,
     Sustain,

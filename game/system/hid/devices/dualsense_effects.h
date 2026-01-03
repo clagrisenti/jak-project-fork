@@ -33,7 +33,7 @@
 
 namespace dualsense_effects {
 
-enum class TriggerEffectOption { LEFT = 0, RIGHT = 1, BOTH = 2 };
+enum class TriggerEffectOption : u8 { LEFT = 0, RIGHT = 1, BOTH = 2 };
 
 struct DS5EffectsState_t {
   u8 ucEnableBits1;              /* 0 */

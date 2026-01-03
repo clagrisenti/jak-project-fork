@@ -2,6 +2,8 @@
 
 #include "common_types.h"
 
+#include "common/common_types.h"
+
 namespace LSPSpec {
 struct DidOpenTextDocumentParams {
   TextDocumentItem m_textDocument;
@@ -32,7 +34,7 @@ struct DidCloseTextDocumentParams {
 void to_json(json& j, const DidCloseTextDocumentParams& obj);
 void from_json(const json& j, DidCloseTextDocumentParams& obj);
 
-enum class TextDocumentSaveReason {
+enum class TextDocumentSaveReason : u8 {
   // Manually triggered, e.g. by the user pressing save, by starting debugging, or by an API call.
   Manual = 1,
   // Automatic after a delay.

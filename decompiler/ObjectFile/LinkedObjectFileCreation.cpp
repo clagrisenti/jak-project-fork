@@ -62,7 +62,7 @@ struct LinkHeaderV5 {
 };
 
 // The types of symbol links
-enum class SymbolLinkKind {
+enum class SymbolLinkKind : u8 {
   EMPTY_LIST,  // link to the empty list
   TYPE,        // link to a type
   SYMBOL       // link to a symbol

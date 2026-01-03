@@ -21,7 +21,7 @@ struct LoadStackEntry {
   u32 size_after_decompression;
 };
 
-enum class OpenMode { MODE0, MODE1, KNOWN_NOT_BLZO };
+enum class OpenMode : u8 { MODE0, MODE1, KNOWN_NOT_BLZO };
 
 struct Buffer {
   u8* decomp_buffer;
@@ -108,7 +108,7 @@ struct CmdLoadSingleIop {
 /*!
  * DGO Load State Machine states.
  */
-enum class DgoState {
+enum class DgoState : u8 {
   Init = 0,
   Read_Header = 1,
   Finish_Obj = 2,

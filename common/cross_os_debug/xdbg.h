@@ -83,7 +83,7 @@ struct Regs {
  * Information about why the target has stopped.
  */
 struct SignalInfo {
-  enum Kind {
+  enum Kind : u8 {
     SEGFAULT,        // access bad memory
     BREAK,           // hit a breakpoint or execute int3
     MATH_EXCEPTION,  // divide by zero

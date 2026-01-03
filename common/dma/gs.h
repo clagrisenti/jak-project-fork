@@ -118,7 +118,7 @@ enum class GsRegisterAddress : u8 {
   LABEL = 0x62
 };
 
-enum class TextureFormat { PSMZ32, PSMZ24, PSMZ16, PSMZ16S };
+enum class TextureFormat : u8 { PSMZ32, PSMZ24, PSMZ16, PSMZ16S };
 
 std::string register_address_name(GsRegisterAddress reg);
 std::string register_address_name(u32 reg);
@@ -206,7 +206,7 @@ struct GsAlpha {
   GsAlpha() = default;
   GsAlpha(u64 val) : data(val) {}
 
-  enum class BlendMode {
+  enum class BlendMode : u8 {
     SOURCE = 0,
     DEST = 1,           // frame buffer
     ZERO_OR_FIXED = 2,  // 0 for a, b, d, fixed for c
@@ -230,7 +230,7 @@ struct GsPrim {
   GsPrim() = default;
   GsPrim(u64 val) : data(val & 0b111'1111'1111) {}
 
-  enum class Kind {
+  enum class Kind : u8 {
     POINT = 0,
     LINE = 1,
     LINE_STRIP = 2,
@@ -269,7 +269,7 @@ struct GsTex0 {
 
   u32 tbp0() const { return data & 0b11'1111'1111'1111; }
   u32 tbw() const { return (data >> 14) & 0b111111; }
-  enum class PSM {
+  enum class PSM : u8 {
     PSMCT32 = 0,
     PSMCT24 = 1,
     PSMCT16 = 2,
@@ -342,7 +342,7 @@ struct GsTexa {
 };
 
 struct GsFrame {
-  enum class PSM {
+  enum class PSM : u8 {
     PSMCT32 = 0,
     PSMCT24 = 1,
     PSMCT16 = 2,
@@ -416,7 +416,7 @@ static_assert(sizeof(AdGifData) == 5 * 16);
 // it can also represent "invalid".
 class DrawMode {
  public:
-  enum class AlphaBlend {
+  enum class AlphaBlend : u8 {
     DISABLED = 0,
     SRC_DST_SRC_DST = 1,
     SRC_0_SRC_DST = 2,
@@ -427,7 +427,7 @@ class DrawMode {
     SRC_0_DST_DST = 7  // Note: requires color_mult tricks
   };
 
-  enum class AlphaTest {
+  enum class AlphaTest : u8 {
     NEVER = 0,
     ALWAYS = 1,
     GEQUAL = 2,

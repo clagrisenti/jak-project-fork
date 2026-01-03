@@ -51,7 +51,7 @@ struct CBuffer {
   // todo
   int m_nDataLength = 0;
 
-  enum class BufferType {
+  enum class BufferType : u8 {
     // this is a really confusing enum...
     EBT_FREE = 0,        // there is no buffer allocate
     NORMAL = 1,          // a buffer sized for non-VAG stream operations (several possible sizes)
@@ -100,7 +100,7 @@ struct CPageList {
   int m_nPageRefCnt = 0;
   int m_nDmaRefCnt = 0;
 
-  enum class AllocState {
+  enum class AllocState : u8 {
     EPLAS_FREE = 0,
     EPLAS_ALLOCATED = 1,
     FREE_PENDING = 2,  // FreePageList called, but no
@@ -125,7 +125,7 @@ struct CPage {
   int m_nPageRefCount = 0;
   int m_nDmaRefCount = 0;
   int m_nAllocState = 0;
-  enum class State {
+  enum class State : u8 {
     UNMAKRED = 0,
     ACTIVE = 1,
     READING = 2,

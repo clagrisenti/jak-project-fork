@@ -328,7 +328,7 @@ u32 float_as_u32(float in) {
  * Representing something that can be written to the merc output buffer. 1 qw
  */
 struct MercOutputQuadword {
-  enum class Kind {
+  enum class Kind : u8 {
     INVALID,       // uninitialized, or in the middle of another thing
     VTX_START,     // the first qw of a vertex
     SHADER_START,  // the first qw of a shader (the giftag)

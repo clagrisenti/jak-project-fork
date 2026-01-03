@@ -83,7 +83,7 @@ class Matcher {
   static Matcher unmerged_let(const std::vector<LetEntryMatcher>& entries,
                               const std::vector<Matcher>& elts);
 
-  enum class Kind {
+  enum class Kind : u8 {
     ANY_REG,     // matching any register
     GENERIC_OP,  // matching
     GENERIC_OP_WITH_REST,
@@ -157,7 +157,7 @@ class DerefTokenMatcher {
   static DerefTokenMatcher any_expr(int match_id = -1);
   static DerefTokenMatcher any_expr_or_int(int match_id = -1);
 
-  enum class Kind {
+  enum class Kind : u8 {
     STRING,
     ANY_STRING,
     CONSTANT_INTEGER,
@@ -183,7 +183,7 @@ class GenericOpMatcher {
   static GenericOpMatcher condition(IR2_Condition::Kind condition);
   static GenericOpMatcher or_match(const std::vector<GenericOpMatcher>& matchers);
 
-  enum class Kind { FIXED, FUNC, CONDITION, OR, INVALID };
+  enum class Kind : u8 { FIXED, FUNC, CONDITION, OR, INVALID };
 
   bool do_match(GenericOperator& input, MatchResult::Maps* maps_out, const Env* const env) const;
 
@@ -200,7 +200,7 @@ class LetEntryMatcher {
   static LetEntryMatcher name(std::optional<Matcher> src_matcher, const std::string& name);
   static LetEntryMatcher any(std::optional<Matcher> src_matcher, int match_id = -1);
 
-  enum class Kind { ANY, NAME, INVALID };
+  enum class Kind : u8 { ANY, NAME, INVALID };
 
   bool do_match(const LetElement::Entry& input,
                 MatchResult::Maps* maps_out,

@@ -8,7 +8,7 @@
 
 namespace decompiler {
 
-enum class VuInstrK {
+enum class VuInstrK : u8 {
   // upper
   // ABS,
   ADD,
@@ -154,7 +154,7 @@ enum class VuInstrK {
  */
 class VuInstructionAtom {
  public:
-  enum class Kind {
+  enum class Kind : u8 {
     VF,
     VI,
     Q,

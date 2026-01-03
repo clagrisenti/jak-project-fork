@@ -9,7 +9,7 @@
 #include "lsp/state/workspace.h"
 #include "lsp/transport/stdio.h"
 
-enum class LSPRouteType { NOOP = 0, NOTIFICATION = 1, REQUEST_RESPONSE = 2 };
+enum class LSPRouteType : u8 { NOOP = 0, NOTIFICATION = 1, REQUEST_RESPONSE = 2 };
 
 class LSPRoute {
  public:

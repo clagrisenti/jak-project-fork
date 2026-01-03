@@ -1,10 +1,9 @@
 // Copyright: 2021 - 2024, Ziemas
 // SPDX-License-Identifier: ISC
-#include "loader.h"
-
 #include <fstream>
 #include <optional>
 
+#include "loader.h"
 #include "sfxblock.h"
 
 #include "common/log/log.h"

@@ -10,7 +10,7 @@
 
 #include "game/graphics/opengl_renderer/buckets.h"
 
-enum class ProfilerSort { NONE = 0, TIME = 1, DRAW_CALLS = 2, TRIANGLES = 3 };
+enum class ProfilerSort : u8 { NONE = 0, TIME = 1, DRAW_CALLS = 2, TRIANGLES = 3 };
 
 struct ProfilerStats {
   float duration = 0;  // seconds

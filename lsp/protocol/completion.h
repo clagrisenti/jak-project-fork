@@ -2,12 +2,14 @@
 
 #include "common_types.h"
 
+#include "common/common_types.h"
+
 // TODO - not fully implemented!
 
 namespace LSPSpec {
 
 /// @brief How a completion was triggered
-enum class CompletionTriggerKind {
+enum class CompletionTriggerKind : u8 {
   /// Completion was triggered by typing an identifier (24x7 code complete), manual invocation (e.g
   /// Ctrl+Space) or via API.
   Invoked = 1,
@@ -44,7 +46,7 @@ void to_json(json& j, const CompletionItemLabelDetails& obj);
 void from_json(const json& j, CompletionItemLabelDetails& obj);
 
 /// @brief The kind of a completion entry.
-enum class CompletionItemKind {
+enum class CompletionItemKind : u8 {
   Text = 1,
   Method = 2,
   Function = 3,
@@ -73,7 +75,7 @@ enum class CompletionItemKind {
 };
 
 /// Completion item tags are extra annotations that tweak the rendering of a completion item.
-enum class CompletionItemTag {
+enum class CompletionItemTag : u8 {
   /// Render a completion as obsolete, usually using a strike-out.
   Deprecated = 1
 };

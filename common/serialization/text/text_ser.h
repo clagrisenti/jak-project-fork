@@ -16,7 +16,7 @@
 #include "common/versions/versions.h"
 
 struct GameTextDefinitionFile {
-  enum class Format { GOAL, JSON };
+  enum class Format : u8 { GOAL, JSON };
   Format format;
   std::string file_path = "";
   int language_id = -1;

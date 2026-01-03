@@ -20,7 +20,7 @@ namespace tfrag3 {
 
 constexpr int TFRAG3_VERSION = 43;
 
-enum MemoryUsageCategory {
+enum MemoryUsageCategory : u8{
   TEXTURE,
 
   SPECIAL_TEXTURE,
@@ -329,7 +329,7 @@ struct IndexTexture {
 };
 
 // Tfrag trees have several kinds:
-enum class TFragmentTreeKind { NORMAL, TRANS, DIRT, ICE, LOWRES, LOWRES_TRANS, WATER, INVALID };
+enum class TFragmentTreeKind : u8 { NORMAL, TRANS, DIRT, ICE, LOWRES, LOWRES_TRANS, WATER, INVALID };
 
 constexpr const char* tfrag_tree_names[] = {"normal", "trans",        "dirt",  "ice",
                                             "lowres", "lowres-trans", "water", "invalid"};
@@ -360,7 +360,7 @@ struct TieWindInstance {
 };
 
 // Tie draws are split into categories.
-enum class TieCategory {
+enum class TieCategory : u8 {
   // normal tie buckets
   NORMAL,
   TRANS,  // also called alpha

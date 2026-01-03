@@ -5,6 +5,8 @@
 #include <variant>
 #include <vector>
 
+#include "common/common_types.h"
+
 #include "decompiler/Function/Function.h"
 #include "decompiler/config.h"
 #include "decompiler/util/DecompilerTypeSystem.h"
@@ -68,7 +70,7 @@ struct AmbiguousIntOrFloatConstant {
  */
 struct Tag {
   bool has_tag() { return kind != NONE; }
-  enum Kind {
+  enum Kind : u8 {
     FIELD_ACCESS,
     UNKNOWN_LABEL,
     UNKNOWN_STACK_STRUCTURE,

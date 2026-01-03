@@ -39,7 +39,7 @@ struct CBaseFile {
   const ISOFileDef* m_FileDef;
 
   // The compression format used on the file
-  enum class Kind {
+  enum class Kind : u8 {
     UNKNOWN = 0,
     NORMAL = 1,
     LZO_COMPRESSED = 2,

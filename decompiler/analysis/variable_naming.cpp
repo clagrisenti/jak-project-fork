@@ -980,7 +980,7 @@ bool is_128bit(const TP_Type& type, const DecompilerTypeSystem& dts) {
 void promote_register_class(const Function& func,
                             VariableNames* result,
                             const DecompilerTypeSystem& dts) {
-  enum class PromotionType { PROMOTE_64, PROMOTE_128 };
+  enum class PromotionType : u8 { PROMOTE_64, PROMOTE_128 };
   std::unordered_map<RegId, PromotionType, RegId::hash> promote_map;
   // here we loop through ops and find cases where we need to adjust types.
 

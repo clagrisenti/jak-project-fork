@@ -6,13 +6,15 @@
 #include <string>
 #include <variant>
 
+#include "common/common_types.h"
+
 // This is intended to be a general purpose worker which is processed by a separate thread
 //
 // This is useful for initiating long-running jobs instead of blocking the game
 // but since you cannot spawn new threads directly in the EE without causing problems
 // you can delegate to this worker, managed by a separate worker thread `ee_worker_thread`.
 
-enum class JobType { WEB_REQUEST };
+enum class JobType : u8 { WEB_REQUEST };
 
 struct WebRequestJobPayload {
   JobType type = JobType::WEB_REQUEST;

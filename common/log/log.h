@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ctime>
+#include "common/common_types.h"
 
 #ifdef __linux__
 #include <sys/time.h>
@@ -23,7 +24,7 @@ struct LogTime {
 #endif
 
 // Logging API
-enum class level {
+enum class level : u8 {
   trace = 0,
   debug = 1,
   info = 2,

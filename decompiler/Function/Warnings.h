@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "common/common_types.h"
 #include "common/util/Assert.h"
 
 #include "fmt/format.h"
@@ -76,7 +77,7 @@ class DecompWarnings {
   std::unordered_set<std::string> unique_warnings;
 
   struct Warning {
-    enum class Kind { INFO, WARN, ERR };
+    enum class Kind : u8 { INFO, WARN, ERR };
     Warning(Kind kind, std::string text) : warning_kind(kind), message(std::move(text)) {}
 
     std::string print() const {

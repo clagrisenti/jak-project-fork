@@ -15,7 +15,7 @@ namespace REPL {
 struct KeyBind {
   // NOTE - in my experience, meta doesn't work on windows and shift is probably a bad idea when
   // typing text! but I leave it up to the user.
-  enum class Modifier { CTRL, SHIFT, META };
+  enum class Modifier : u8 { CTRL, SHIFT, META };
   Modifier modifier;
   std::string key;
   std::string description;

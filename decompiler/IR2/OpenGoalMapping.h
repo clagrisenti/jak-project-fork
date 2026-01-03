@@ -18,7 +18,7 @@
 namespace decompiler {
 
 struct OpenGOALAsm {
-  enum class InstructionModifiers {
+  enum class InstructionModifiers : u8 {
     BROADCAST,
     DEST_MASK,
     FTF,

@@ -144,7 +144,7 @@ class GameSubtitleBank {
  */
 class GameSubtitleDB {
  public:
-  enum class SubtitleFormat { V1, V2 };
+  enum class SubtitleFormat : u8 { V1, V2 };
   std::optional<std::string> m_load_error = {};
   std::map<int, std::shared_ptr<GameSubtitleBank>> m_banks;
   SubtitleFormat m_subtitle_version = SubtitleFormat::V2;

@@ -19,7 +19,7 @@ constexpr int MAX_INTRUCTION_DEST = 1;
 
 // An "atom", representing a single register, immediate, etc... for use in an Instruction.
 struct InstructionAtom {
-  enum AtomKind {
+  enum AtomKind : u8 {
     REGISTER,         // An EE Register
     IMM,              // An immediate value (stored as int32)
     IMM_SYM,          // An immediate value (a symbolic link)

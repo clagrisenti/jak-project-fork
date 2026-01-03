@@ -10,6 +10,8 @@
 
 #include "common/common_types.h"
 
+#include <sys/types.h>
+
 namespace versions {
 // language version (OpenGOAL)
 constexpr s32 GOAL_VERSION_MAJOR = 1;
@@ -55,7 +57,7 @@ constexpr int KERNEL_VERSION_MINOR = 0;
 constexpr int IRX_VERSION_MAJOR = 2;
 constexpr int IRX_VERSION_MINOR = 0;
 
-enum class GameVersion { Jak1 = 1, Jak2 = 2, Jak3 = 3, JakX = 4 };
+enum class GameVersion : u8 { Jak1 = 1, Jak2 = 2, Jak3 = 3, JakX = 4 };
 
 // TODO: most usages of this are currently stubs for jak 3
 template <typename T>

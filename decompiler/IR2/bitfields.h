@@ -5,10 +5,11 @@
 
 #include "decompiler/IR2/Form.h"
 #include "decompiler/util/data_decompile.h"
+#include <sys/types.h>
 
 namespace decompiler {
 struct BitfieldManip {
-  enum class Kind {
+  enum class Kind : u8 {
     LEFT_SHIFT,
     RIGHT_SHIFT_LOGICAL,
     RIGHT_SHIFT_LOGICAL_32BIT,

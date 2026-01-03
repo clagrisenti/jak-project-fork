@@ -5418,7 +5418,7 @@ FormElement* try_make_logtest_mouse_macro(Form* in, FormPool& pool) {
     inv_match = true;
   }
   if (mr.matched) {
-    enum { ABS, REL, NIL } t = NIL;
+    enum : u8 { ABS, REL, NIL } t = NIL;
     if (mr.maps.strings.at(2) == "button0-abs") {
       t = ABS;
     } else if (mr.maps.strings.at(2) == "button0-rel") {
@@ -5484,7 +5484,7 @@ FormElement* try_make_logtest_cpad_macro(Form* in, FormPool& pool) {
     inv_match = true;
   }
   if (mr.matched) {
-    enum { ABS, REL, NIL } t = NIL;
+    enum : u8 { ABS, REL, NIL } t = NIL;
     if (mr.maps.strings.at(2) == "button0-abs") {
       t = ABS;
     } else if (mr.maps.strings.at(2) == "button0-rel") {

@@ -15,7 +15,7 @@ constexpr PerGameVersion<s32> SAVE_SIZE(692, 1204, 1060, 1060);  // 691 for jak 
 constexpr PerGameVersion<s32> BANK_SIZE(0x10000, 0x20000, 0x1e000, 0x1e000);
 
 // each card can be in one of these states:
-enum class MemoryCardState : u32 {
+enum class MemoryCardState : u8 {
   UNKNOWN = 0,               // we know nothing about the card.
   KNOWN = 1,                 // we know if the card is there or not
   OPEN_BUT_UNFORMATTED = 2,  // we checked the status, and its a valid card, but it's not formatted
@@ -80,7 +80,7 @@ struct MemoryCard {
 // sceMcGetInfo -> cb_probe -> sceMcGetDir -> cb_getdir -> sceMcOpen -> cb_check_open ->
 //  -> sceMcRead -> cb_check_read
 
-enum class MemoryCardOperationKind : u32 {
+enum class MemoryCardOperationKind : u8 {
   NO_OP = 0,
   FORMAT = 1,       // (handle, unused), (slot, type, free, format)
   UNFORMAT = 2,     // (handle, unused), (slot)
@@ -89,7 +89,7 @@ enum class MemoryCardOperationKind : u32 {
   LOAD = 5,
 };
 
-enum class McStatusCode : u32 {
+enum class McStatusCode : u8 {
   BUSY = 0,
   OK = 1,
   BAD_HANDLE = 2,

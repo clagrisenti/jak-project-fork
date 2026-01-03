@@ -17,9 +17,9 @@ TODO:
   - hiDPI support, see https://wiki.libsdl.org/SDL2/SDL_GetRendererOutputSize
 */
 
-enum class WindowState { Minimized, Maximized, Restored };
+enum class WindowState : u8 { Minimized, Maximized, Restored };
 
-enum class Orientation { Landscape, LandscapeFlipped, Portrait, PortraitFlipped, Unknown };
+enum class Orientation : u8 { Landscape, LandscapeFlipped, Portrait, PortraitFlipped, Unknown };
 
 /// https://wiki.libsdl.org/SDL3/SDL_DisplayMode
 struct DisplayMode {
@@ -46,7 +46,7 @@ struct Resolution {
 /// Manages display related operations and querying
 class DisplayManager {
  private:
-  enum class EEDisplayEventType { SET_WINDOW_SIZE, SET_DISPLAY_MODE, SET_DISPLAY_ID };
+  enum class EEDisplayEventType : u8 { SET_WINDOW_SIZE, SET_DISPLAY_MODE, SET_DISPLAY_ID };
   game_settings::DisplaySettings::DisplayMode m_previous_fullscreen_display_mode =
       game_settings::DisplaySettings::DisplayMode::Fullscreen;
   struct EEDisplayEvent {

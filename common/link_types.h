@@ -7,7 +7,7 @@
 
 #include "common_types.h"
 
-enum LinkKind {
+enum LinkKind : u8 {
   LINK_TABLE_END = 0,                 //! no more linking data
   LINK_SYMBOL_OFFSET = 1,             //! link a symbol (pointer to symbol table entry)
   LINK_TYPE_PTR = 2,                  //! link a pointer to a type.
@@ -16,7 +16,7 @@ enum LinkKind {
   LINK_PTR = 5,                       //! link a pointer within this segment
 };
 
-enum SegmentTypes { MAIN_SEGMENT = 0, DEBUG_SEGMENT = 1, TOP_LEVEL_SEGMENT = 2 };
+enum SegmentTypes : u8 { MAIN_SEGMENT = 0, DEBUG_SEGMENT = 1, TOP_LEVEL_SEGMENT = 2 };
 
 constexpr const char* SEGMENT_NAMES[3] = {"main", "debug", "top-level"};
 

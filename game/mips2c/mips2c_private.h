@@ -33,7 +33,7 @@ u64 _call_goal8_asm_win32(void* func, u64* arg_array, u64 zero, u64 pp, u64 st, 
 namespace Mips2C {
 
 // nicknames for GPRs
-enum Gpr {
+enum Gpr : u8 {
   r0 = 0,  // hardcoded to zero
   at = 1,  // temp, not used by GOAL compiler, but used by GOAL's kernel inline assembly (an other
   // places?)
@@ -70,7 +70,7 @@ enum Gpr {
   MAX_GPR = 32
 };
 
-enum VfName {
+enum VfName : u8 {
   vf00 = 0,
   vf0 = 0,
   vf1 = 1,
@@ -115,7 +115,7 @@ enum VfName {
   vf31 = 31,
 };
 
-enum ViName {
+enum ViName : u8 {
   vi00 = 0,
   vi01 = 1,
   vi02 = 2,
@@ -133,7 +133,7 @@ enum ViName {
   vi14 = 14,
 };
 
-enum FprName {
+enum FprName : u8 {
   f0 = 0,
   f1 = 1,
   f2 = 2,
@@ -169,7 +169,7 @@ enum FprName {
 };
 
 // note: these are not the same as the ps2 encoding - in these the least significant bit is x.
-enum class DEST {
+enum class DEST : u8 {
   NONE = 0,
   x = 1,
   y = 2,
@@ -188,7 +188,7 @@ enum class DEST {
   xyzw = 15
 };
 
-enum class BC { x = 0, y = 1, z = 2, w = 3 };
+enum class BC : u8 { x = 0, y = 1, z = 2, w = 3 };
 
 struct Mips2c_vf {
   union {

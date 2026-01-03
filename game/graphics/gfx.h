@@ -23,7 +23,7 @@ struct GfxGlobalSettings;
 class GfxDisplay;
 
 // enum for rendering pipeline
-enum class GfxPipeline { Invalid = 0, OpenGL };
+enum class GfxPipeline : u8 { Invalid = 0, OpenGL };
 
 // module for the different rendering pipelines
 struct GfxRendererModule {
@@ -98,7 +98,14 @@ struct GfxGlobalSettings {
   bool collision_wireframe = true;
 
   // matching enum in kernel-defs.gc !!
-  enum CollisionRendererMode { None, Mode, Event, Material, Skip, SkipHide } collision_mode = Mode;
+  enum CollisionRendererMode : u8 {
+    None,
+    Mode,
+    Event,
+    Material,
+    Skip,
+    SkipHide
+  } collision_mode = Mode;
   std::array<u32, (PAT_MOD_COUNT + 31) / 32> collision_mode_mask = {UINT32_MAX};
   std::array<u32, (PAT_EVT_COUNT + 31) / 32> collision_event_mask = {UINT32_MAX};
   std::array<u32, (PAT_MAT_COUNT + 31) / 32> collision_material_mask = {UINT32_MAX, UINT32_MAX};
@@ -124,7 +131,7 @@ void clear_vsync_callback();
 u32 sync_path();
 
 // matching enum in kernel-defs.gc !!
-enum class RendererTreeType { NONE = 0, TFRAG3 = 1, TIE3 = 2, INVALID };
+enum class RendererTreeType : u8 { NONE = 0, TFRAG3 = 1, TIE3 = 2, INVALID };
 bool CollisionRendererGetMask(GfxGlobalSettings::CollisionRendererMode mode, s64 mask_id);
 void CollisionRendererSetMask(GfxGlobalSettings::CollisionRendererMode mode, s64 mask_id);
 void CollisionRendererClearMask(GfxGlobalSettings::CollisionRendererMode mode, s64 mask_id);

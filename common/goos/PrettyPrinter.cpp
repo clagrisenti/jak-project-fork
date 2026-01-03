@@ -23,7 +23,7 @@ namespace pretty_print {
  * A single token which cannot be split between lines.
  */
 struct FormToken {
-  enum class TokenKind {
+  enum class TokenKind : u8 {
     WHITESPACE,
     STRING,
     OPEN_PAREN,

@@ -402,7 +402,7 @@ class AsmOp : public AtomicOp {
  */
 class IR2_Condition {
  public:
-  enum class Kind {
+  enum class Kind : u8 {
     NOT_EQUAL,
     EQUAL,
     LESS_THAN_SIGNED,
@@ -501,7 +501,7 @@ class SetVarConditionOp : public AtomicOp {
  */
 class StoreOp : public AtomicOp {
  public:
-  enum class Kind { INTEGER, FLOAT, VECTOR_FLOAT, INVALID };
+  enum class Kind : u8 { INTEGER, FLOAT, VECTOR_FLOAT, INVALID };
   StoreOp(int size, Kind kind, SimpleExpression addr, SimpleAtom value, int my_idx);
   goos::Object to_form(const std::vector<DecompilerLabel>& labels, const Env& env) const override;
   bool operator==(const AtomicOp& other) const override;
@@ -537,7 +537,7 @@ class StoreOp : public AtomicOp {
  */
 class LoadVarOp : public AtomicOp {
  public:
-  enum class Kind { UNSIGNED, SIGNED, FLOAT, VECTOR_FLOAT, INVALID };
+  enum class Kind : u8 { UNSIGNED, SIGNED, FLOAT, VECTOR_FLOAT, INVALID };
   LoadVarOp(Kind kind, int size, RegisterAccess dst, SimpleExpression src, int my_idx);
   goos::Object to_form(const std::vector<DecompilerLabel>& labels, const Env& env) const override;
   bool operator==(const AtomicOp& other) const override;
@@ -584,7 +584,7 @@ FormElement* make_label_load(int label_idx,
  */
 class IR2_BranchDelay {
  public:
-  enum class Kind {
+  enum class Kind : u8 {
     NOP,
     SET_REG_FALSE,
     SET_REG_TRUE,
@@ -707,7 +707,7 @@ class AsmBranchOp : public AtomicOp {
  */
 class SpecialOp : public AtomicOp {
  public:
-  enum class Kind {
+  enum class Kind : u8 {
     NOP,
     BREAK,
     CRASH,

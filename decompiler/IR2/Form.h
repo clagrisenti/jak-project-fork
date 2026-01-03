@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "common/common_types.h"
 #include "common/goos/Object.h"
 #include "common/math/Vector.h"
 #include "common/type_system/TypeSystem.h"
@@ -770,7 +771,7 @@ class EmptyElement : public FormElement {
  */
 class RLetElement : public FormElement {
  public:
-  enum class RegClass { VF };
+  enum class RegClass : u8 { VF };
 
   explicit RLetElement(Form* _body, RegSet _regs);
   goos::Object to_form_internal(const Env& env) const override;
@@ -841,7 +842,7 @@ class ShortCircuitElement : public FormElement {
     bool cleaned = false;
   };
 
-  enum Kind { UNKNOWN, AND, OR } kind = UNKNOWN;
+  enum Kind : u8 { UNKNOWN, AND, OR } kind = UNKNOWN;
 
   RegisterAccess final_result;
   std::vector<Entry> entries;
@@ -1028,7 +1029,7 @@ std::string fixed_operator_to_string(FixedOperatorKind kind);
  */
 class GenericOperator {
  public:
-  enum class Kind { FIXED_OPERATOR, CONDITION_OPERATOR, FUNCTION_EXPR, INVALID };
+  enum class Kind : u8 { FIXED_OPERATOR, CONDITION_OPERATOR, FUNCTION_EXPR, INVALID };
 
   static GenericOperator make_fixed(FixedOperatorKind kind);
   static GenericOperator make_function(Form* value);
@@ -1227,7 +1228,7 @@ class ConstantFloatElement : public FormElement {
 
 class DerefToken {
  public:
-  enum class Kind {
+  enum class Kind : u8 {
     INTEGER_CONSTANT,
     INTEGER_EXPRESSION,  // some form which evaluates to an integer index. Not offset, index.
     FIELD_NAME,
@@ -1456,7 +1457,7 @@ class LetElement : public FormElement {
 
 class CounterLoopElement : public FormElement {
  public:
-  enum class Kind { DOTIMES, COUNTDOWN, INVALID };
+  enum class Kind : u8 { DOTIMES, COUNTDOWN, INVALID };
   CounterLoopElement(Kind kind,
                      RegisterAccess var_init,
                      RegisterAccess var_check,
@@ -1884,7 +1885,7 @@ class WithDmaBufferAddBucketElement : public FormElement {
 
 class ResLumpMacroElement : public FormElement {
  public:
-  enum class Kind { DATA, STRUCT, VALUE, INVALID };
+  enum class Kind : u8 { DATA, STRUCT, VALUE, INVALID };
   ResLumpMacroElement(Kind kind,
                       Form* lump_object,
                       Form* property_name,

@@ -31,7 +31,7 @@ struct TfragRenderSettings {
   const u8* occlusion_culling = nullptr;
 };
 
-enum class DoubleDrawKind { NONE, AFAIL_NO_DEPTH_WRITE };
+enum class DoubleDrawKind : u8 { NONE, AFAIL_NO_DEPTH_WRITE };
 
 struct DoubleDraw {
   DoubleDrawKind kind = DoubleDrawKind::NONE;

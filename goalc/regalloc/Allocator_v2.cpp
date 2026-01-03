@@ -1,11 +1,11 @@
-#include "Allocator_v2.h"
-
 #include <algorithm>
 #include <optional>
 #include <unordered_map>
 
 #include "common/log/log.h"
 #include "common/util/Range.h"
+
+#include "Allocator_v2.h"
 
 #include "fmt/format.h"
 
@@ -65,7 +65,7 @@ class VarAssignment {
   // The assignment state.
   // Register: permanently in a register.
   // Stack: by default in the stack, moved to temporary register as needed for use.
-  enum class Kind { UNASSIGNED, STACK, REGISTER };
+  enum class Kind : u8 { UNASSIGNED, STACK, REGISTER };
 
   // unassigned by default.
   // last_live is inclusive

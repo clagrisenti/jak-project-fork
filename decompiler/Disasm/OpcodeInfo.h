@@ -7,9 +7,12 @@
 
 #include <cstdint>
 #include <string>
+#include "common/common_types.h"
+
+#include <sys/types.h>
 
 namespace decompiler {
-enum class InstructionKind {
+enum class InstructionKind : u8 {
   UNKNOWN,
 
   // Integer Math
@@ -284,7 +287,7 @@ enum class InstructionKind {
 constexpr InstructionKind FIRST_COP2_MACRO = InstructionKind::VMOVE;
 constexpr InstructionKind LAST_COP2_MACRO = InstructionKind::VCALLMS;
 
-enum class FieldType {
+enum class FieldType : u8 {
   RS,
   RT,
   RD,
@@ -306,7 +309,7 @@ enum class FieldType {
   ZERO
 };
 
-enum class DecodeType {
+enum class DecodeType : u8 {
   GPR,
   IMM,
   FPR,

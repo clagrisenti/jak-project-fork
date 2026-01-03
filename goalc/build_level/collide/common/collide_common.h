@@ -9,8 +9,8 @@ struct CollideVertex {
 
 namespace jak1 {
 struct PatSurface {
-  enum class Mode { GROUND = 0, WALL = 1, OBSTACLE = 2, MAX_MODE = 3 };
-  enum class Material {
+  enum class Mode : u8 { GROUND = 0, WALL = 1, OBSTACLE = 2, MAX_MODE = 3 };
+  enum class Material : u8 {
     STONE = 0,
     ICE = 1,
     QUICKSAND = 2,
@@ -37,7 +37,7 @@ struct PatSurface {
     MAX_MATERIAL = 23
   };
 
-  enum class Event {
+  enum class Event : u8 {
     NONE = 0,
     DEADLY = 1,
     ENDLESSFALL = 2,
@@ -116,8 +116,8 @@ struct CollideFace {
 
 namespace jak2 {
 struct PatSurface {
-  enum class Mode { GROUND = 0, WALL = 1, OBSTACLE = 2, HALFPIPE = 3, MAX_MODE = 4 };
-  enum class Material {
+  enum class Mode : u8 { GROUND = 0, WALL = 1, OBSTACLE = 2, HALFPIPE = 3, MAX_MODE = 4 };
+  enum class Material : u8 {
     NONE = 0,
     ICE = 1,
     QUICKSAND = 2,
@@ -150,7 +150,7 @@ struct PatSurface {
     MAX_MATERIAL = 29
   };
 
-  enum class Event {
+  enum class Event : u8 {
     NONE = 0,
     DEADLY = 1,
     ENDLESSFALL = 2,
@@ -316,8 +316,8 @@ struct CollideFace {
 
 namespace jak3 {
 struct PatSurface {
-  enum class Mode { GROUND = 0, WALL = 1, OBSTACLE = 2, HALFPIPE = 3, MAX_MODE = 4 };
-  enum class Material {
+  enum class Mode : u8 { GROUND = 0, WALL = 1, OBSTACLE = 2, HALFPIPE = 3, MAX_MODE = 4 };
+  enum class Material : u8 {
     NONE = 0,
     ICE = 1,
     QUICKSAND = 2,
@@ -355,7 +355,7 @@ struct PatSurface {
     MAX_MATERIAL = 34
   };
 
-  enum class Event {
+  enum class Event : u8 {
     NONE = 0,
     DEADLY = 1,
     ENDLESSFALL = 2,

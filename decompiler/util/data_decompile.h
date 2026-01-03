@@ -12,6 +12,7 @@
 #include "decompiler/ObjectFile/LinkedWord.h"
 #include "decompiler/config.h"
 #include "decompiler/util/DecompilerTypeSystem.h"
+#include <sys/types.h>
 
 namespace decompiler {
 class LinkedObjectFile;
@@ -126,7 +127,7 @@ goos::Object bitfield_defs_print(const TypeSpec& type,
                                  const std::vector<BitFieldConstantDef>& defs);
 
 struct ArrayFieldDecompMeta {
-  enum class Kind { REF_TO_INLINE_ARR, REF_TO_INTEGER_ARR };
+  enum class Kind : u8 { REF_TO_INLINE_ARR, REF_TO_INTEGER_ARR };
 
   TypeSpec element_type;
   int bytes_per_element;  // aka stride

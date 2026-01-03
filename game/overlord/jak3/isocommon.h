@@ -11,7 +11,7 @@ struct CBaseFile;
 
 struct ISOFileDef;
 
-enum class EIsoStatus {
+enum class EIsoStatus : u8 {
   NONE_0 = 0,
   IDLE_1 = 0x1,
   OK_2 = 0x2,  // already reading, or no need to read, or no mem to read.

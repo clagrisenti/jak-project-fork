@@ -37,7 +37,7 @@ struct ReplaceInfo {
 
 // version of the game text file's text encoding. Not real, but we need to differentiate them
 // somehow, since the encoding changes.
-enum class GameTextVersion {
+enum class GameTextVersion : u8{
   JAK1_V1 = 10,  // jak 1 (ntsc-u v1)
   JAK1_V2 = 11,  // jak 1 (pal+)
   JAK2 = 20,     // jak 2

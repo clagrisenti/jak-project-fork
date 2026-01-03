@@ -4,7 +4,7 @@
 #include "common/versions/versions.h"
 
 //! Supported languages.
-enum class Language {
+enum class Language : u8 {
   English = 0,
   French = 1,
   German = 2,

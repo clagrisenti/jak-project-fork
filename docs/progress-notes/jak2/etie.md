@@ -723,7 +723,7 @@ TieCategoryInfo get_jak1_tie_category(u32 flags) {
 
 Updating the data format:
 ```cpp
-enum class TieCategory {
+enum class TieCategory : u8 {
   NORMAL,
   TRANS,  // also called alpha
   WATER,
@@ -853,7 +853,7 @@ Figure out all of etie looks absolutely awful (3k lines of EE assembly, 1.5k lin
 
 First, add some new categories for envmap:
 ```
-enum class TieCategory {
+enum class TieCategory : u8 {
   NORMAL,
   TRANS,  // also called alpha
   WATER,

@@ -81,7 +81,7 @@ class CfgVtx {
 
   bool needs_label = false;
 
-  enum class DelaySlotKind { NO_BRANCH, SET_REG_FALSE, SET_REG_TRUE, NOP, OTHER, NO_DELAY };
+  enum class DelaySlotKind : u8{ NO_BRANCH, SET_REG_FALSE, SET_REG_TRUE, NOP, OTHER, NO_DELAY };
 
   struct {
     bool has_branch = false;     // does the block end in a branch (any kind)?

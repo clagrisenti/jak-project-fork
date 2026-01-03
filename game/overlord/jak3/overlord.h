@@ -20,7 +20,7 @@ extern int g_nServerThreadID;
 extern int g_nPlayerThreadID;
 extern int g_nLoaderThreadID;
 
-enum class LogCategory {
+enum class LogCategory : u8 {
   PAGING,
   FILESYSTEM,
   WARN,

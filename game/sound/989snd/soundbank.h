@@ -28,7 +28,7 @@ struct BankTag {
   /*   c */ u32 BankID;
 };
 
-enum class BankType {
+enum class BankType : u8 {
   Music,
   SFX,
 };

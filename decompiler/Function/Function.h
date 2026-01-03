@@ -22,7 +22,7 @@ namespace decompiler {
 class DecompilerTypeSystem;
 
 struct FunctionName {
-  enum class FunctionKind {
+  enum class FunctionKind : u8 {
     UNIDENTIFIED,  // hasn't been identified yet.
     GLOBAL,        // global named function
     METHOD,

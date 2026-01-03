@@ -8,6 +8,7 @@
 #include "common/util/Assert.h"
 
 #include "decompiler/Disasm/Register.h"
+#include <sys/types.h>
 
 namespace decompiler {
 /*!
@@ -17,7 +18,7 @@ namespace decompiler {
  */
 class TP_Type {
  public:
-  enum class Kind {
+  enum class Kind : u8 {
     TYPESPEC,               // just a normal typespec
     TYPE_OF_TYPE_OR_CHILD,  // a type object, of the given type of a child type.
     TYPE_OF_TYPE_NO_VIRTUAL,

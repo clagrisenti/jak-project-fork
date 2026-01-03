@@ -2,8 +2,10 @@
 /*!
  * Matches the bucket-id enum in GOAL
  */
+#include "common/common_types.h"
+
 namespace jak1 {
-enum class BucketId {
+enum class BucketId : u8 {
   BUCKET0 = 0,
   BUCKET1 = 1,
   // 2
@@ -80,7 +82,7 @@ enum class BucketId {
 
 namespace jak2 {
 
-enum class BucketId {
+enum class BucketId : u16 {
   BUCKET_0,
   BUCKET_1,
   BUCKET_2,
@@ -413,7 +415,7 @@ enum class BucketId {
 }
 
 namespace jak3 {
-enum class BucketId {
+enum class BucketId : u16 {
   BUCKET_2 = 2,
   BLIT_START = 3,
   TEX_LCOM_SKY_PRE = 4,
@@ -1072,7 +1074,7 @@ enum class BucketId {
 };
 }
 
-enum class BucketCategory {
+enum class BucketCategory : u8 {
   TFRAG,
   TIE,
   SHRUB,

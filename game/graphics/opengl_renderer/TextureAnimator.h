@@ -20,7 +20,7 @@
 struct GpuTexture;
 
 struct VramEntry {
-  enum class Kind {
+  enum class Kind : u8 {
     CLUT16_16_IN_PSM32,
     GENERIC_PSM32,
     GENERIC_PSMT8,
@@ -137,7 +137,7 @@ static_assert(sizeof(LayerVals) == 80);
  * A single layer in a FixedAnimationDef.
  */
 struct FixedLayerDef {
-  enum class Kind {
+  enum class Kind : u8 {
     DEFAULT_ANIM_LAYER,
   } kind = Kind::DEFAULT_ANIM_LAYER;
   float start_time = 0;

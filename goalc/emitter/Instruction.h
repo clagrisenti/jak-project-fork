@@ -140,7 +140,7 @@ struct Instruction {
   Instruction(uint8_t opcode) : op(opcode) {}
   uint8_t op;
 
-  enum Flags {
+  enum Flags : u8 {
     kOp2Set = (1 << 0),
     kOp3Set = (1 << 1),
     kIsNull = (1 << 2),

@@ -14,6 +14,7 @@
 #include "lsp/protocol/document_diagnostics.h"
 #include "lsp/protocol/document_symbols.h"
 #include "lsp/state/lsp_requester.h"
+#include <sys/types.h>
 
 #include "third-party/tree-sitter/tree-sitter/lib/src/tree.h"
 
@@ -111,7 +112,7 @@ class WorkspaceAllTypesFile {
 
 class Workspace {
  public:
-  enum class FileType { OpenGOAL, OpenGOALIR, Unsupported };
+  enum class FileType : u8 { OpenGOAL, OpenGOALIR, Unsupported };
   Workspace();
   virtual ~Workspace();
 

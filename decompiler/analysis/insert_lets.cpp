@@ -1,11 +1,12 @@
-#include "insert_lets.h"
-
 #include <algorithm>
 #include <array>
 #include <limits>
 #include <tuple>
 #include <unordered_set>
 
+#include "insert_lets.h"
+
+#include "common/common_types.h"
 #include "common/log/log.h"
 #include "common/util/Assert.h"
 #include "common/util/print_float.h"
@@ -1257,7 +1258,7 @@ FormElement* rewrite_joint_macro(LetElement* in, const Env& env, FormPool& pool)
   auto set_fn = match_ja_set(env, chan, "frame-num", -1, in->body(), &idx, &bad);
 
   // lastly, match the function call.
-  enum { NO_FUNC, EVAL, NO_EVAL } func_status = NO_FUNC;
+  enum : u8 { NO_FUNC, EVAL, NO_EVAL } func_status = NO_FUNC;
   Form* arg_group = nullptr;
   std::string arg_num_func;
   if (idx < in->body()->size()) {
@@ -2144,7 +2145,7 @@ FormElement* rewrite_attack_info(LetElement* in, const Env& env, FormPool& pool)
   auto block_var = in->entries().at(0).dest;
   const auto& block_var_reg = block_var.reg();
 
-  enum AttackInfoFieldKind { DEFAULT, VECTOR, METERS, DEGREES };
+  enum AttackInfoFieldKind : u8 { DEFAULT, VECTOR, METERS, DEGREES };
 
   const static std::map<std::string, std::pair<int, AttackInfoFieldKind>> possible_args_jak1 = {
       {"vector", {1, VECTOR}},      {"attacker", {3, DEFAULT}}, {"mode", {5, DEFAULT}},

@@ -11,7 +11,7 @@ class Generic2 {
            u32 num_buckets = 800);
   ~Generic2();
 
-  enum class Mode { NORMAL, LIGHTNING, WARP, PRIM };
+  enum class Mode : u8 { NORMAL, LIGHTNING, WARP, PRIM };
 
   void render_in_mode(DmaFollower& dma,
                       SharedRenderState* render_state,

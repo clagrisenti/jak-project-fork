@@ -4,10 +4,12 @@
 
 #include "common_types.h"
 
+#include "common/common_types.h"
+
 #include "third-party/json.hpp"
 
 namespace LSPSpec {
-enum class SymbolKind {
+enum class SymbolKind : u8 {
   File = 1,
   Module = 2,
   Namespace = 3,
@@ -38,7 +40,7 @@ enum class SymbolKind {
 
 /// @brief Symbol tags are extra annotations that tweak the rendering of a symbol.
 /// @since 3.16
-enum class SymbolTag {
+enum class SymbolTag : u8 {
   /// @brief Render a symbol as obsolete, usually using a strike-out.
   Deprecated = 1
 };

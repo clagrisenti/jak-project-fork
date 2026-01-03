@@ -12,7 +12,7 @@ namespace decompiler {
 struct ObjectFileData;
 
 struct SpoolSubtitleMessage {
-  enum class Kind { NIL = 0, STRING, IMAGE } kind;
+  enum class Kind : u8 { NIL = 0, STRING, IMAGE } kind;
   std::string text;
 
   s16 w, h;

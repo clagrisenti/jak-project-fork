@@ -11,7 +11,7 @@
 #include "common/math/Vector.h"
 #include "common/util/Assert.h"
 
-enum class Mask {
+enum class Mask : u8 {
   NONE = 0,
   x = 1,
   y = 2,

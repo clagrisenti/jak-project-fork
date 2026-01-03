@@ -22,7 +22,7 @@ struct ISO_DGOCommand : public ISO_Hdr {
   u8* ee_dest_buffer = nullptr;  // 192
   int bytes_processed = 0;       // 196
   int objects_loaded = 0;        // 200
-  enum class State {
+  enum class State : u8 {
     INIT = 0,
     READ_DGO_HEADER = 1,
     FINISH_OBJ = 2,
@@ -51,7 +51,7 @@ struct ISO_DGOCommand : public ISO_Hdr {
   int want_abort = 0;      // 256
 };
 
-enum class CopyKind {
+enum class CopyKind : u8 {
   EE = 0,
   IOP = 1,
   SBK = 2,
