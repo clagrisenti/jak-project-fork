@@ -1,4 +1,4 @@
-Checks: 
+Checks:
  -*,
  bugprone-*,
  performance-*,
@@ -10,7 +10,12 @@ Checks:
  clang-analyzer-*,
  clang-diagnostics-*,
  misc-*,
+ readability-*,
+ cppcoreguidelines-*,
  -modernize-use-trailing-return-type,
- -llvm-header-guard
+ -llvm-header-guard,
+ -llvm-prefer-static-over-anonymous-namespace,
+ -cppcoreguidelines-avoid-non-const-global-variables,
+ -portability-avoid-pragma-once
 
 FormatStyle: 'file'

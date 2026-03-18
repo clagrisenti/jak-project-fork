@@ -49,6 +49,8 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         -mavx \
         -mavx2 \
         -Wall \
+        -Wextra \
+        -Wpedantic \
         -Wno-c++11-narrowing \
         -Wno-c++98-compat \
         -Wno-deprecated-this-capture \
@@ -96,7 +98,6 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         -Wcast-qual \
         -Wdisabled-optimization \
         -Wformat \
-        -Wextra \
         -Woverloaded-virtual \
         -Wredundant-decls \
         -Wshadow \
@@ -122,14 +123,13 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
         -Wcast-qual \
         -Wdisabled-optimization \
         -Wformat \
-        -Wextra \
         -Woverloaded-virtual \
         -Wredundant-decls \
         -Wshadow \
         -Wsign-promo \
         -fdiagnostics-color=always"
         )
-    
+
     # pin to AVX for macOS, hopefully all macOS runners have atleast this architecture
     # technically speaking, SSE4 is the cutoff for Apple Silicon so...only a matter of time!
     if(NOT CMAKE_CXX_COMPILER_TARGET STREQUAL "arm64-apple-darwin")
