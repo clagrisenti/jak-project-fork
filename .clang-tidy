@@ -16,6 +16,7 @@ Checks:
  -llvm-header-guard,
  -llvm-prefer-static-over-anonymous-namespace,
  -cppcoreguidelines-avoid-non-const-global-variables,
- -portability-avoid-pragma-once
+ -portability-avoid-pragma-once,
+ -readability-identifier-length
 
 FormatStyle: 'file'

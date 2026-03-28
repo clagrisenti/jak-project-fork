@@ -16,6 +16,9 @@ build.master/
 logs/*
 profile_data/*
 
+# qtcreator
+.qtcreator/
+
 # for vscode/clangd
 .cache/*
 .DS_Store

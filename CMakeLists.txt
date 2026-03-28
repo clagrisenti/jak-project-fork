@@ -25,6 +25,10 @@ else()
     set(BUILD_STATIC_LIBS OFF)
 endif()
 
+if(NOT NOT_EXPORT_COMPILE_COMMANDS)
+  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+endif()
+
 # For clangd
 if (EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )
     configure_file(
