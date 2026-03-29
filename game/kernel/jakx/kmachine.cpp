@@ -472,7 +472,7 @@ void InitMachine_PCPort() {
   intern_from_c(-1, 0, "*pc-settings-folder*")->value() =
       make_string_from_c(settings_path.string().c_str());
   intern_from_c(-1, 0, "*pc-settings-built-sha*")->value() =
-      make_string_from_c(build_revision().c_str());
+      make_string_from_c(build_revision().data());
 }
 // End PC Stuff
 

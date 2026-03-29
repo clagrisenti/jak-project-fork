@@ -1,11 +1,8 @@
 #include "versions.h"
 
 #include "common/util/Assert.h"
-#include "common/versions/revision.h"
 
-#include "fmt/format.h"
-
-GameVersion game_name_to_version(const std::string& name) {
+GameVersion game_name_to_version(const std::string_view name) {
   if (name == "jak1") {
     return GameVersion::Jak1;
   } else if (name == "jak2") {
@@ -19,7 +16,7 @@ GameVersion game_name_to_version(const std::string& name) {
   }
 }
 
-bool valid_game_version(const std::string& name) {
+bool valid_game_version(const std::string_view name) {
   return name == "jak1" || name == "jak2" || name == "jak3";
 }
 
@@ -51,19 +48,4 @@ std::string version_to_game_name_external(GameVersion v) {
     default:
       ASSERT_MSG(false, fmt::format("no game_name for version: {} found", fmt::underlying(v)));
   }
-}
-
-std::vector<std::string> valid_game_version_names() {
-  return {game_version_names[GameVersion::Jak1], game_version_names[GameVersion::Jak2],
-          game_version_names[GameVersion::Jak3], game_version_names[GameVersion::JakX]};
-}
-
-std::string build_revision() {
-  if (std::string(BUILT_TAG) != "") {
-    return std::string(BUILT_TAG);
-  }
-  if (std::string(BUILT_SHA) != "") {
-    return std::string(BUILT_SHA);
-  }
-  return "Unknown Revision";
 }

@@ -443,7 +443,7 @@ void InitMachine_PCPort() {
   intern_from_c(-1, 0, "*pc-settings-folder*")->value() =
       make_string_from_c(settings_path.string().c_str());
   intern_from_c(-1, 0, "*pc-settings-built-sha*")->value() =
-      make_string_from_c(build_revision().c_str());
+      make_string_from_c(build_revision().data());
 }
 // End PC Stuff
 
@@ -506,7 +506,8 @@ void InitMachineScheme() {
                              LINK_FLAG_OUTPUT_LOAD | LINK_FLAG_EXECUTE | LINK_FLAG_PRINT_LOGIN,
                              0x400000, true);
     *EnableMethodSet = *EnableMethodSet + -1;
-    using namespace jak3_symbols;
+    using jak3_symbols::FIX_SYM_GLOBAL_HEAP;
+    using jak3_symbols::FIX_SYM_PAIR_TYPE;
 
     kernel_packages->value() =
         new_pair(s7.offset + FIX_SYM_GLOBAL_HEAP, *((s7 + FIX_SYM_PAIR_TYPE - 1).cast<u32>()),

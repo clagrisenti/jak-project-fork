@@ -23,7 +23,7 @@ function(write_revision_h)
           list(GET GIT_TAG_LIST ${GIT_TAG_LAST_INDEX} GIT_TAG)
         endif()
     endif()
-    file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/versions/revision.h "#define BUILT_TAG \"${GIT_TAG}\"\n#define BUILT_SHA \"${GIT_SHORT_SHA}\"\n")
+    file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/versions/revision.h "#include <string_view>\n\nconstexpr std::string_view BUILT_TAG = \"${GIT_TAG}\", BUILT_SHA = \"${GIT_SHORT_SHA}\";")
 endfunction()
 
 write_revision_h()

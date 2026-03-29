@@ -5,8 +5,11 @@
  * Version numbers for GOAL Language, Kernel, etc...
  */
 
+#include <array>
 #include <string>
 #include <vector>
+
+#include "revision.h"
 
 #include "common/common_types.h"
 
@@ -63,16 +66,30 @@ enum class GameVersion : u8 { Jak1 = 1, Jak2 = 2, Jak3 = 3, JakX = 4 };
 template <typename T>
 struct PerGameVersion {
   constexpr PerGameVersion(T jak1, T jak2, T jak3, T jakx) : data{jak1, jak2, jak3, jakx} {}
-  constexpr const T& operator[](GameVersion v) const { return data[(int)v - 1]; }
-  T data[4];
+  constexpr const T& operator[](GameVersion v) const { return data[static_cast<int>(v) - 1]; }
+
+ private:
+  std::array<T, 4> data;
 };
 
-constexpr PerGameVersion<const char*> game_version_names = {"jak1", "jak2", "jak3", "jakx"};
+constexpr PerGameVersion<const char*> game_version_names{"jak1", "jak2", "jak3", "jakx"};
 
-GameVersion game_name_to_version(const std::string& name);
-bool valid_game_version(const std::string& name);
+GameVersion game_name_to_version(const std::string_view name);
+bool valid_game_version(const std::string_view name);
 std::string version_to_game_name(GameVersion v);
 std::string version_to_game_name_external(GameVersion v);
-std::vector<std::string> valid_game_version_names();
 
-std::string build_revision();
+constexpr std::vector<std::string> valid_game_version_names() {
+  return {game_version_names[GameVersion::Jak1], game_version_names[GameVersion::Jak2],
+          game_version_names[GameVersion::Jak3], game_version_names[GameVersion::JakX]};
+}
+
+constexpr std::string_view build_revision() {
+  if (!BUILT_TAG.empty()) {
+    return BUILT_TAG;
+  }
+  if (!BUILT_SHA.empty()) {
+    return BUILT_SHA;
+  }
+  return "Unknown Revision";
+}
