@@ -1,5 +1,6 @@
 #pragma once
 #include "common/common_types.h"
+#include "common/util/Timer.h"
 
 #include <sys/types.h>
 
@@ -42,6 +43,10 @@ extern char DebugBootMessage[64];
 
 // Added in PC port, option to run listener functions without the kernel for debugging
 extern u32 MasterUseKernel;
+
+// Added in PC port for splash screen
+extern Timer SplashTimer;
+extern u32 SplashScreen;
 
 struct MasterConfig {
   u16 language;          //! GOAL language 0
