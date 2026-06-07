@@ -9,6 +9,8 @@
 #define GAME_TERRITORY_SCEI 2  // sony inc. (japan)
 #define GAME_TERRITORY_SCEK 3  // sony korea
 
+#define SPLASH_SCREEN_TIME 3.f  // how long to display the splash screen for
+
 enum class RuntimeExitStatus : u8 {
   RUNNING = 0,
   RESTART_RUNTIME = 1,

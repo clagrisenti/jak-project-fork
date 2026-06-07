@@ -67,6 +67,8 @@ enum class ShaderId : u8 {
   TIE_WIND = 40,
   SIMPLE_TEXTURE = 41,
   SLOW_TIME = 42,
+  OCEAN_ENVMAP = 43,
+  OCEAN_ENVMAP_HAZE = 44,
   MAX_SHADERS
 };
 
