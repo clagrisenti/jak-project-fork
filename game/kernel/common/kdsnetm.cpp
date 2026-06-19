@@ -2,6 +2,8 @@
 
 #include <cstdio>
 
+#include "common/log/log.h"
+
 #include "game/kernel/common/kprint.h"
 #include "game/sce/deci2.h"
 #include "game/system/deci_common.h"
@@ -84,7 +86,7 @@ void GoalProtoHandler(int event, int param, void* opt) {
           // receive failure
           pb->last_receive_size = -1;
           protoBlock.receive_progress = 0;  // why use protoBlock instead of pb here?
-          printf("gproto: read error with sceDeci2ExRecv\n");
+          lg::info("gproto: read error with sceDeci2ExRecv\n");
         } else {
           pb->receive_progress += received;
         }
@@ -92,7 +94,7 @@ void GoalProtoHandler(int event, int param, void* opt) {
         // size was too large
         pb->last_receive_size = -1;
         protoBlock.receive_progress = 0;  // why use protoBlock here?
-        printf("gproto: read error, message too large!\n");
+        lg::error("gproto: read error, message too large!\n");
       }
       break;
 
@@ -187,7 +189,7 @@ s32 SendFromBufferD(s32 msg_kind, u64 msg_id, char* data, s32 size) {
     // start send!
     auto rv = ee::sceDeci2ReqSend(protoBlock.socket, header->deci2_header.dst);
     if (rv < 0) {
-      printf("1sceDeci2ReqSend fail, reason code = %08x\n", rv);
+      lg::info("1sceDeci2ReqSend fail, reason code = %08x\n", rv);
       return 0xfffffffa;
     }
 

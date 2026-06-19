@@ -2,6 +2,8 @@
 
 #include <cstring>
 
+#include "common/log/log.h"
+
 #include "game/runtime.h"
 #include "game/sound/sndshim.h"
 
@@ -425,7 +427,7 @@ void PrintActiveSounds() {
         }
         sprintf(string, "                 : Vol %d", GetVolume(&s));
         memcpy(string, s.bank_entry->name.data(), len);
-        printf("%s\n", string);
+        lg::info("%s\n", string);
       } else {  // added for printing jak2 sounds
         u32 len = strlen(s.name);
         if (len > 16) {
@@ -434,7 +436,7 @@ void PrintActiveSounds() {
         sprintf(string, "                 : Vol %d, ID %d, Curve %d", GetVolume(&s), s.id,
                 s.params.fo_curve);
         memcpy(string, s.name, len);
-        printf("%s\n", string);
+        lg::info("%s\n", string);
       }
     }
   }

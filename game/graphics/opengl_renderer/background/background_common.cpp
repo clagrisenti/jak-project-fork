@@ -243,23 +243,23 @@ void first_tfrag_draw_setup(const GoalBackgroundCameraData& settings,
       make_new_cam_mat(settings.rot, settings.perspective, settings.fog.x(), settings.hvdf_off.z());
 
   /*
-  fmt::print("camera:\n{}\n{}\n{}\n{}\n", settings.camera[0].to_string_aligned(),
+  lg::print("camera:\n{}\n{}\n{}\n{}\n", settings.camera[0].to_string_aligned(),
              settings.camera[1].to_string_aligned(), settings.camera[2].to_string_aligned(),
              settings.camera[3].to_string_aligned());
 
-  fmt::print("camera2:\n{}\n{}\n{}\n{}\n", newcam[0].to_string_aligned(),
+  lg::print("camera2:\n{}\n{}\n{}\n{}\n", newcam[0].to_string_aligned(),
              newcam[1].to_string_aligned(), newcam[2].to_string_aligned(),
              newcam[3].to_string_aligned());
 
-  fmt::print("persp:\n{}\n{}\n{}\n{}\n", settings.perspective[0].to_string_aligned(),
+  lg::print("persp:\n{}\n{}\n{}\n{}\n", settings.perspective[0].to_string_aligned(),
              settings.perspective[1].to_string_aligned(),
              settings.perspective[2].to_string_aligned(),
              settings.perspective[3].to_string_aligned());
-  fmt::print("rot:\n{}\n{}\n{}\n{}\n", settings.rot[0].to_string_aligned(),
+  lg::print("rot:\n{}\n{}\n{}\n{}\n", settings.rot[0].to_string_aligned(),
              settings.rot[1].to_string_aligned(), settings.rot[2].to_string_aligned(),
              settings.rot[3].to_string_aligned());
-  fmt::print("ctrans: {}\n", settings.trans.to_string_aligned());
-  fmt::print("hvdf: {}\n", settings.hvdf_off.to_string_aligned());
+  lg::print("ctrans: {}\n", settings.trans.to_string_aligned());
+  lg::print("hvdf: {}\n", settings.hvdf_off.to_string_aligned());
   */
 
   glUniformMatrix4fv(glGetUniformLocation(id, "pc_camera"), 1, GL_FALSE, newcam[0].data());

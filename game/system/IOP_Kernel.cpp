@@ -472,7 +472,7 @@ void IOP_Kernel::sif_rpc(s32 rpcChannel,
     }
   }
   if (!rec) {
-    printf("Failed to find handler for sif channel 0x%x\n", rpcChannel);
+    lg::info("Failed to find handler for sif channel 0x%x\n", rpcChannel);
   }
   ASSERT(rec);
 

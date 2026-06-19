@@ -222,10 +222,10 @@ void TexturePool::handle_upload_now(const u8* tpage,
     GoalTexture tex;
     if (texture_page.try_copy_texture_description(&tex, tex_idx, memory_base, tpage, s7_ptr)) {
       if (debug) {
-        fmt::print("Pool upload {} to {}\n",
-                   std::string(goal_string(texture_page.name_ptr, memory_base)) +
-                       goal_string(tex.name_ptr, memory_base),
-                   tex.dest[0]);
+        lg::print(fmt::format("Pool upload {} to {}\n",
+                              std::string(goal_string(texture_page.name_ptr, memory_base)) +
+                                  goal_string(tex.name_ptr, memory_base),
+                              tex.dest[0]));
       }
       // each texture may have multiple mip levels.
       for (int mip_idx = 0; mip_idx < tex.num_mips; mip_idx++) {

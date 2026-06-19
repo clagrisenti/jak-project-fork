@@ -587,7 +587,7 @@ Ptr<Symbol4<u32>> set_fixed_symbol(int offset, const char* name, u32 value) {
   sym->value() = value;
 
   if (sym_to_string_ptr(sym).c()->offset) {
-    printf("setting %s\n", name);
+    lg::info("setting %s\n", name);
     ASSERT_NOT_REACHED();  // duplicate def
   }
 
@@ -1050,7 +1050,7 @@ u64 new_type(u32 symbol, u32 parent, u64 flags) {
     if (original_type_list_value && (original_type_list_value == s7.offset ||
                                      (in_valid_memory_for_new_type(original_type_list_value) &&
                                       is_valid_type(original_type_list_value)))) {
-      printf("case 1 for new_type level types\n");
+      lg::info("case 1 for new_type level types\n");
       new_type_obj->memusage_method.offset = original_type_list_value;
     }
   } else {
@@ -1094,7 +1094,7 @@ u64 method_set(u32 type_, u32 method_id, u32 method) {
     return 0;
   } else if (method == 2) {
     method = type->parent->get_method(method_id).offset;
-    printf("[Method Set] got 2, inheriting\n");
+    lg::info("[Method Set] got 2, inheriting\n");
   }
 
   // do the set
@@ -1116,10 +1116,10 @@ u64 method_set(u32 type_, u32 method_id, u32 method) {
           sym_value->get_method(method_id).offset == existing_method &&
           type_typep(sym_value, type) != s7.offset) {
         if (FastLink != 0) {
-          printf("************ WARNING **************\n");
-          printf("method %d of %s redefined - you must define class heirarchies in order now\n",
-                 method_id, sym_to_string(sym)->data());
-          printf("***********************************\n");
+          lg::warn("************ WARNING **************\n");
+          lg::warn("method %d of %s redefined - you must define class heirarchies in order now\n",
+                   method_id, sym_to_string(sym)->data());
+          lg::warn("***********************************\n");
         }
         sym_value->get_method(method_id).offset = method;
       }
@@ -1134,10 +1134,10 @@ u64 method_set(u32 type_, u32 method_id, u32 method) {
           sym_value->get_method(method_id).offset == existing_method &&
           type_typep(sym_value, type) != s7.offset) {
         if (FastLink != 0) {
-          printf("************ WARNING **************\n");
-          printf("method %d of %s redefined - you must define class heirarchies in order now\n",
-                 method_id, sym_to_string(sym)->data());
-          printf("***********************************\n");
+          lg::warn("************ WARNING **************\n");
+          lg::warn("method %d of %s redefined - you must define class heirarchies in order now\n",
+                   method_id, sym_to_string(sym)->data());
+          lg::warn("***********************************\n");
         }
         sym_value->get_method(method_id).offset = method;
       }
@@ -1165,7 +1165,7 @@ u64 call_method_of_type(u32 arg, Ptr<Type> type, u32 method_id) {
               (*type_tag).offset);
     }
   }
-  printf("[ERROR] call_method_of_type failed!\n");
+  lg::error("[ERROR] call_method_of_type failed!\n");
   return arg;
 }
 
@@ -1392,7 +1392,7 @@ u64 copy_basic(u32 obj, u32 heap, u32 /*unused*/, u32 pp) {
     // then copy! (minus the type tag, alloc_heap_object already did it for us)
     memcpy(Ptr<u32>(result).c(), Ptr<u32>(obj).c(), size - BASIC_OFFSET);
   } else {
-    printf("DANGER COPY BASIC!\n");
+    lg::warn("DANGER COPY BASIC!\n");
     // copy directly (including type tag)
     memcpy(Ptr<u32>(heap - BASIC_OFFSET).c(), Ptr<u32>(obj - BASIC_OFFSET).c(), size);
     result = heap;
@@ -1958,7 +1958,7 @@ u64 loado(u32 file_name_in, u32 heap_in) {
   char loadName[272];
   Ptr<String> file_name(file_name_in);
   Ptr<kheapinfo> heap(heap_in);
-  printf("****** CALL TO loado(%s) ******\n", file_name->data());
+  lg::info("****** CALL TO loado(%s) ******\n", file_name->data());
   kstrcpy(loadName, MakeFileName(DATA_FILE_TYPE, file_name->data(), 0));
   s32 returnValue = load_and_link(file_name->data(), loadName, heap.c(), LINK_FLAG_PRINT_LOGIN);
 

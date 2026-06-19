@@ -1,6 +1,7 @@
 // cppcheck-suppress-file unusedLabels
 //--------------------------MIPS2C---------------------
 // clang-format off
+#include "common/log/log.h"
 #include "game/mips2c/mips2c_private.h"
 #include "game/kernel/jak3/kscheme.h"
 using ::jak3::intern_from_c;
@@ -185,7 +186,7 @@ block_11:
   call_addr = c->gprs[t9].du32[0];                  // function call:
   c->sll(v0, ra, 0);                                // sll v0, ra, 0
   // c->jalr(call_addr);                               // jalr ra, t9
-  printf("ERROR: Exceeded max number of collide-cache prims!\n");
+  lg::info("ERROR: Exceeded max number of collide-cache prims!\n");
   //beq r0, r0, L92                                 // beq r0, r0, L92
   // nop                                            // sll r0, r0, 0
   goto block_18;                                    // branch always
@@ -309,7 +310,7 @@ block_2:
   // call_addr = c->gprs[t9].du32[0];                  // function call:
   c->sll(v0, ra, 0);                                // sll v0, ra, 0
   // c->jalr(call_addr);                               // jalr ra, t9
-  printf("ERROR: Exceeded max number of collide-cache prims!\n");
+  lg::error("ERROR: Exceeded max number of collide-cache prims!\n");
 
 block_3:
   c->ld(ra, 0, sp);                                 // ld ra, 0(sp)
@@ -627,7 +628,7 @@ block_11:
   call_addr = c->gprs[t9].du32[0];                  // function call:
   c->sll(v0, ra, 0);                                // sll v0, ra, 0
   // c->jalr(call_addr);                               // jalr ra, t9
-  printf("ERROR: Exceeded max number of collide-cache prims!\n");
+  lg::error("ERROR: Exceeded max number of collide-cache prims!\n");
   //beq r0, r0, L62                                 // beq r0, r0, L62
   // nop                                            // sll r0, r0, 0
   goto block_14;                                    // branch always
@@ -734,7 +735,7 @@ block_2:
   // call_addr = c->gprs[t9].du32[0];                  // function call:
   c->sll(v0, ra, 0);                                // sll v0, ra, 0
   // c->jalr(call_addr);                               // jalr ra, t9
-  printf("ERROR: Exceeded max number of collide-cache prims!\n");
+  lg::error("ERROR: Exceeded max number of collide-cache prims!\n");
 
 block_3:
   c->ld(ra, 0, sp);                                 // ld ra, 0(sp)
@@ -1476,7 +1477,7 @@ block_20:
   call_addr = c->gprs[t9].du32[0];                  // function call:
   c->sll(v0, ra, 0);                                // sll v0, ra, 0
   // c->jalr(call_addr);                               // jalr ra, t9
-  printf("ERROR: Exceeded max # of spheres in collide-cache::probe-using-spheres!\n");
+  lg::error("ERROR: Exceeded max # of spheres in collide-cache::probe-using-spheres!\n");
 
 block_21:
   c->mov64(v0, s7);                                 // or v0, s7, r0

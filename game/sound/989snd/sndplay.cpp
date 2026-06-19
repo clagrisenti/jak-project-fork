@@ -24,13 +24,13 @@ int main(int argc, char* argv[]) {
     lg::info("sound {} started", sound);
   }
 
-  printf("commands:\n");
-  printf(" play [id]\n");
-  printf(" stop\n");
-  printf(" dump-info\n");
+  lg::info("commands:\n");
+  lg::info(" play [id]\n");
+  lg::info(" stop\n");
+  lg::info(" dump-info\n");
 
   while (true) {
-    printf("> ");
+    lg::info("> ");
     std::string command;
     std::getline(std::cin, command);
 
@@ -44,10 +44,10 @@ int main(int argc, char* argv[]) {
 
     if (parts[0] == "play") {
       if (parts.size() < 2) {
-        printf("invalid args\n");
+        lg::info("invalid args\n");
       } else {
         auto id = player.PlaySound(bankid, std::atoi(parts[1].c_str()), 0x400, 0, 0, 0);
-        printf("sound handle %d started\n", id);
+        lg::info("sound handle %d started\n", id);
       }
     }
 
@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
 
     if (parts[0] == "setreg") {
       if (parts.size() < 3) {
-        printf("invalid args\n");
+        lg::info("invalid args\n");
       } else {
         player.SetSoundReg(std::atoi(parts[1].c_str()), std::atoi(parts[2].c_str()),
                            std::atoi(parts[3].c_str()));
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (parts[0] == "stop") {
-      printf("stopping all sounds\n");
+      lg::info("stopping all sounds\n");
       player.StopAllSounds();
     }
 

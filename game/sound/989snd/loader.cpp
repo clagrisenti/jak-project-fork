@@ -1,9 +1,10 @@
 // Copyright: 2021 - 2024, Ziemas
 // SPDX-License-Identifier: ISC
+#include "loader.h"
+
 #include <fstream>
 #include <optional>
 
-#include "loader.h"
 #include "sfxblock.h"
 
 #include "common/log/log.h"
@@ -412,7 +413,7 @@ BankHandle Loader::BankLoad(std::span<u8> bank) {
   fa.Read(reader);
 
   if (fa.type != 1 && fa.type != 3) {
-    fmt::print("bad file type\n");
+    lg::print("bad file type\n");
     return nullptr;
   }
 
@@ -423,7 +424,7 @@ BankHandle Loader::BankLoad(std::span<u8> bank) {
 
   if (fourcc == snd::fourcc("SBv2")) {
     if (fa.num_chunks != 3) {
-      fmt::print("SBv2 without midi data not supported\n");
+      lg::print("SBv2 without midi data not supported\n");
       return 0;
     }
     std::span<u8> midi_data(std::span<u8>(bank).subspan(fa.where[2].offset, fa.where[2].size));

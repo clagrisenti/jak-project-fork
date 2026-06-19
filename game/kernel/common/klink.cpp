@@ -1,6 +1,7 @@
 #include "klink.h"
 
 #include "common/goal_constants.h"
+#include "common/log/log.h"
 #include "common/symbols.h"
 
 #include "game/kernel/common/fileio.h"
@@ -55,9 +56,9 @@ void link_control::jak1_jak2_begin(Ptr<uint8_t> object_file,
 
     if (link_debug_printfs) {
       char* goal_name = object_file.cast<char>().c();
-      printf("link %s\n", m_object_name);
-      printf("link_control::begin %c%c%c%c\n", goal_name[0], goal_name[1], goal_name[2],
-             goal_name[3]);
+      lg::info("link %s\n", m_object_name);
+      lg::info("link_control::begin %c%c%c%c\n", goal_name[0], goal_name[1], goal_name[2],
+               goal_name[3]);
     }
 
     // points to the beginning of the linking data
@@ -77,13 +78,13 @@ void link_control::jak1_jak2_begin(Ptr<uint8_t> object_file,
       ASSERT(false);
     }
     if (link_debug_printfs) {
-      printf("Object file header:\n");
-      printf(" GOAL ver %d.%d obj %d len %d\n", ofh->goal_version_major, ofh->goal_version_minor,
-             ofh->object_file_version, ofh->link_block_length);
-      printf(" segment count %d\n", ofh->segment_count);
+      lg::info("Object file header:\n");
+      lg::info(" GOAL ver %d.%d obj %d len %d\n", ofh->goal_version_major, ofh->goal_version_minor,
+               ofh->object_file_version, ofh->link_block_length);
+      lg::info(" segment count %d\n", ofh->segment_count);
       for (int i = 0; i < N_SEG; i++) {
-        printf(" seg %d link 0x%04x, 0x%04x data 0x%04x, 0x%04x\n", i, ofh->link_infos[i].offset,
-               ofh->link_infos[i].size, ofh->code_infos[i].offset, ofh->code_infos[i].size);
+        lg::info(" seg %d link 0x%04x, 0x%04x data 0x%04x, 0x%04x\n", i, ofh->link_infos[i].offset,
+                 ofh->link_infos[i].size, ofh->code_infos[i].offset, ofh->code_infos[i].size);
       }
     }
 
@@ -100,21 +101,21 @@ void link_control::jak1_jak2_begin(Ptr<uint8_t> object_file,
         // the link block is outside our heap, or in the top of our heap.  It's somebody else's
         // problem.
         if (link_debug_printfs) {
-          printf("Link block somebody else's problem\n");
+          lg::info("Link block somebody else's problem\n");
         }
 
         if (m_heap->base.offset <= m_object_data.offset &&    // above heap base
             m_object_data.offset < m_heap->top.offset &&      // less than heap top (not needed?)
             m_object_data.offset < m_heap->current.offset) {  // less than heap current
           if (link_debug_printfs) {
-            printf("Code block in the heap, kicking it out for copy into heap\n");
+            lg::info("Code block in the heap, kicking it out for copy into heap\n");
           }
           m_heap->current = m_object_data;
         }
       } else {
         // in our heap, we need to move it so we can free up its space later on
         if (link_debug_printfs) {
-          printf("Link block needs to be moved!\n");
+          lg::info("Link block needs to be moved!\n");
         }
 
         // allocate space for a new one
@@ -128,7 +129,7 @@ void link_control::jak1_jak2_begin(Ptr<uint8_t> object_file,
         // if we can save some memory here
         if (old_link_block.offset < m_heap->current.offset) {
           if (link_debug_printfs) {
-            printf("Kick out old link block\n");
+            lg::info("Kick out old link block\n");
           }
           m_heap->current = old_link_block;
         }
@@ -144,7 +145,7 @@ void link_control::jak1_jak2_begin(Ptr<uint8_t> object_file,
     m_opengoal = false;
     // not an open goal object.
     if (link_debug_printfs) {
-      printf("Linking GOAL style object %s\n", name);
+      lg::info("Linking GOAL style object %s\n", name);
     }
 
     // initialize
@@ -174,21 +175,21 @@ void link_control::jak1_jak2_begin(Ptr<uint8_t> object_file,
         // the link block is outside our heap, or in the top of our heap.  It's somebody else's
         // problem.
         if (link_debug_printfs) {
-          printf("Link block somebody else's problem\n");
+          lg::info("Link block somebody else's problem\n");
         }
 
         if (m_heap->base.offset <= m_object_data.offset &&    // above heap base
             m_object_data.offset < m_heap->top.offset &&      // less than heap top (not needed?)
             m_object_data.offset < m_heap->current.offset) {  // less than heap current
           if (link_debug_printfs) {
-            printf("Code block in the heap, kicking it out for copy into heap\n");
+            lg::info("Code block in the heap, kicking it out for copy into heap\n");
           }
           m_heap->current = m_object_data;
         }
       } else {
         // in our heap, we need to move it so we can free up its space later on
         if (link_debug_printfs) {
-          printf("Link block needs to be moved!\n");
+          lg::info("Link block needs to be moved!\n");
         }
 
         // allocate space for a new one
@@ -202,7 +203,7 @@ void link_control::jak1_jak2_begin(Ptr<uint8_t> object_file,
         // if we can save some memory here
         if (old_link_block.offset < m_heap->current.offset) {
           if (link_debug_printfs) {
-            printf("Kick out old link block\n");
+            lg::info("Kick out old link block\n");
           }
           m_heap->current = old_link_block;
         }
@@ -254,7 +255,7 @@ Ptr<u8> c_symlink2(Ptr<u8> objData, Ptr<u8> linkObj, Ptr<u8> relocTable) {
       // I don't think we should hit this ever.
       // if this is hit - there's a good chance something has overwritten the object file data
       // after linking has started.
-      printf("val is 0x%x ptr %p\n", objValue, relocPtr - 1);
+      lg::info("val is 0x%x ptr %p\n", objValue, static_cast<const void*>(relocPtr - 1));
       ASSERT(false);
     }
   } while (*relocPtr);

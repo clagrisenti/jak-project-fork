@@ -426,13 +426,13 @@ FragSplit pick_best_frag_split(const Frag& frag,
 
   if (aspect > 25) {
     if (split_stats[max_idx].imbalance < 4) {
-      printf(
+      lg::info(
           "pick best frag split splitting a frag of size %d due to bad aspect (%f), with imbalance "
           "%f\n",
           (int)frag.tri_indices.size(), aspect, split_stats[max_idx].imbalance);
       return splits[max_idx];
     } else {
-      printf(
+      lg::info(
           "weird: there's a bad aspect frag (%f, %f), but splitting along the worst axis causes "
           "imbalance %f.\n",
           max_box_size / 4096.f, min_box_size / 4096.f, split_stats[max_idx].imbalance);
@@ -487,9 +487,9 @@ std::vector<Frag> fragment_mesh(const std::vector<jak2::CollideFace>& tris) {
   auto initial_frag = add_all_to_frag(tris);
   auto initial_stats = compute_frag_stats(tris, initial_frag.tri_indices);
   if (frag_is_valid_for_packing(initial_frag, initial_stats, tris)) {
-    printf("initial is good!\n");
-    printf("%s\n%s\n\n", initial_stats.bbox.min.to_string_aligned().c_str(),
-           initial_stats.bbox.max.to_string_aligned().c_str());
+    lg::info("initial is good!\n");
+    lg::info("%s\n%s\n\n", initial_stats.bbox.min.to_string_aligned().c_str(),
+             initial_stats.bbox.max.to_string_aligned().c_str());
     return {initial_frag};
   }
 
@@ -498,7 +498,7 @@ std::vector<Frag> fragment_mesh(const std::vector<jak2::CollideFace>& tris) {
   std::vector<Frag> good_frags;
 
   while (!too_big_frags.empty()) {
-    printf("sizes %zu %zu\n", too_big_frags.size(), good_frags.size());
+    lg::info("sizes %zu %zu\n", too_big_frags.size(), good_frags.size());
     auto& back = too_big_frags.back();
 
     // split it!

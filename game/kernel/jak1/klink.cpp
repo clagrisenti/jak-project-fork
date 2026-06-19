@@ -245,7 +245,7 @@ uint32_t link_control::jak1_work_v3() {
                                 ofh->code_infos[seg_id].size);
         }
       } else {
-        printf("UNHANDLED SEG ID IN WORK V3 STATE 1\n");
+        lg::info("UNHANDLED SEG ID IN WORK V3 STATE 1\n");
       }
     }
 
@@ -301,7 +301,7 @@ uint32_t link_control::jak1_work_v3() {
   }
 
   else {
-    printf("WORK v3 INVALID STATE\n");
+    lg::info("WORK v3 INVALID STATE\n");
     return 1;
   }
 }
@@ -330,7 +330,7 @@ uint32_t link_control::jak1_work_v2() {
     if (m_heap_gap <
         OBJ_V2_CLOSE_ENOUGH) {  // close enough, don't relocate the object, just expand the heap
       if (link_debug_printfs) {
-        printf("[work_v2] close enough, not moving\n");
+        lg::info("[work_v2] close enough, not moving\n");
       }
       m_heap->current = m_object_data + m_code_size;
       if (m_heap->top.offset <= m_heap->current.offset) {
@@ -345,8 +345,8 @@ uint32_t link_control::jak1_work_v2() {
         // allocate on heap, will have no gap
         m_object_data = kmalloc(m_heap, m_code_size, 0, "data-segment");
         if (link_debug_printfs) {
-          printf("[work_v2] moving from 0x%x to 0x%x\n", m_original_object_location.offset,
-                 m_object_data.offset);
+          lg::info("[work_v2] moving from 0x%x to 0x%x\n", m_original_object_location.offset,
+                   m_object_data.offset);
         }
         if (!m_object_data.offset) {
           MsgErr("dkernel: unable to malloc %d bytes for data-segment\n", m_code_size);
@@ -475,7 +475,7 @@ uint32_t link_control::jak1_work_v2() {
           }
           name = m_reloc_ptr.cast<char>().c();
           if (link_debug_printfs) {
-            printf("[work_v2] symlink: %s\n", name);
+            lg::info("[work_v2] symlink: %s\n", name);
           }
           goalObj = jak1::intern_from_c(name).cast<u8>();
         } else {
@@ -486,7 +486,7 @@ uint32_t link_control::jak1_work_v2() {
           }
           name = m_reloc_ptr.cast<char>().c();
           if (link_debug_printfs) {
-            printf("[work_v2] symlink -type: %s\n", name);
+            lg::info("[work_v2] symlink -type: %s\n", name);
           }
           goalObj = jak1::intern_type_from_c(name, nMethods).cast<u8>();
         }

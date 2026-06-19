@@ -2,6 +2,8 @@
 
 #include <cstring>
 
+#include "common/log/log.h"
+
 #include "game/kernel/common/fileio.h"
 
 namespace jak3 {
@@ -46,7 +48,7 @@ char* DecodeFileName(const char* name) {
     } else if (!strncmp(name, "$ISO/", 5)) {
       result = MakeFileName(ISO_FILE_TYPE, name + 5, 0);
     } else {
-      printf("[ERROR] DecodeFileName: UNKNOWN FILE NAME %s\n", name);
+      lg::error("[ERROR] DecodeFileName: UNKNOWN FILE NAME %s\n", name);
       result = nullptr;
     }
   } else {
@@ -237,7 +239,7 @@ char* MakeFileName(int type, const char* name, int new_string) {
       sprintf(buf, "%sdb/refplant/%s", prefix, name);
       break;
     default:
-      printf("UNKNOWN FILE TYPE %d\n", type);
+      lg::warn("UNKNOWN FILE TYPE %d\n", type);
   }
 
   char* result;

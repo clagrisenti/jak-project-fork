@@ -2,6 +2,8 @@
 
 #include <cstring>
 
+#include "common/log/log.h"
+
 #include "game/kernel/common/fileio.h"
 
 namespace jakx {
@@ -46,7 +48,7 @@ char* DecodeFileName(const char* name) {
     } else if (!strncmp(name, "$FLASH/", 7)) {
       result = MakeFileName(FLASH_FILE_TYPE, name + 7, 0);
     } else {
-      printf("[ERROR] DecodeFileName: UNKNOWN FILE NAME %s\n", name);
+      lg::error("[ERROR] DecodeFileName: UNKNOWN FILE NAME %s\n", name);
       result = nullptr;
     }
   } else {

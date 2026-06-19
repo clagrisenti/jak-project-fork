@@ -116,7 +116,7 @@ s32 sceDeci2ExRecv(s32 s, void* buf, u16 len) {
     memcpy(buf, protocols[s - 1].recv_buffer, len);
     return len;
   } else {
-    printf("[DECI2] Error: ExRecv %d, only %d available!\n", len, avail);
+    lg::warn("[DECI2] Error: ExRecv %d, only %d available!\n", len, avail);
     return -1;
   }
 }
@@ -127,11 +127,11 @@ s32 sceDeci2ExRecv(s32 s, void* buf, u16 len) {
 s32 sceDeci2ExSend(s32 s, void* buf, u16 len) {
   ASSERT(s - 1 < protocol_count);
   if (!sending_driver) {
-    printf("sceDeci2ExSend called at illegal time!\n");
+    lg::info("sceDeci2ExSend called at illegal time!\n");
   }
 
   if (&protocols[s - 1] != sending_driver) {
-    printf("sceDeci2ExSend called with the wrong socket!\n");
+    lg::info("sceDeci2ExSend called with the wrong socket!\n");
   }
 
   server->send_data(buf, len);

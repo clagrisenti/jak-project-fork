@@ -1,5 +1,7 @@
 #include "BucketRenderer.h"
 
+#include "common/log/log.h"
+
 #include "fmt/format.h"
 #include "third-party/imgui/imgui.h"
 
@@ -54,7 +56,7 @@ void EmptyBucketRenderer::render(DmaFollower& dma,
     auto first_tag = dma.current_tag();
     dma.read_and_advance();
     if (first_tag.kind != DmaTag::Kind::CNT || first_tag.qwc != 0) {
-      fmt::print("Bucket renderer {} ({}) was supposed to be empty, but wasn't\n", m_my_id, m_name);
+      lg::print("Bucket renderer {} ({}) was supposed to be empty, but wasn't\n", m_my_id, m_name);
       ASSERT(false);
     }
   }
@@ -80,11 +82,11 @@ void PrintRenderer::render(DmaFollower& dma,
 
   auto transfers = 0;
   // print the entire chain
-  fmt::print("START {} DMA!!!!!!!\n", m_name);
+  lg::print("START {} DMA!!!!!!!\n", m_name);
   while (dma.current_tag_offset() != render_state->next_bucket) {
     auto dmatag = dma.current_tag();
     auto data = dma.read_and_advance();
-    printf(
+    lg::info(
         "dma transfer %d:\n%ssize: %d\nvif0: %s, data: %d\nvif1: %s, data: %d, imm: "
         "%d\n\n",
         transfers, dmatag.print().c_str(), data.size_bytes, data.vifcode0().print().c_str(),
@@ -92,7 +94,7 @@ void PrintRenderer::render(DmaFollower& dma,
         data.vifcode1().immediate);
     transfers++;
   }
-  printf("transfers: %d\n\n", transfers);
+  lg::info("transfers: %d\n\n", transfers);
 }
 
 void SharedRenderState::reset() {

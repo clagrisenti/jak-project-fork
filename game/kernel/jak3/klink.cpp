@@ -2,6 +2,7 @@
 
 #include "common/common_types.h"
 #include "common/goal_constants.h"
+#include "common/log/log.h"
 #include "common/symbols.h"
 
 #include "game/kernel/common/fileio.h"
@@ -46,9 +47,9 @@ void link_control::jak3_begin(Ptr<uint8_t> object_file,
 
     if (link_debug_printfs) {
       char* goal_name = object_file.cast<char>().c();
-      printf("link %s\n", m_object_name);
-      printf("link_control::begin %c%c%c%c\n", goal_name[0], goal_name[1], goal_name[2],
-             goal_name[3]);
+      lg::info("link %s\n", m_object_name);
+      lg::info("link_control::begin %c%c%c%c\n", goal_name[0], goal_name[1], goal_name[2],
+               goal_name[3]);
     }
 
     // points to the beginning of the linking data
@@ -68,13 +69,13 @@ void link_control::jak3_begin(Ptr<uint8_t> object_file,
       ASSERT(false);
     }
     if (link_debug_printfs) {
-      printf("Object file header:\n");
-      printf(" GOAL ver %d.%d obj %d len %d\n", ofh->goal_version_major, ofh->goal_version_minor,
-             ofh->object_file_version, ofh->link_block_length);
-      printf(" segment count %d\n", ofh->segment_count);
+      lg::info("Object file header:\n");
+      lg::info(" GOAL ver %d.%d obj %d len %d\n", ofh->goal_version_major, ofh->goal_version_minor,
+               ofh->object_file_version, ofh->link_block_length);
+      lg::info(" segment count %d\n", ofh->segment_count);
       for (int i = 0; i < N_SEG; i++) {
-        printf(" seg %d link 0x%04x, 0x%04x data 0x%04x, 0x%04x\n", i, ofh->link_infos[i].offset,
-               ofh->link_infos[i].size, ofh->code_infos[i].offset, ofh->code_infos[i].size);
+        lg::info(" seg %d link 0x%04x, 0x%04x data 0x%04x, 0x%04x\n", i, ofh->link_infos[i].offset,
+                 ofh->link_infos[i].size, ofh->code_infos[i].offset, ofh->code_infos[i].size);
       }
     }
 
@@ -91,21 +92,21 @@ void link_control::jak3_begin(Ptr<uint8_t> object_file,
         // the link block is outside our heap, or in the top of our heap.  It's somebody else's
         // problem.
         if (link_debug_printfs) {
-          printf("Link block somebody else's problem\n");
+          lg::info("Link block somebody else's problem\n");
         }
 
         if (m_heap->base.offset <= m_object_data.offset &&    // above heap base
             m_object_data.offset < m_heap->top.offset &&      // less than heap top (not needed?)
             m_object_data.offset < m_heap->current.offset) {  // less than heap current
           if (link_debug_printfs) {
-            printf("Code block in the heap, kicking it out for copy into heap\n");
+            lg::info("Code block in the heap, kicking it out for copy into heap\n");
           }
           m_heap->current = m_object_data;
         }
       } else {
         // in our heap, we need to move it so we can free up its space later on
         if (link_debug_printfs) {
-          printf("Link block needs to be moved!\n");
+          lg::info("Link block needs to be moved!\n");
         }
 
         // allocate space for a new one
@@ -119,7 +120,7 @@ void link_control::jak3_begin(Ptr<uint8_t> object_file,
         // if we can save some memory here
         if (old_link_block.offset < m_heap->current.offset) {
           if (link_debug_printfs) {
-            printf("Kick out old link block\n");
+            lg::info("Kick out old link block\n");
           }
           m_heap->current = old_link_block;
         }
@@ -150,7 +151,7 @@ void link_control::jak3_begin(Ptr<uint8_t> object_file,
     if (version == 4 || version == 2) {
       // it's a v4 produced by opengoal... lets just try using jak2's linker
       m_version = version;
-      printf("got version 4, falling back to jak1/jak2\n");
+      lg::info("got version 4, falling back to jak1/jak2\n");
       jak1_jak2_begin(object_file, name, size, heap, flags);
       return;
     }
@@ -187,7 +188,7 @@ void link_control::jak3_begin(Ptr<uint8_t> object_file,
             m_object_data.offset < m_heap->top.offset &&      // less than heap top (not needed?)
             m_object_data.offset < m_heap->current.offset) {  // less than heap current
           if (link_debug_printfs) {
-            printf("Code block in the heap, kicking it out for copy into heap\n");
+            lg::info("Code block in the heap, kicking it out for copy into heap\n");
           }
           m_heap->current = m_object_data;
         }
@@ -242,7 +243,7 @@ void link_control::jak3_begin(Ptr<uint8_t> object_file,
         // we'll be relying on the linking process to copy the data as needed.l
         if (old_link_block < m_heap->current.c()) {
           if (link_debug_printfs) {
-            printf("Kick out old link block\n");
+            lg::info("Kick out old link block\n");
           }
           m_heap->current.offset = old_link_block - g_ee_main_mem;
         }
@@ -306,7 +307,7 @@ uint32_t link_control::jak3_work_v5() {
     m_link_segments_table = (SegmentInfoV5*)link_data;
     /*
     for (int i = 0; i < m_n_segments; i++) {
-      printf(" %d: reloc %d, data %d, size %d, magic %d\n", i, m_link_segments_table[i].relocs,
+      lg::info(" %d: reloc %d, data %d, size %d, magic %d\n", i, m_link_segments_table[i].relocs,
              m_link_segments_table[i].data, m_link_segments_table[i].size,
              m_link_segments_table[i].magic);
     }
@@ -667,7 +668,7 @@ uint32_t link_control::jak3_work_opengoal() {
                   ofh->code_infos[seg_id].size);
         }
       } else {
-        printf("UNHANDLED SEG ID IN WORK V3 STATE 1\n");
+        lg::info("UNHANDLED SEG ID IN WORK V3 STATE 1\n");
       }
     }
 
@@ -723,7 +724,7 @@ uint32_t link_control::jak3_work_opengoal() {
   }
 
   else {
-    printf("WORK v3 INVALID STATE\n");
+    lg::warn("WORK v3 INVALID STATE\n");
     return 1;
   }
 }
@@ -800,7 +801,7 @@ Ptr<uint8_t> link_and_exec(Ptr<uint8_t> data,
                            uint32_t flags,
                            bool jump_from_c_to_goal) {
   if (link_busy()) {
-    printf("-------------> saved link is busy\n");
+    lg::info("-------------> saved link is busy\n");
     // probably won't end well...
   }
   link_control lc;
@@ -901,7 +902,7 @@ uint32_t link_control::jak3_work_v2_v4() {
     if (m_heap_gap <
         OBJ_V2_CLOSE_ENOUGH) {  // close enough, don't relocate the object, just expand the heap
       if (link_debug_printfs) {
-        printf("[work_v2] close enough, not moving\n");
+        lg::info("[work_v2] close enough, not moving\n");
       }
       m_heap->current = m_object_data + m_code_size;
       if (m_heap->top.offset <= m_heap->current.offset) {
@@ -923,8 +924,8 @@ uint32_t link_control::jak3_work_v2_v4() {
         // allocate on heap, will have no gap
         m_object_data = kmalloc(m_heap, m_code_size, 0, "data-segment");
         if (link_debug_printfs) {
-          printf("[work_v2] moving from 0x%x to 0x%x\n", m_original_object_location.offset,
-                 m_object_data.offset);
+          lg::info("[work_v2] moving from 0x%x to 0x%x\n", m_original_object_location.offset,
+                   m_object_data.offset);
         }
         if (!m_object_data.offset) {
           MsgErr("dkernel: unable to malloc %d bytes for data-segment\n", m_code_size);
@@ -1053,7 +1054,7 @@ uint32_t link_control::jak3_work_v2_v4() {
           }
           name = m_reloc_ptr.cast<char>().c();
           if (link_debug_printfs) {
-            printf("[work_v2] symlink: %s\n", name);
+            lg::info("[work_v2] symlink: %s\n", name);
           }
           goalObj = jak3::intern_from_c(-1, 0, name).cast<u8>();
         } else {
@@ -1064,7 +1065,7 @@ uint32_t link_control::jak3_work_v2_v4() {
           }
           name = m_reloc_ptr.cast<char>().c();
           if (link_debug_printfs) {
-            printf("[work_v2] symlink -type: %s\n", name);
+            lg::info("[work_v2] symlink -type: %s\n", name);
           }
           goalObj = jak3::intern_type_from_c(-1, 0, name, nMethods).cast<u8>();
         }

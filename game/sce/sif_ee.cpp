@@ -4,6 +4,7 @@
 #include <cstring>
 #include <unordered_map>
 
+#include "common/log/log.h"
 #include "common/util/Assert.h"
 #include "common/util/FileUtil.h"
 
@@ -61,7 +62,7 @@ int sceSifLoadModule(const char* name, int arg_size, const char* args) {
 
     for (int i = 0; i < cnt; i++) {
       if (iop->overlord_argv[i])
-        printf("arg %d : %s\n", i, iop->overlord_argv[i]);
+        lg::info("arg %d : %s\n", i, iop->overlord_argv[i]);
     }
     iop->set_ee_main_mem(g_ee_main_mem);
     iop->send_status(IOP_Status::IOP_OVERLORD_INIT);
@@ -119,7 +120,7 @@ s32 sceOpen(const char* filename, s32 flag) {
     } break;
   }
   if (!fp) {
-    printf("[SCE] sceOpen(%s) failed.\n", name.c_str());
+    lg::info("[SCE] sceOpen(%s) failed.\n", name.c_str());
     return -1;
   }
 
@@ -144,7 +145,7 @@ s32 sceClose(s32 fd) {
     sce_fds.erase(fd);
     return 0;
   } else {
-    printf("[SCE] sceClose called on invalid fd\n");
+    lg::info("[SCE] sceClose called on invalid fd\n");
     return 0;
   }
 }

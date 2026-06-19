@@ -316,7 +316,7 @@ FieldPrint get_field_print(const std::string& str) {
     c1 = next();
   }
   if (c1 != 'T' && c1 == 'd') {
-    printf("HACK: skipping %s\n", str.data());
+    lg::info("HACK: skipping %s\n", str.data());
     return handle_custom_prints(field_print, str);
   }
   ASSERT(c1 == 'T');
@@ -962,7 +962,7 @@ int identify_float_field(int idx,
   auto& float_move = function.ir2.atomic_ops->ops.at(idx++);
   if (!is_op_2(float_move.get(), SimpleExpression::Kind::FPR_TO_GPR, make_gpr(Reg::A2),
                make_fpr(0))) {
-    printf("bad float move: %s\n", float_move->to_string(function.ir2.env).c_str());
+    lg::warn("bad float move: %s\n", float_move->to_string(function.ir2.env).c_str());
     ASSERT(false);
   }
 
@@ -1029,11 +1029,11 @@ bool get_ptr_offset_constant_nonzero(const SimpleExpression& math, Register base
 bool get_ptr_offset(AtomicOp* ir, Register dst, Register base, int* result) {
   auto as_set = dynamic_cast<SetVarOp*>(ir);
   if (!as_set) {
-    printf("not a set, actual type: %s\n", typeid(*ir).name());
+    lg::warn("not a set, actual type: %s\n", typeid(*ir).name());
     return false;
   }
   if (as_set->dst().reg() != dst) {
-    printf("bad dst");
+    lg::warn("bad dst");
     return false;
   }
 
@@ -1043,11 +1043,11 @@ bool get_ptr_offset(AtomicOp* ir, Register dst, Register base, int* result) {
 bool get_ptr_offset_load_var_op(AtomicOp* ir, Register dst, Register base, int* result) {
   auto as_load = dynamic_cast<LoadVarOp*>(ir);
   if (!as_load) {
-    printf("not a set, actual type: %s\n", typeid(*ir).name());
+    lg::warn("not a set, actual type: %s\n", typeid(*ir).name());
     return false;
   }
   if (as_load->get_set_destination().reg() != dst) {
-    printf("bad dst");
+    lg::warn("bad dst");
     return false;
   }
 
@@ -1080,7 +1080,7 @@ int identify_array_field(int idx,
   }
 
   if (!ptr) {
-    printf("bad get ptr offset %s\n", get_op->to_string(function.ir2.env).c_str());
+    lg::warn("bad get ptr offset %s\n", get_op->to_string(function.ir2.env).c_str());
     ASSERT(false);
   }
   if (result->is_basic) {
@@ -1123,7 +1123,7 @@ int identify_struct_inline_field(int idx,
   auto& get_op = function.ir2.atomic_ops->ops.at(idx++);
   int offset = 0;
   if (!get_ptr_offset(get_op.get(), make_gpr(Reg::A2), make_gpr(Reg::GP), &offset)) {
-    printf("bad get ptr offset %s\n", get_op->to_string(function.ir2.env).c_str());
+    lg::warn("bad get ptr offset %s\n", get_op->to_string(function.ir2.env).c_str());
     // ASSERT(false);
   }
   if (result->is_basic) {
@@ -1219,7 +1219,7 @@ int identify_cstring_field(int idx,
       offset = load_info.offset;
       comment = "field uses ~g print with a quadword load!";
     } else {
-      printf("bad get ptr offset %s\n", get_op->to_string(function.ir2.env).c_str());
+      lg::warn("bad get ptr offset %s\n", get_op->to_string(function.ir2.env).c_str());
       ASSERT(false);
     }
   }
@@ -1318,8 +1318,8 @@ int detect(int idx, Function& function, LinkedObjectFile& file, TypeInspectorRes
   }
 
   else {
-    printf("couldn't do %s, %s, adding unknown field\n", sstr->c_str(),
-           first_get_op->to_string(function.ir2.env).c_str());
+    lg::info("couldn't do %s, %s, adding unknown field\n", sstr->c_str(),
+             first_get_op->to_string(function.ir2.env).c_str());
     // if all else fails, create an unknown field so the rest of the inspect can pass.
     Field unknown("UNKNOWN", TypeSpec("UNKNOWN"), -1);
     unknown.set_comment("field could not be read.");
@@ -1361,7 +1361,7 @@ int detect(int idx, Function& function, LinkedObjectFile& file, TypeInspectorRes
   }
 
   if (!call_op) {
-    printf("bad call\n");
+    lg::error("bad call\n");
     // ASSERT(false);
     return -1;
   }
@@ -1380,7 +1380,7 @@ std::string inspect_inspect_method(Function& inspect_method,
   TypeInspectorResult result;
   ASSERT(type_name == inspect_method.guessed_name.type_name);
   if (inspect_method.name() == "(method 3 process-tree)") {
-    printf("HACK: skipping method\n");
+    lg::info("HACK: skipping method\n");
     return fmt::format(";; {} TODO: skipped!\n", type_name);
   }
   TypeFlags flags;

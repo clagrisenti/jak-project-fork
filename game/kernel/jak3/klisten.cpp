@@ -2,6 +2,7 @@
 
 #include "kmachine.h"
 
+#include "common/listener_common.h"
 #include "common/log/log.h"
 #include "common/symbols.h"
 #include "common/util/string_util.h"
@@ -82,7 +83,7 @@ void ProcessListenerMessage(Ptr<char> msg) {
       ClearPending();
       break;
     case LTT_MSG_PRINT_SYMBOLS:
-      printf("[ERROR] unsupported message kind LTT_MSG_PRINT_SYMBOLS (NYI)\n");
+      lg::error("[ERROR] unsupported message kind LTT_MSG_PRINT_SYMBOLS (NYI)\n");
       break;
     case LTT_MSG_RESET:
       MasterExit = RuntimeExitStatus::RESTART_RUNTIME;

@@ -88,7 +88,7 @@ Ptr<u8> GetNextDGO(u32* lastObjectFlag) {
   } else {
     // I don't see how this case can happen unless there's a bug. The game does check for this and
     // nothing in this case. (maybe from GOAL this can happen?)
-    printf("last message not set!\n");
+    lg::info("last message not set!\n");
   }
   return buffer;
 }

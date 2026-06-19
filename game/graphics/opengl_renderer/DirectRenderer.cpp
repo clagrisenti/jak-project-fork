@@ -579,7 +579,7 @@ u32 get_direct_qwc_or_nop(const VifCode& code) {
         return code.immediate;
       }
     default:
-      printf("expected direct, got %s\n", code.print().c_str());
+      lg::info("expected direct, got %s\n", code.print().c_str());
       ASSERT(false);
   }
 }
@@ -904,37 +904,37 @@ void DirectRenderer::handle_trxdir(u64 dir,
   auto get_tex_func = [&render_state](const std::string& name, u16 tbp) {
     auto result = render_state->texture_pool->lookup(tbp);
     if (!result) {
-      fmt::print("{} tbp {} not found\n", name, tbp);
+      lg::print(fmt::format("{} tbp {} not found\n", name, tbp));
     } else {
-      fmt::print("{} tbp {} found\n", name, tbp);
+      lg::print(fmt::format("{} tbp {} found\n", name, tbp));
     }
     return result;
   };
-  fmt::print("GS TEXTURE COPY --\n");
-  fmt::print("src w/psm: {}/{} dst w/psm: {}/{}\n", m_blit_buf_state.sbw, m_blit_buf_state.spsm,
-             m_blit_buf_state.dbw, m_blit_buf_state.dpsm);
+  lg::print("GS TEXTURE COPY --\n");
+  lg::print("src w/psm: {}/{} dst w/psm: {}/{}\n", m_blit_buf_state.sbw, m_blit_buf_state.spsm,
+            m_blit_buf_state.dbw, m_blit_buf_state.dpsm);
   switch (dir) {
     case 0: {  // host->local
-      fmt::print("-- FROM EE\n");
+      lg::print("-- FROM EE\n");
       auto dst_tex = get_tex_func("dst", m_blit_buf_state.dbp);
       (void)dst_tex;
       // ASSERT_MSG(false, "nyi trxdir host->local");
     } break;
     case 1: {  // local->host
-      fmt::print("-- FROM GS\n");
+      lg::print("-- FROM GS\n");
       auto src_tex = get_tex_func("src", m_blit_buf_state.sbp);
       (void)src_tex;
       // ASSERT_MSG(false, "nyi trxdir local->host");
     } break;
     case 2: {  // local->local
-      fmt::print("-- GS <-> GS\n");
+      lg::print("-- GS <-> GS\n");
       auto src_tex = get_tex_func("src", m_blit_buf_state.sbp);
       auto dst_tex = get_tex_func("dst", m_blit_buf_state.dbp);
       (void)src_tex;
       (void)dst_tex;
     } break;
     case 3:  // disable
-      fmt::print("-- HUH???\n");
+      lg::print("-- HUH???\n");
       ASSERT_MSG(false, "nyi trxdir disable");
       break;
   }
