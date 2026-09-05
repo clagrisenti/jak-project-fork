@@ -1,6 +1,7 @@
 // cppcheck-suppress-file unusedLabels
 //--------------------------MIPS2C---------------------
 // clang-format off
+#include "common/log/log.h"
 #include "game/mips2c/mips2c_private.h"
 #include "game/kernel/jak3/kscheme.h"
 using ::jak3::intern_from_c;
@@ -980,7 +981,7 @@ block_15:
   // call_addr = c->gprs[t9].du32[0];                  // function call:
   c->sll(v0, ra, 0);                                // sll v0, ra, 0
   // c->jalr(call_addr);                               // jalr ra, t9
-  printf("ERROR: Exceeded max # of grabbable tris!\n");
+  lg::error("ERROR: Exceeded max # of grabbable tris!\n");
   c->addiu(v1, r0, 48);                             // addiu v1, r0, 48
   c->sw(v1, 16, gp);                                // sw v1, 16(gp)
 
@@ -1380,7 +1381,7 @@ block_41:
   // call_addr = c->gprs[t9].du32[0];                  // function call:
   c->sll(v0, ra, 0);                                // sll v0, ra, 0
   // c->jalr(call_addr);                               // jalr ra, t9
-  printf("ERROR: Too many edge verts found in edge grab!\n");
+  lg::error("ERROR: Too many edge verts found in edge grab!\n");
   //beq r0, r0, L31                                 // beq r0, r0, L31
   // nop                                            // sll r0, r0, 0
   goto block_43;                                    // branch always
@@ -1393,7 +1394,7 @@ block_42:
   // call_addr = c->gprs[t9].du32[0];                  // function call:
   c->sll(v0, ra, 0);                                // sll v0, ra, 0
   // c->jalr(call_addr);                               // jalr ra, t9
-  printf("ERROR: Too many edges found in edge grab!\n");
+  lg::error("ERROR: Too many edges found in edge grab!\n");
 
 block_43:
   c->gprs[v0].du64[0] = 0;                          // or v0, r0, r0

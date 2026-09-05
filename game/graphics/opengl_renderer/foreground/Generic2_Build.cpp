@@ -161,7 +161,7 @@ void Generic2::determine_draw_modes(bool enable_at, bool default_fog) {
                    c == GsAlpha::BlendMode::ZERO_OR_FIXED && d == GsAlpha::BlendMode::DEST) {
           current_mode.set_alpha_blend(DrawMode::AlphaBlend::SRC_0_FIX_DST);
         } else {
-          fmt::print("unsupported blend: a {} b {} c {} d {}\n", (int)a, (int)b, (int)c, (int)d);
+          lg::print("unsupported blend: a {} b {} c {} d {}\n", (int)a, (int)b, (int)c, (int)d);
           // ASSERT(false);
         }
       }

@@ -184,8 +184,8 @@ void Merc2::model_mod_blerc_draws(int num_effects,
 
     // check that we have enough room for the finished thing.
     if (effect.mod.vertices.size() > MAX_MOD_VTX) {
-      fmt::print("More mod vertices than MAX_MOD_VTX. {} > {}\n", effect.mod.vertices.size(),
-                 MAX_MOD_VTX);
+      lg::print("More mod vertices than MAX_MOD_VTX. {} > {}\n", effect.mod.vertices.size(),
+                MAX_MOD_VTX);
       ASSERT_NOT_REACHED();
     }
 
@@ -239,15 +239,15 @@ void Merc2::model_mod_draws(int num_effects,
 
     // check that we have enough room for the finished thing.
     if (effect.mod.vertices.size() > MAX_MOD_VTX) {
-      fmt::print("More mod vertices than MAX_MOD_VTX. {} > {}\n", effect.mod.vertices.size(),
-                 MAX_MOD_VTX);
+      lg::print("More mod vertices than MAX_MOD_VTX. {} > {}\n", effect.mod.vertices.size(),
+                MAX_MOD_VTX);
       ASSERT_NOT_REACHED();
     }
 
     // check that we have enough room for unpack
     if (effect.mod.expect_vidx_end > MAX_MOD_VTX) {
-      fmt::print("More mod vertices (temp) than MAX_MOD_VTX. {} > {}\n", effect.mod.expect_vidx_end,
-                 MAX_MOD_VTX);
+      lg::print("More mod vertices (temp) than MAX_MOD_VTX. {} > {}\n", effect.mod.expect_vidx_end,
+                MAX_MOD_VTX);
       ASSERT_NOT_REACHED();
     }
 
@@ -358,7 +358,7 @@ void Merc2::model_mod_draws(int num_effects,
 
       // sanity check
       if (effect.mod.expect_vidx_end != vidx) {
-        fmt::print("---------- BAD {}/{}\n", effect.mod.expect_vidx_end, vidx);
+        lg::print("---------- BAD {}/{}\n", effect.mod.expect_vidx_end, vidx);
         ASSERT(false);
       }
     }
@@ -429,7 +429,7 @@ void Merc2::handle_pc_model(const DmaTransfer& setup,
 
   // each model uses only 1 light.
   if (m_next_free_light >= MAX_LIGHTS) {
-    fmt::print("MERC2 out of lights, consider increasing MAX_LIGHTS\n");
+    lg::print("MERC2 out of lights, consider increasing MAX_LIGHTS\n");
     flush_draw_buckets(render_state, proff, stats);
   }
 
@@ -437,13 +437,13 @@ void Merc2::handle_pc_model(const DmaTransfer& setup,
   int bone_count = model->max_bones + 1;
   if (m_next_free_bone_vector + m_opengl_buffer_alignment + bone_count * 8 >
       MAX_SHADER_BONE_VECTORS) {
-    fmt::print("MERC2 out of bones, consider increasing MAX_SHADER_BONE_VECTORS\n");
+    lg::print("MERC2 out of bones, consider increasing MAX_SHADER_BONE_VECTORS\n");
     flush_draw_buckets(render_state, proff, stats);
   }
 
   // also sanity check that we have enough to draw the model
   if (m_opengl_buffer_alignment + bone_count * 8 > MAX_SHADER_BONE_VECTORS) {
-    fmt::print(
+    lg::print(
         "MERC2 doesn't have enough bones to draw a model, increase MAX_SHADER_BONE_VECTORS\n");
     ASSERT_NOT_REACHED();
   }
@@ -474,7 +474,7 @@ void Merc2::handle_pc_model(const DmaTransfer& setup,
   // next check draws:
   if (lev_bucket->next_free_draw + model->max_draws >= lev_bucket->draws.size()) {
     // out of room, flush
-    fmt::print("MERC2 out of draws, consider increasing MAX_DRAWS_PER_LEVEL\n");
+    lg::print("MERC2 out of draws, consider increasing MAX_DRAWS_PER_LEVEL\n");
     flush_draw_buckets(render_state, proff, stats);
     if (model->max_draws >= lev_bucket->draws.size()) {
       ASSERT_NOT_REACHED_MSG("MERC2 draw buffer not big enough");
@@ -484,7 +484,7 @@ void Merc2::handle_pc_model(const DmaTransfer& setup,
   // same for envmap draws
   if (lev_bucket->next_free_envmap_draw + model->max_draws >= lev_bucket->envmap_draws.size()) {
     // out of room, flush
-    fmt::print("MERC2 out of envmap draws, consider increasing MAX_ENVMAP_DRAWS_PER_LEVEL\n");
+    lg::print("MERC2 out of envmap draws, consider increasing MAX_ENVMAP_DRAWS_PER_LEVEL\n");
     flush_draw_buckets(render_state, proff, stats);
     if (model->max_draws >= lev_bucket->envmap_draws.size()) {
       ASSERT_NOT_REACHED_MSG("MERC2 envmap draw buffer not big enough");
@@ -1279,7 +1279,7 @@ void Merc2::do_draws(const Draw* draw_array,
         int slot = -(draw.texture + 1);
         glBindTexture(GL_TEXTURE_2D, m_anim_slot_array->at(slot));
       } else {
-        fmt::print("Invalid draw.texture is {}, would have crashed.\n", draw.texture);
+        lg::print("Invalid draw.texture is {}, would have crashed.\n", draw.texture);
       }
       last_tex = draw.texture;
     }

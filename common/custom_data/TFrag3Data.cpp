@@ -846,7 +846,7 @@ void print_memory_usage(const tfrag3::Level& lev, int uncompressed_data_size) {
 
   for (const auto& x : known_categories) {
     if (x.second) {
-      lg::print("{:30s} : {:6d} kB {:3.1f}%\n", x.first, x.second / 1024,
+      lg::print("{:30s} : {:6d} kB {:3.1f}%", x.first, x.second / 1024,
                 100.f * (float)x.second / uncompressed_data_size);
     }
   }

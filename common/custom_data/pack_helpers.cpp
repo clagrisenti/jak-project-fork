@@ -10,7 +10,7 @@ constexpr float kMasterOffset = 12000 * 4096;
 std::pair<u64, u16> position_to_cluster_and_offset(float in) {
   in += kMasterOffset;
   if (in < 0) {
-    lg::print("negative: {}\n", in);
+    lg::print("negative: {}", in);
   }
   ASSERT(in >= 0);
   int cluster_cell = (in / kClusterSize);

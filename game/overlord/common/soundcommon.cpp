@@ -5,6 +5,7 @@
 #include <string.h>
 #include <string>
 
+#include "common/log/log.h"
 #include "common/util/Assert.h"
 
 // TODO strcpy_toupper
@@ -33,12 +34,12 @@ void PrintBankInfo(SoundBank* bank) {
   // we dont need this and it spams the console too much
   return;
 
-  printf("Bank %s\n\n", bank->name.data());
+  lg::info("Bank {}\n", bank->name.data());
   for (u32 i = 0; i < bank->sound_count; i++) {
     // Some characters use the full 16 characters (bonelurker-grunt) and dont have a null terminator
     std::string name = std::string(bank->sound[i].name.data(), 16);
-    printf("%d : %16s : min %d max %d curve %d\n", i, name.c_str(),
-           bank->sound[i].fallof_params & 0x3fff, (bank->sound[i].fallof_params >> 14) & 0x3fff,
-           bank->sound[i].fallof_params >> 28);
+    lg::info("{} : {} : min {} max {} curve {}", i, name.c_str(),
+             bank->sound[i].fallof_params & 0x3fff, (bank->sound[i].fallof_params >> 14) & 0x3fff,
+             bank->sound[i].fallof_params >> 28);
   }
 }

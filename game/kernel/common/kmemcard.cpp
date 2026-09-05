@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include "common/log/log.h"
 #include "common/util/Assert.h"
 #include "common/util/FileUtil.h"
 #include "common/util/Timer.h"
@@ -58,11 +59,11 @@ using namespace ee;
 template <typename... Args>
 void mc_print(const std::string& str, Args&&... args) {
   if (memcard_debug) {
-    fmt::print("[MC] ");
+    lg::print("[MC] ");
     if (!str.empty() && str.back() == '\n') {
-      fmt::print(fmt::runtime(str), std::forward<Args>(args)...);
+      lg::print(fmt::format(fmt::runtime(str), std::forward<Args>(args)...));
     } else {
-      fmt::print(fmt::runtime(str + '\n'), std::forward<Args>(args)...);
+      lg::print(fmt::format(fmt::runtime(str + '\n'), std::forward<Args>(args)...));
     }
   }
 }
@@ -302,7 +303,7 @@ void pc_game_save_synch() {
       op.result = McStatusCode::INTERNAL_ERROR;
     }
   } else {
-    fmt::print("[MC] Error opening file, errno - {}", errno);
+    lg::print("[MC] Error opening file, errno - {}", errno);
     op.operation = MemoryCardOperationKind::NO_OP;
     op.result = McStatusCode::INTERNAL_ERROR;
   }
@@ -540,7 +541,7 @@ void MC_run() {
  * Why is this a memory card func?
  */
 void MC_set_language(s32 l) {
-  printf("Language set to %d\n", l);
+  lg::info("Language set to {}", l);
   language = l;
 }
 
@@ -657,19 +658,19 @@ void MC_makefile(s32 port, s32 size) {
     sceMcSync(0, &cmd, &fd);
 
     if (result < 0) {
-      printf("Can't open file on memcard [%d]\n", result);
+      lg::warn("Can't open file on memcard [{}]\n", result);
     } else {
       // write some random crap into the memory card.
       sceMcWrite(fd, Ptr<u8>(0x1000000).c(), size);
       sceMcSync(0, &cmd, &result);
       if (result != size) {
-        printf("Only written %d bytes\n", result);
+        lg::info("Only written {} bytes\n", result);
       }
       sceMcClose(fd);
       sceMcSync(0, &cmd, &result);
     }
   } else {
-    printf("Can\'t create garbage folder [%d]\n", result);
+    lg::info("Can\'t create garbage folder [{}]\n", result);
   }
 }
 

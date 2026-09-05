@@ -45,16 +45,15 @@ SystemThread& SystemThreadManager::create_thread(const std::string& name) {
  */
 void SystemThreadManager::print_stats() {
   double total_user = 0, total_kernel = 0;
-  printf("%8s | %5s | %5s\n", "Name", "User", "Kernel");
-  printf("--------------------------\n");
+  lg::info("{} | {} | {}", "Name", "User", "Kernel");
+  lg::info("--------------------------\n");
   for (int id = 0; id < thread_count; id++) {
     auto& thread = threads[id];
-    printf("%8s | %5.1f | %5.1f\n", thread.name.c_str(), thread.cpu_user * 100.,
-           thread.cpu_kernel * 100.);
+    lg::info("{} | {} | {}", thread.name.c_str(), thread.cpu_user * 100., thread.cpu_kernel * 100.);
     total_kernel += thread.cpu_kernel;
     total_user += thread.cpu_user;
   }
-  printf("%8s | %5.1f | %5.1f\n\n", "#TOTAL#", total_user * 100., total_kernel * 100.);
+  lg::info("{} | {} | {}\n", "#TOTAL#", total_user * 100., total_kernel * 100.);
 }
 
 /*!

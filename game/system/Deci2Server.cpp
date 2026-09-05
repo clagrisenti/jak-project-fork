@@ -129,14 +129,14 @@ void Deci2Server::read_data() {
     auto& prot = d2_drivers[i];
     if (prot.active && prot.protocol) {
       if (handler != -1) {
-        printf("[DECI2] Warning: more than on protocol handler for this message!\n");
+        lg::warn("[DECI2] Warning: more than on protocol handler for this message!\n");
       }
       handler = i;
     }
   }
 
   if (handler == -1) {
-    printf("[DECI2] Warning: no handler for this message, ignoring...\n");
+    lg::warn("[DECI2] Warning: no handler for this message, ignoring...\n");
     unlock();
     return;
   }
@@ -174,7 +174,7 @@ void Deci2Server::read_data() {
 void Deci2Server::send_data(void* buf, u16 len) {
   lock();
   if (!client_connected) {
-    printf("[DECI2] send while not connected, not sending!\n");
+    lg::info("[DECI2] send while not connected, not sending!\n");
   } else {
     uint16_t prog = 0;
     while (prog < len) {

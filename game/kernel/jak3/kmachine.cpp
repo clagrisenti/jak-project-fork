@@ -233,7 +233,7 @@ void InitIOP() {
   int total_len = cmd - overlord_boot_command;
 
   if (modsrc == 0) {
-    printf("Initializing CD library in FAKEISO mode\n");
+    lg::info("Initializing CD library in FAKEISO mode\n");
     if (sceSifLoadModule("host0:bin/overlord.irx", total_len, overlord_boot_command) < 0) {
       MsgErr("loading overlord.irx <3> failed\n");
       exit(0);
@@ -246,7 +246,7 @@ void InitIOP() {
     MsgErr("MC driver init failed %d\n", rv);
     exit(0);
   }
-  printf("InitIOP OK\n");
+  lg::info("InitIOP OK\n");
 }
 
 int InitMachine() {
@@ -284,17 +284,17 @@ int InitMachine() {
   } else {
     ee::sceDeci2Disable();  // added
   }
-  printf("InitSound\n");
+  lg::info("InitSound\n");
   InitSound();
-  printf("InitRPC\n");
+  lg::info("InitRPC\n");
   InitRPC();
   reset_output();
   clear_print();
   auto status = InitHeapAndSymbol();
   if (status >= 0) {
-    printf("InitListenerConnect\n");
+    lg::info("InitListenerConnect\n");
     InitListenerConnect();
-    printf("InitCheckListener\n");
+    lg::info("InitCheckListener\n");
     InitCheckListener();
     Msg(6, "kernel: machine started\n");
     return 0;
@@ -581,7 +581,7 @@ void InitMachineScheme() {
     kernel_packages->value() =
         new_pair(s7.offset + FIX_SYM_GLOBAL_HEAP, *((s7 + FIX_SYM_PAIR_TYPE - 1).cast<u32>()),
                  make_string_from_c("common"), kernel_packages->value());
-    printf("calling play-boot!\n");
+    lg::info("calling play-boot!\n");
     call_goal_function_by_name("play-boot");  // new function for jak2!
   }
 }

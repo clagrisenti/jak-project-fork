@@ -1,5 +1,6 @@
 #include "repl_wrapper.h"
 
+#include "common/log/log.h"
 #include "common/util/FileUtil.h"
 #include "common/util/json_util.h"
 #include "common/util/string_util.h"
@@ -76,7 +77,7 @@ void Wrapper::print_welcome_message(const std::vector<std::string>& loaded_proje
   message += fmt::format("         {} to recompile the active project.\n",
                          fmt::format(fg(fmt::color::cyan), "(mi)"));
   message += fmt::format(fmt::emphasis::bold | fg(fmt::color::orange), "            .\n");
-  fmt::print("{}", message);
+  lg::print(message);
 }
 
 void Wrapper::print_to_repl(const std::string& str) {
@@ -118,7 +119,7 @@ void Wrapper::load_history() {
   if (fs::exists(path)) {
     repl.history_load(path.string());
   } else {
-    fmt::print("Couldn't locate REPL history file at '{}'\n", path.string());
+    lg::print(fmt::format("Couldn't locate REPL history file at '{}'", path.string()));
   }
 }
 

@@ -38,18 +38,18 @@ std::optional<u32> SFXBlock::GetSoundByName(const char* name) {
 
 void SFXBlock::DebugPrintAllSounds() {
   for (const auto& [name, id] : Names) {
-    printf("%s : %d\n", name.c_str(), id);
+    lg::info("{} : {}", name.c_str(), id);
     const auto& sound = Sounds.at(id);
-    printf(" Vol: %d\n", sound.Vol);
-    printf(" VolGroup: %d\n", sound.VolGroup);
-    printf(" Pan: %d\n", sound.Pan);
-    printf(" InstanceLimit: %d\n", sound.InstanceLimit);
-    printf(" Flags: 0x%x\n", sound.Flags.flags);
-    printf(" User: 0x%x 0x%x 0x%x 0x%x\n", sound.UserData.data[0], sound.UserData.data[1],
-           sound.UserData.data[2], sound.UserData.data[3]);
-    printf(" Grains\n");
+    lg::info(" Vol: {}", sound.Vol);
+    lg::info(" VolGroup: {}", sound.VolGroup);
+    lg::info(" Pan: {}", sound.Pan);
+    lg::info(" InstanceLimit: {}", sound.InstanceLimit);
+    lg::info(" Flags: 0x{0:#x}", sound.Flags.flags);
+    lg::info(" User: 0x{0:#x} 0x{1:#x} 0x{3:#x} 0x{3:#x}", sound.UserData.data[0],
+             sound.UserData.data[1], sound.UserData.data[2], sound.UserData.data[3]);
+    lg::info(" Grains\n");
     for (const auto& grain : sound.Grains) {
-      fmt::print("  {} ({})\n", magic_enum::enum_name(grain.Type), (int)grain.Type);
+      lg::print(fmt::format("  {} ({})\n", magic_enum::enum_name(grain.Type), (int)grain.Type));
     }
   }
 }

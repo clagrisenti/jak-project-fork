@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include "common/log/log.h"
 #include "common/versions/versions.h"
 
 #include "game/kernel/common/fileio.h"
@@ -39,7 +40,7 @@ char* DecodeFileName(const char* name) {
     } else if (!strncmp(name, "$ISO/", 5)) {
       result = MakeFileName(ISO_FILE_TYPE, name + 5, 0);
     } else {
-      printf("[ERROR] DecodeFileName: UNKNOWN FILE NAME %s\n", name);
+      lg::error("[ERROR] DecodeFileName: UNKNOWN FILE NAME {}", name);
       result = nullptr;
     }
   } else {
@@ -168,7 +169,7 @@ char* MakeFileName(int type, const char* name, int new_string) {
   } else if (type == ISO_FILE_TYPE) {
     sprintf(buffer_633, "/out/iso/%s", name);
   } else {
-    printf("UNKNOWN FILE TYPE %d\n", type);
+    lg::warn("UNKNOWN FILE TYPE {}", type);
   }
 
   char* result;

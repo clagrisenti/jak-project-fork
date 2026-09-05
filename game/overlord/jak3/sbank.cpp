@@ -28,10 +28,10 @@ void jak3_overlord_init_globals_sbank() {
 
 // added
 void PrintBanks() {
-  printf("Loaded Banks\n");
+  lg::info("Loaded Banks\n");
   for (int i = 0; i < kNumBanks; i++) {
-    printf(" [%d] %s %s (%d/%d)\n", i, gBanks[i]->m_name1, gBanks[i]->m_name2, gBanks[i]->in_use,
-           gBanks[i]->loaded);
+    lg::info(" [{}] {} {} ({}/{})", i, gBanks[i]->m_name1, gBanks[i]->m_name2, gBanks[i]->in_use,
+             gBanks[i]->loaded);
   }
 }
 

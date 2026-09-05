@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include "common/common_types.h"
+#include "common/log/log.h"
 #include "common/util/Assert.h"
 
 #include "game/sound/common/voice.h"
@@ -80,7 +81,7 @@ void sceSdSetAddr(u32 entry, u32 value) {
       voice->SetLsa(value >> 1);
     } break;
     default:
-      printf("unknown 0x%x\n", reg);
+      lg::info("unknown 0x{0:#x}", reg);
       ASSERT_NOT_REACHED();
       break;
   }

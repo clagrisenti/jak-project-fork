@@ -1,5 +1,7 @@
 #include "Shadow2.h"
 
+#include "common/log/log.h"
+
 #include "third-party/imgui/imgui.h"
 
 Shadow2::Shadow2(const std::string& name, int my_id) : BucketRenderer(name, my_id) {
@@ -156,7 +158,7 @@ void Shadow2::render(DmaFollower& dma, SharedRenderState* render_state, ScopedPr
 
       u32 offset = 4 * vif1.num;
       if (transfer.size_bytes > 16 + 255 * 4) {
-        printf("shadow overflow detected, skipping all shadows for this frame!");
+        lg::warn("shadow overflow detected, skipping all shadows for this frame!");
         while (dma.current_tag_offset() == render_state->next_bucket) {
           dma.read_and_advance();
         }
@@ -196,7 +198,7 @@ void Shadow2::render(DmaFollower& dma, SharedRenderState* render_state, ScopedPr
           buffer_from_mscal6(current_input);
           break;
         default:
-          printf("mscal %d\n", mscal.immediate);
+          lg::info("mscal {}", mscal.immediate);
           ASSERT_NOT_REACHED();
       }
     } else if (vif0.kind == VifCode::Kind::FLUSHA && vif1.kind == VifCode::Kind::DIRECT) {
@@ -210,8 +212,8 @@ void Shadow2::render(DmaFollower& dma, SharedRenderState* render_state, ScopedPr
     }
 
     else {
-      fmt::print("unhandled transfer in shadow2\n{} bytes\n{}\n{}\n", transfer.size_bytes,
-                 vif0.print(), vif1.print());
+      lg::print("unhandled transfer in shadow2\n{} bytes\n{}\n{}\n", transfer.size_bytes,
+                vif0.print(), vif1.print());
     }
   }
 

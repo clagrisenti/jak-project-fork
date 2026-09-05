@@ -11,16 +11,21 @@
 #include "fmt/format.h"
 
 namespace lg {
-
-#ifdef __linux__
-struct LogTime {
-  timeval tv;
-};
+constexpr bool use_log =
+#ifdef NO_LOG
+    false
 #else
-struct LogTime {
-  time_t tim;
-};
+    true
 #endif
+    ;
+
+struct LogTime {
+#ifdef __linux__
+  timeval tv;
+#else
+  time_t tim;
+#endif
+};
 
 // Logging API
 enum class level {
@@ -67,45 +72,66 @@ void log(level log_level, const std::string& format, Args&&... args) {
 
 template <typename... Args>
 void print(const std::string& format, Args&&... args) {
-  std::string formatted_message = fmt::format(fmt::runtime(format), std::forward<Args>(args)...);
-  internal::log_print(formatted_message.c_str());
+  if constexpr (use_log) {
+    std::string formatted_message = fmt::format(fmt::runtime(format), std::forward<Args>(args)...);
+    internal::log_print(formatted_message.c_str());
+  }
 }
+
 template <typename... Args>
 void print(const fmt::text_style& ts, const std::string& format, Args&&... args) {
-  std::string formatted_message = fmt::vformat(ts, format, fmt::make_format_args(args...));
-  internal::log_print(formatted_message.c_str());
+  if constexpr (use_log) {
+    std::string formatted_message = fmt::vformat(ts, format, fmt::make_format_args(args...));
+    internal::log_print(formatted_message.c_str());
+  }
 }
 
 // same as print but uses the C printf instead of fmt
-void printstd(const char* format, va_list arg_list);
+inline void printstd(const char* format, va_list arg_list) {
+  if constexpr (use_log) {
+    internal::log_vprintf(format, arg_list);
+  }
+}
 
 template <typename... Args>
 void trace(const std::string& format, Args&&... args) {
-  log(level::trace, format, std::forward<Args>(args)...);
+  if constexpr (use_log) {
+    log(level::trace, format, std::forward<Args>(args)...);
+  }
 }
 
 template <typename... Args>
 void debug(const std::string& format, Args&&... args) {
-  log(level::debug, format, std::forward<Args>(args)...);
+  if constexpr (use_log) {
+    log(level::debug, format, std::forward<Args>(args)...);
+  }
 }
 
 template <typename... Args>
 void info(const std::string& format, Args&&... args) {
-  log(level::info, format, std::forward<Args>(args)...);
+  if constexpr (use_log) {
+    log(level::info, format, std::forward<Args>(args)...);
+  }
 }
 
 template <typename... Args>
 void warn(const std::string& format, Args&&... args) {
-  log(level::warn, format, std::forward<Args>(args)...);
+  if constexpr (use_log) {
+    log(level::warn, format, std::forward<Args>(args)...);
+  }
 }
 
 template <typename... Args>
 void error(const std::string& format, Args&&... args) {
-  log(level::error, format, std::forward<Args>(args)...);
+  if constexpr (use_log) {
+    log(level::error, format, std::forward<Args>(args)...);
+  }
 }
 
 template <typename... Args>
 void die(const std::string& format, Args&&... args) {
-  log(level::die, format, std::forward<Args>(args)...);
+  if constexpr (use_log) {
+    log(level::die, format, std::forward<Args>(args)...);
+  }
 }
 }  // namespace lg

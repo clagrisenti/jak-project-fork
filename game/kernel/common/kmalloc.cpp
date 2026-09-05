@@ -4,6 +4,7 @@
 #include <cstring>
 
 #include "common/goal_constants.h"
+#include "common/log/log.h"
 
 #include "game/kernel/common/kprint.h"
 #include "game/kernel/common/kscheme.h"
@@ -44,7 +45,7 @@ Ptr<u8> ksmalloc(Ptr<kheapinfo> heap, s32 size, u32 flags, char const* name) {
   (void)heap;
   (void)size;
   (void)name;
-  printf("[ERROR] ksmalloc : cannot be used!\n");
+  lg::error("[ERROR] ksmalloc : cannot be used!\n");
   u32 align = flags & 0xfff;
   Ptr<u8> mem;
 
@@ -90,7 +91,7 @@ Ptr<kheapinfo> kheapstatus(Ptr<kheapinfo> heap) {
   }
 
   for (int i = 0; i < NUM_CATEGORIES; i++) {
-    printf("  %d: %d %d\n", i, MemItemsCount[i], MemItemsSize[i]);
+    lg::info("  {}: {} {}\n", i, MemItemsCount[i], MemItemsSize[i]);
   }
 
   // might not have returned heap in jak 1

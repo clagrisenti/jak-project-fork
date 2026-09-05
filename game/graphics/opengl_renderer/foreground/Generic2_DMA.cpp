@@ -471,8 +471,8 @@ void Generic2::process_dma_jak2(DmaFollower& dma, u32 next_bucket) {
       auto v1 = vif_transfer.vifcode1();
       if (vif_transfer.vifcode0().kind != VifCode::Kind::STCYCL ||
           vif_transfer.vifcode1().kind != VifCode::Kind::UNPACK_V4_32) {
-        fmt::print("failing tag: {} {} {}\n", vif_transfer.vifcode0().print(),
-                   vif_transfer.vifcode1().print(), vif_transfer.size_bytes);
+        lg::print("failing tag: {} {} {}\n", vif_transfer.vifcode0().print(),
+                  vif_transfer.vifcode1().print(), vif_transfer.size_bytes);
       }
       ASSERT(vif_transfer.vifcode0().kind == VifCode::Kind::STCYCL);
       ASSERT(v1.kind == VifCode::Kind::UNPACK_V4_32);

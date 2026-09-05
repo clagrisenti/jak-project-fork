@@ -248,8 +248,8 @@ void InitSound() {
 
 void PrintSounds() {
   for (auto& sound : gSounds) {
-    printf("SOUND %d %s\n", sound.id, sound.name.data);
-    printf(" still playing? %d\n", snd_SoundIsStillPlaying(sound.sound_handle));
+    lg::info("SOUND {} {}", sound.id, sound.name.data);
+    lg::info(" still playing? {}", snd_SoundIsStillPlaying(sound.sound_handle));
   }
 }
 

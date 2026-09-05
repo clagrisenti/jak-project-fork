@@ -1,5 +1,6 @@
 #include "subtitle_editor_db.h"
 
+#include "common/log/log.h"
 #include "common/util/FileUtil.h"
 #include "common/util/json_util.h"
 
@@ -35,7 +36,7 @@ void Jak1SubtitleEditorDB::update() {
         new_entry.move_first = false;
       }
       if (new_entry.move_to.size() != 0 && new_entry.move_to.size() != 3) {
-        fmt::print("Bad subtitle db entry, provide 0 or 3 coordinates for 'move_to' - {}", key);
+        lg::print("Bad subtitle db entry, provide 0 or 3 coordinates for 'move_to' - {}", key);
         continue;
       }
       new_entry.execute_code = val.at("execute_code").get<std::string>();
@@ -47,7 +48,7 @@ void Jak1SubtitleEditorDB::update() {
       }
 
     } catch (std::exception& ex) {
-      fmt::print("Bad subtitle db entry - {} - {}", key, ex.what());
+      lg::print("Bad subtitle db entry - {} - {}", key, ex.what());
     }
   }
 }

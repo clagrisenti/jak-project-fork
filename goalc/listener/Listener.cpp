@@ -175,15 +175,15 @@ bool Listener::connect_to_target(int n_tries, const std::string& ip, int port) {
     return false;
   }
 
-  printf("Got version %d.%d", version_buffer[0], version_buffer[1]);
+  lg::info("Got version {}.{}", version_buffer[0], version_buffer[1]);
   if (version_buffer[0] == GOAL_VERSION_MAJOR && version_buffer[1] == GOAL_VERSION_MINOR) {
-    printf(" OK!\n");
+    lg::info(" OK!");
     m_connected = true;
     rcv_thread = std::thread(&Listener::receive_func, this);
     receive_thread_running = true;
     return true;
   } else {
-    printf(", expected %d.%d. Cannot connect.\n", GOAL_VERSION_MAJOR, GOAL_VERSION_MINOR);
+    lg::info(", expected {}.{}. Cannot connect.", GOAL_VERSION_MAJOR, GOAL_VERSION_MINOR);
     close_socket(listen_socket);
     listen_socket = -1;
     return false;

@@ -2,6 +2,7 @@
 
 #include "common/common_types.h"
 #include "common/goal_constants.h"
+#include "common/log/log.h"
 #include "common/symbols.h"
 
 #include "game/kernel/common/fileio.h"
@@ -151,7 +152,7 @@ void link_control::jakx_begin(Ptr<uint8_t> object_file,
     if (version == 4 || version == 2) {
       // it's a v4 produced by opengoal... lets just try using jak2's linker
       m_version = version;
-      printf("got version 4, falling back to jak1/jak2\n");
+      lg::info("got version 4, falling back to jak1/jak2");
       jak1_jak2_begin(object_file, name, size, heap, flags);
       return;
     }

@@ -48,7 +48,7 @@ void ProgressRenderer::handle_frame(u64 val,
         m_offscreen_mode = true;
         break;
       default:
-        fmt::print("Unknown fbp in ProgressRenderer: {}\n", f.fbp());
+        lg::print(fmt::format("Unknown fbp in ProgressRenderer: {}\n", f.fbp()));
         ASSERT(false);
     }
   }

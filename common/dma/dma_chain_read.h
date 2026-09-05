@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include "common/dma/dma.h"
+#include "common/log/log.h"
 #include "common/util/Assert.h"
 
 /*!
@@ -108,7 +109,7 @@ class DmaFollower {
 
   DmaTransfer advance_and_print_dma(DmaFollower& dma) {
     auto data = dma.read_and_advance();
-    printf(
+    lg::info(
         "dma transfer:\n%ssize: %d\nvif0: %s, data: %d\nvif1: %s, data: %d, imm: "
         "%d\n\n",
         dma.current_tag().print().c_str(), data.size_bytes, data.vifcode0().print().c_str(),

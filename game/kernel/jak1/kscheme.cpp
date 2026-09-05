@@ -704,7 +704,7 @@ Ptr<Symbol> find_symbol_from_c(const char* name) {
     probe = find_symbol_in_area(hash, name, SymbolTable2.offset, s7.offset - 0x10);
     if (probe.offset == 1) {
       // uh oh, both overflowed!
-      printf("[BIG WARNING] symbol table probe double overflow!\n");
+      lg::warn("[BIG WARNING] symbol table probe double overflow!\n");
       return find_symbol_in_fixed_area(hash, name);
     } else {
       return probe;
@@ -721,7 +721,7 @@ Ptr<Symbol> find_symbol_from_c(const char* name) {
     probe =
         find_symbol_in_area(hash, name, s7.offset + FIX_FIXED_SYM_END_OFFSET, LastSymbol.offset);
     if (probe.offset == 1) {
-      printf("[BIG WARNING] symbol table probe double overflow!\n");
+      lg::warn("[BIG WARNING] symbol table probe double overflow!\n");
       return find_symbol_in_fixed_area(hash, name);
     } else {
       return probe;
@@ -978,19 +978,19 @@ u64 type_typep(Ptr<Type> t1, Ptr<Type> t2) {
 u64 method_set(u32 type_, u32 method_id, u32 method) {
   Ptr<Type> type(type_);
   if (method_id > 127)
-    printf("[METHOD SET ERROR] tried to set method %d\n", method_id);
+    lg::error("[METHOD SET ERROR] tried to set method {}", method_id);
 
   auto existing_method = type->get_method(method_id).offset;
 
   if (method == 1) {
     method = 0;
-    printf("[Method Set] got 1, setting null\n");
+    lg::info("[Method Set] got 1, setting null\n");
   } else if (method == 0) {
     // no print, this happens a lot in non-debug mode.
     return 0;
   } else if (method == 2) {
     method = type->parent->get_method(method_id).offset;
-    printf("[Method Set] got 2, inheriting\n");
+    lg::info("[Method Set] got 2, inheriting\n");
   }
 
   // do the set
@@ -1031,10 +1031,10 @@ u64 method_set(u32 type_, u32 method_id, u32 method) {
 
       if (FastLink) {
         // you were saved by EnableMethodSet.  I guess we warn.
-        printf("************ WARNING **************\n");
-        printf("method %d of %s redefined - you must define class heirarchies in order now\n",
-               method_id, info(symAsType->symbol)->str->data());
-        printf("***********************************\n");
+        lg::warn("************ WARNING **************\n");
+        lg::warn("method {} of {} redefined - you must define class heirarchies in order now\n",
+                 method_id, info(symAsType->symbol)->str->data());
+        lg::warn("***********************************\n");
       }
 
       symAsType->get_method(method_id).offset = method;
@@ -1072,10 +1072,10 @@ u64 method_set(u32 type_, u32 method_id, u32 method) {
 
       if (FastLink) {
         // you were saved by EnableMethodSet.  I guess we warn.
-        printf("************ WARNING **************\n");
-        printf("method %d of %s redefined - you must define class heirarchies in order now\n",
-               method_id, info(symAsType->symbol)->str->data());
-        printf("***********************************\n");
+        lg::warn("************ WARNING **************\n");
+        lg::warn("method {} of {} redefined - you must define class heirarchies in order now\n",
+                 method_id, info(symAsType->symbol)->str->data());
+        lg::warn("***********************************\n");
       }
 
       symAsType->get_method(method_id).offset = method;
@@ -1102,7 +1102,7 @@ u64 call_method_of_type(u64 arg, Ptr<Type> type, u32 method_id) {
               (*type_tag).offset);
     }
   }
-  printf("[ERROR] call_method_of_type failed!\n");
+  lg::error("[ERROR] call_method_of_type failed!\n");
   return arg;
 }
 
@@ -1299,7 +1299,7 @@ u64 copy_basic(u32 obj, u32 heap, u32 /*unused*/, u32 pp) {
     // then copy! (minus the type tag, alloc_heap_object already did it for us)
     memcpy(Ptr<u32>(result).c(), Ptr<u32>(obj).c(), size - BASIC_OFFSET);
   } else {
-    printf("DANGER COPY BASIC!\n");
+    lg::error("DANGER COPY BASIC!\n");
     // copy directly (including type tag)
     memcpy(Ptr<u32>(heap - BASIC_OFFSET).c(), Ptr<u32>(obj - BASIC_OFFSET).c(), size);
     result = heap;
@@ -1795,7 +1795,7 @@ s32 InitHeapAndSymbol() {
  * GOAL "load" function for debug loads. Doesn't load off the CD.
  */
 u64 load(u32 file_name_in, u32 heap_in) {
-  printf("LOAD!\n");  // added by me
+  lg::info("LOAD!\n");  // added by me
   Ptr<String> file_name(file_name_in);
   Ptr<kheapinfo> heap(heap_in);
   char decodedName[260];  // could be 256 or 260?
@@ -1827,7 +1827,7 @@ u64 loadc(const char* file_name, kheapinfo* heap, u32 flags) {
   auto loading_pack_sym = Ptr<Symbol>(s7.offset + FIX_SYM_LOADING_PACKAGE);
   auto last_loading_pack = loading_pack_sym->value;
   loading_pack_sym->value = make_ptr(heap).offset;
-  printf("****** CALL TO loadc() ******\n");  // not added by me
+  lg::info("****** CALL TO loadc() ******\n");  // not added by me
   auto name = MakeFileName(CODE_FILE_TYPE, file_name, 0);
   kstrcpy(decodedName, name);
 
