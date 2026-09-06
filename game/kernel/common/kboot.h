@@ -16,6 +16,7 @@ enum class RuntimeExitStatus : u8 {
   RESTART_RUNTIME = 1,
   EXIT = 2,
   RESTART_IN_DEBUG = 3,
+  RESTART_IN_RETAIL = 4,
 };
 
 enum class VideoMode : u8 {
