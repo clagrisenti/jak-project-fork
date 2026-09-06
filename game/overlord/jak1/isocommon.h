@@ -112,7 +112,7 @@ struct IsoCommandLoadSingle : public IsoMessage {
 /*!
  * DGO Load State Machine states.
  */
-enum class DgoState {
+enum class DgoState : u8 {
   Init = 0,
   Read_Header = 1,
   Finish_Obj = 2,

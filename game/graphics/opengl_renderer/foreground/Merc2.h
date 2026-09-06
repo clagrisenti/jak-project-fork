@@ -51,7 +51,7 @@ class Merc2 {
 
  private:
   const std::vector<GLuint>* m_anim_slot_array;
-  enum MercDataMemory {
+  enum MercDataMemory : s16 {
     LOW_MEMORY = 0,
     BUFFER_BASE = 442,
     // this negative offset is what broke jak graphics in Dobiestation for a long time.
@@ -174,7 +174,7 @@ class Merc2 {
 
   GLuint m_bones_buffer;
 
-  enum DrawFlags {
+  enum DrawFlags : u8 {
     IGNORE_ALPHA = 1,
     MOD_VTX = 2,
     NO_TEXTURE = 4,

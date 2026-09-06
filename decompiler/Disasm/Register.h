@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <string>
 
+#include "common/common_types.h"
 #include "common/util/Assert.h"
 
 namespace decompiler {
@@ -19,7 +20,7 @@ namespace decompiler {
 // It is important that each register is a unique register ID, and that we don't have gaps.
 
 namespace Reg {
-enum RegisterKind {
+enum RegisterKind : u8 {
   GPR = 0,      // EE General purpose registers, these have nicknames (32 regs)
   FPR = 1,      // EE Floating point registers, just called f0 - f31 (32 regs)
   VF = 2,       // VU0 Floating point vector registers from EE, just called vf0 - vf31 (32 regs)
@@ -31,7 +32,7 @@ enum RegisterKind {
 };
 
 // nicknames for GPRs
-enum Gpr {
+enum Gpr : u8 {
   R0 = 0,   // hardcoded to zero
   AT = 1,   // temp, not used by GOAL compiler, but used by GOAL's kernel inline assembly (an other
             // places?)
@@ -69,7 +70,7 @@ enum Gpr {
 };
 
 // nicknames for COP0 registers
-enum Cop0 {
+enum Cop0 : u8 {
   INDEX = 0,
   RANDOM = 1,
   ENTRYLO0 = 2,
@@ -107,7 +108,7 @@ enum Cop0 {
 
 // nicknames for COP2 Integer (VI) registers
 // the first 16 are vi0 - vi15, so they don't have nicknames
-enum Vi {
+enum Vi : u8 {
   COP2_STATUS = 16,
   MAC = 17,
   CLIPPING = 18,
@@ -127,7 +128,7 @@ enum Vi {
   MAX_COP2 = 32
 };
 
-enum SpecialRegisters {
+enum SpecialRegisters : u8 {
   PCR0 = 0,
   PCR1 = 1,
   MACRO_Q = 2,

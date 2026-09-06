@@ -111,7 +111,7 @@ class OceanMid {
   } m_constants;
   static_assert(sizeof(Constants) == 0x240);
 
-  enum Vu1Data {
+  enum Vu1Data : u16 {
     IN_BUFFER_0 = VU1_INPUT_BUFFER_BASE,    // 0
     IN_BUFFER_1 = VU1_INPUT_BUFFER_OFFSET,  // 0x76
 

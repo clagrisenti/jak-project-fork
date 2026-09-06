@@ -28,7 +28,7 @@ int ActiveVagStreams;
 void CalculateVAGVolumes(VagCmd* cmd, u32* l_out, u32* r_out);
 void StopVAG(VagCmd* cmd, int /*param_2*/);
 
-enum VolumeCategory {
+enum VolumeCategory : u8 {
   DIALOGUE = 2,  // VAG streams. Copied "dialogue" name from jak 1.
 };
 int MasterVolume[32];

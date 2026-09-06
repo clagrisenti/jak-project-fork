@@ -39,8 +39,11 @@
 #include <sstream>
 #include <vector>
 
+#include "common/common_types.h"
+
 namespace {
-enum EditType { kMatch, kAdd, kRemove, kReplace };
+enum EditType : u8 { kMatch, kAdd, kRemove, kReplace };
+
 std::vector<EditType> CalculateOptimalEdits(const std::vector<size_t>& left,
                                             const std::vector<size_t>& right) {
   std::vector<std::vector<double> > costs(left.size() + 1, std::vector<double>(right.size() + 1));

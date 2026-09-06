@@ -9,7 +9,7 @@
 constexpr int BITS_PER_BYTE = 8;
 template <typename T>
 std::optional<Range<int>> get_bit_range(T value) {
-  enum State { INITIAL_ZEROS, ONES, TRAILING_ZEROS } state = INITIAL_ZEROS;
+  enum State : u8 { INITIAL_ZEROS, ONES, TRAILING_ZEROS } state = INITIAL_ZEROS;
 
   int start_bit = 0;
   int end_bit = 0;

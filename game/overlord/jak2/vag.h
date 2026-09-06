@@ -9,7 +9,7 @@
 
 namespace jak2 {
 
-enum VagCmdByte {
+enum VagCmdByte : u8 {
   // BYTE1 = 1,   // init to 0 (playing?)
   // PAUSED = 2,  // init to 1 (paused?)
   BYTE4 = 4,  // streaming?

@@ -20,7 +20,7 @@ Ptr<u8> FileLoad(char* name, Ptr<kheapinfo> heap, Ptr<u8> memory, u32 malloc_fla
 extern char buffer_633[512];
 
 // GOAL File Types
-enum GoalFileType {
+enum GoalFileType : u16 {
   LISTENER_TO_KERNEL_FILE_TYPE = 1,
   KERNEL_TO_LISTENER_FILE_TYPE = 2,
   CODE_FILE_TYPE = 3,

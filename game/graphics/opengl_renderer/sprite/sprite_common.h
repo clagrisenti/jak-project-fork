@@ -161,7 +161,7 @@ static_assert(sizeof(SpriteVecData2d) == 48);
  * The layout of VU1 data memory, in quadword addresses
  * The lower 800 qw's hold two buffers for double buffering drawing/loading.
  */
-enum SpriteDataMem {
+enum SpriteDataMem : u16 {
   // these three can have an offset of 0 or 400 depending on which buffer
   Header = 0,   // number of sprites (updated per chunk)
   Vector = 1,   // vector data (updated per chunk)
@@ -200,7 +200,7 @@ struct SpriteHud2DPacket {
 /*!
  * The layout of VU1 code memory
  */
-enum SpriteProgMem {
+enum SpriteProgMem : u8 {
   Init = 0,                 // the sprite initialization program. runs once per frame.
   Sprites2dGrp0 = 3,        // world space 2d sprites
   Sprites2dHud_Jak1 = 109,  // hud sprites

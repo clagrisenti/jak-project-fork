@@ -1,7 +1,8 @@
 #pragma once
 
+#include "common/common_types.h"
 namespace emitter {
-enum class InstructionSet { X86, ARM64 };
+enum class InstructionSet : u8 { X86, ARM64 };
 
 //! Native target for tests that execute generated code.
 //! Compiler targets must be selected explicitly.

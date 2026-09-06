@@ -145,7 +145,7 @@ class OceanTexture {
     static_assert(sizeof(Vertex) == 16);
   } m_mipmap;
 
-  enum TexVu1Data {
+  enum TexVu1Data : u16 {
     BUF0 = 384,
     BUF1 = 583,
     DEST0 = 782,
@@ -153,7 +153,7 @@ class OceanTexture {
     CONSTANTS = 985,
   };
 
-  enum TexVu1Prog { START = 0, REST = 2, DONE = 4 };
+  enum TexVu1Prog : u8 { START = 0, REST = 2, DONE = 4 };
 
   static constexpr int NUM_FRAG_LOOPS = 9;
 };

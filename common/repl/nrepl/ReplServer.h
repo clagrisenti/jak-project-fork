@@ -5,7 +5,7 @@
 
 #include "common/cross_sockets/XSocketServer.h"
 
-enum ReplServerMessageType { PING = 0, EVAL = 10, SHUTDOWN = 20 };
+enum ReplServerMessageType : u8 { PING = 0, EVAL = 10, SHUTDOWN = 20 };
 
 struct ReplServerHeader {
   u32 length;

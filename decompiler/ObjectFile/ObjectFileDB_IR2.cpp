@@ -48,7 +48,7 @@ void ObjectFileDB::process_object_file_data(
   ir2_setup_labels(config, data);
   ir2_do_segment_analysis_phase2(TOP_LEVEL_SEGMENT, config, data);
   if (data.linked_data.functions_by_seg.size() == 3) {
-    enum { DEFPART, DEFSTATE, DEFSKELGROUP } step = DEFPART;
+    enum : u8 { DEFPART, DEFSTATE, DEFSKELGROUP } step = DEFPART;
     try {
       run_defpartgroup(data.linked_data.functions_by_seg.at(TOP_LEVEL_SEGMENT).front(),
                        config.part_group_table);

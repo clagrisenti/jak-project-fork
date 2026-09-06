@@ -41,7 +41,7 @@ struct CPadInfo;
 namespace ee {
 
 // controller modes (not in the lib)
-enum PadMode {
+enum PadMode : u8 {
   Controller = 4,
   DualShock = 7,
   DualShock2 = DualShock,

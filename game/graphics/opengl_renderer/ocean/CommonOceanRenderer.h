@@ -22,7 +22,7 @@ class CommonOceanRenderer {
 
   void handle_mid_adgif(const u8* data, u32 offset);
 
-  enum VertexBucket {
+  enum VertexBucket : u8 {
     RGB_TEXTURE = 0,
     ALPHA = 1,
     ENV_MAP = 2,

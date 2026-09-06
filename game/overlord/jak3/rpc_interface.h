@@ -59,7 +59,7 @@ static_assert(sizeof(SoundIOPInfo) == 0x2d0);
 
 // Common
 
-enum RpcId {
+enum RpcId : u64 {
   Player = 0xfab0,    // sound effects playback
   Loader = 0xfab1,    // sound effects loading.
   LoadToEE = 0xfab2,  // was ramdisk, now just a simple way to load a file to EE memory.
@@ -78,7 +78,7 @@ struct RpcLoadToEEMsg {
 };
 static_assert(sizeof(RpcLoadToEEMsg) == 32);
 
-enum LoadToEEFno {
+enum LoadToEEFno : u8 {
   LOAD_FILE = 4,
 };
 
@@ -96,7 +96,7 @@ struct RPC_Dgo_Cmd {
 };
 static_assert(sizeof(RPC_Dgo_Cmd) == 0x40);
 
-enum DgoFno {
+enum DgoFno : u8 {
   LOAD = 0,
   LOAD_NEXT = 1,
   CANCEL = 2,

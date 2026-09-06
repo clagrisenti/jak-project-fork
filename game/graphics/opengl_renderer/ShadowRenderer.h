@@ -20,13 +20,13 @@ class ShadowRenderer : public BucketRenderer {
 
   Vf m_vu_data[1024];
 
-  enum Vu1Data {
+  enum Vu1Data : u16 {
     MATRIX = 0,
     CONSTANTS = 0x370,
     GIF_CONSTANTS = 0x3ac,
   };
 
-  enum Vu1Code {
+  enum Vu1Code : u8 {
     INIT = 10,
   };
 

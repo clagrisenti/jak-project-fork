@@ -26,7 +26,7 @@ enum class ExtractorErrorCode : u8 {
   COMPILATION_BAD_PROJECT_PATH = 4050,
 };
 
-enum GameIsoFlags { FLAG_JAK1_BLACK_LABEL = (1 << 0) };
+enum GameIsoFlags : u8 { FLAG_JAK1_BLACK_LABEL = (1 << 0) };
 
 std::string get_territory_name(int territory);
 

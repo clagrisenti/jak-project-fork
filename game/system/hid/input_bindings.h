@@ -20,9 +20,9 @@
 /// A simple abstraction around the PS2 controller data with some convenience functions for
 /// pulling specific data out if it's useful.
 struct PadData {
-  enum AnalogIndex { LEFT_X = 0, LEFT_Y, RIGHT_X, RIGHT_Y = 3 };
+  enum AnalogIndex : u8 { LEFT_X = 0, LEFT_Y, RIGHT_X, RIGHT_Y = 3 };
 
-  enum ButtonIndex {
+  enum ButtonIndex : u8 {
     SELECT = 0,
     L3,
     R3,
@@ -41,7 +41,7 @@ struct PadData {
     SQUARE = 15
   };
 
-  enum PressureIndex {
+  enum PressureIndex : u8 {
     INVALID_PRESSURE = -1,
     DPAD_RIGHT_PRESSURE = 0,
     DPAD_LEFT_PRESSURE,
@@ -258,7 +258,7 @@ struct InputBinding {
 void to_json(json& j, const InputBinding& obj);
 void from_json(const json& j, InputBinding& obj);
 
-enum InputDeviceType { CONTROLLER = 0, KEYBOARD = 1, MOUSE = 2 };
+enum InputDeviceType : u8 { CONTROLLER = 0, KEYBOARD = 1, MOUSE = 2 };
 
 struct InputBindingInfo {
   s32 sdl_idx;

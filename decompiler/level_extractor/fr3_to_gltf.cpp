@@ -580,7 +580,7 @@ int make_index_buffer_accessor(tinygltf::Model& model, u32 start, u32 count, int
   return accessor_idx;
 }
 
-enum class TexImageKind {
+enum class TexImageKind : u8 {
   RGBA,
   ENVMAP_STRENGTH,
 };
