@@ -237,7 +237,7 @@ Object Interpreter::eval_with_rewind(const Object& obj,
     return eval(obj, env);
   } catch (std::runtime_error& e) {
     if (!disable_printing) {
-      lg::info("-----------------------------------------\n");
+      lg::info("-----------------------------------------");
       lg::info("From object {}\nat {}", obj.inspect().c_str(), reader.db.get_info_for(obj).c_str());
     }
     throw e;

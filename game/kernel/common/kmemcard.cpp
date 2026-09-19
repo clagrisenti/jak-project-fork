@@ -303,7 +303,7 @@ void pc_game_save_synch() {
       op.result = McStatusCode::INTERNAL_ERROR;
     }
   } else {
-    lg::print("[MC] Error opening file, errno - {}", errno);
+    lg::error("[MC] Error opening file, errno - {}", errno);
     op.operation = MemoryCardOperationKind::NO_OP;
     op.result = McStatusCode::INTERNAL_ERROR;
   }
@@ -670,7 +670,7 @@ void MC_makefile(s32 port, s32 size) {
       sceMcSync(0, &cmd, &result);
     }
   } else {
-    lg::info("Can\'t create garbage folder [{}]\n", result);
+    lg::warn("Can\'t create garbage folder [{}]\n", result);
   }
 }
 

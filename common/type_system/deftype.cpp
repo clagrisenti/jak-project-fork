@@ -638,7 +638,7 @@ StructureDefResult parse_structure_def(StructureType* type,
           fmt::format("Process heap underflow in type {}: heap-base is {} vs. auto-detected {}",
                       type->get_name(), flags.heap_base, auto_hb));
       //} else if (flags.heap_base != auto_hb) {
-      //  lg::print("Type {} has manual heap-base ({} vs {}). This is fine. \n", type->get_name(),
+      //  lg::print("Type {} has manual heap-base ({} vs {}). This is fine.", type->get_name(),
       //             flags.heap_base, auto_hb);
     }
   }

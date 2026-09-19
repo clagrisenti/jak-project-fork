@@ -904,9 +904,9 @@ void DirectRenderer::handle_trxdir(u64 dir,
   auto get_tex_func = [&render_state](const std::string& name, u16 tbp) {
     auto result = render_state->texture_pool->lookup(tbp);
     if (!result) {
-      lg::print(fmt::format("{} tbp {} not found\n", name, tbp));
+      lg::print("{} tbp {} not found", name, tbp);
     } else {
-      lg::print(fmt::format("{} tbp {} found\n", name, tbp));
+      lg::print("{} tbp {} found", name, tbp);
     }
     return result;
   };

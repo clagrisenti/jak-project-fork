@@ -394,7 +394,7 @@ void Loader::update_blocking(TexturePool& tex_pool) {
       missing_levels = false;
       for (auto& des : m_desired_levels) {
         if (m_loaded_tfrag3_levels.find(des) == m_loaded_tfrag3_levels.end()) {
-          lg::print("blackout loader doing additional level {}...\n", des);
+          lg::print("blackout loader doing additional level {}...", des);
           missing_levels = true;
         }
       }

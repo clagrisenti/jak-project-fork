@@ -376,7 +376,7 @@ std::vector<std::string> MakeSystem::get_dependencies(const std::string& target)
 
   get_dependencies(target, target, &result, &added_deps);
 
-  lg::print("Successfully found all {} dependencies for target in {:.3f}s\n", result.size(),
+  lg::print("Successfully found all {} dependencies for target in {:.3f}s", result.size(),
             timer.getSeconds());
   return result;
 }
@@ -432,26 +432,29 @@ std::vector<std::string> MakeSystem::filter_dependencies(const std::vector<std::
     }
   }
 
-  lg::print("Found that {} of {} targets do need rebuilding in {:.3f}s\n", result.size(),
+  lg::print("Found that {} of {} targets do need rebuilding in {:.3f}s", result.size(),
             all_deps.size(), timer.getSeconds());
   return result;
 }
 
 namespace {
-void print_input(const std::vector<std::string>& in, char end) {
+std::string print_input(const std::vector<std::string>& in, char end) {
   int i = 0;
   std::string all_names;
-  for (auto& name : in) {
+  std::string res;
+  for (const auto& name : in) {
     if (i++ > 0) {
       all_names += ", ";
     }
     all_names += name;
   }
   if (all_names.length() > 70) {
-    lg::print("{}...{}", all_names.substr(0, 70 - 3), end);
+    res = fmt::format("{}...{}", all_names.substr(0, 70 - 3), end);
   } else {
-    lg::print("{}{}{}", all_names, std::string(70 - all_names.length(), ' '), end);
+    res = fmt::format("{}{}{}", all_names, std::string(70 - all_names.length(), ' '), end);
   }
+
+  return res;
 }
 }  // namespace
 
@@ -488,19 +491,18 @@ bool MakeSystem::make(const std::string& target_in, bool force, bool verbose, bo
   }
 
   Timer make_timer;
-  lg::print("Building {} targets...\n", deps.size());
+  lg::print("Building {} targets...", deps.size());
   int i = 0;
-  for (auto& to_make : deps) {
+  for (const auto& to_make : deps) {
     Timer step_timer;
     auto& rule = m_output_to_step.at(to_make);
     auto& tool = m_tools.at(rule->tool);
     int percent = (100.0 * (1 + (i++)) / (deps.size())) + 0.5;
     if (verbose) {
-      lg::print("[{:3d}%] [{:8s}] {}{}\n", percent, tool->name(), rule->input.at(0),
+      lg::print("[{:3d}%] [{:8s}] {}{}", percent, tool->name(), rule->input.at(0),
                 rule->input.size() > 1 ? ", ..." : "");
     } else {
-      lg::print("[{:3d}%] [{:8s}]       ", percent, tool->name());
-      print_input(rule->input, '\r');
+      lg::print("[{:3d}%] [{:8s}]       {}", percent, tool->name(), print_input(rule->input, ' '));
     }
 
     bool success = false;
@@ -508,10 +510,10 @@ bool MakeSystem::make(const std::string& target_in, bool force, bool verbose, bo
       success = tool->run({rule->input, rule->deps, rule->outputs, rule->arg}, m_path_map);
     } catch (std::exception& e) {
       lg::print("\n");
-      lg::print("Error: {}\n", e.what());
+      lg::error("Error: {}", e.what());
     }
     if (!success) {
-      lg::print("Build failed on {}{}\n", rule->input.at(0), rule->input.size() > 1 ? ", ..." : "");
+      lg::error("Build failed on {}{}", rule->input.at(0), rule->input.size() > 1 ? ", ..." : "");
       throw std::runtime_error("Build failed.");
       return false;
     }
@@ -519,18 +521,17 @@ bool MakeSystem::make(const std::string& target_in, bool force, bool verbose, bo
     const auto seconds = step_timer.getSeconds();
     if (verbose) {
       if (seconds > 0.05) {
-        lg::print(fg(fmt::color::yellow), " {:.3f}\n", seconds);
+        lg::print(fg(fmt::color::yellow), " {:.3f}", seconds);
       } else {
-        lg::print(" {:.3f}\n", seconds);
+        lg::print(" {:.3f}", seconds);
       }
     } else {
       if (seconds > 0.05) {
         lg::print("[{:3d}%] [{:8s}] ", percent, tool->name());
-        lg::print(fg(fmt::color::yellow), "{:.3f} ", seconds);
-        print_input(rule->input, '\n');
+        lg::print(fg(fmt::color::yellow), "{:.3f} {}", seconds, print_input(rule->input, ' '));
       } else {
-        lg::print("[{:3d}%] [{:8s}] {:.3f} ", percent, tool->name(), seconds);
-        print_input(rule->input, '\n');
+        lg::print("[{:3d}%] [{:8s}] {:.3f} {}", percent, tool->name(), seconds,
+                  print_input(rule->input, ' '));
       }
     }
 
@@ -540,8 +541,7 @@ bool MakeSystem::make(const std::string& target_in, bool force, bool verbose, bo
                       seconds, i == deps.size() ? "" : ",");
     }
   }
-  lg::print("\nSuccessfully built all {} targets in {:.3f}s\n", deps.size(),
-            make_timer.getSeconds());
+  lg::print("Successfully built all {} targets in {:.3f}s", deps.size(), make_timer.getSeconds());
   if (gen_report) {
     report_contents += fmt::format("}}, 'total': {}}});", make_timer.getSeconds());
     str_util::replace(report_output, "// DATA ENDS\n",

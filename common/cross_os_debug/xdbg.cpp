@@ -66,7 +66,7 @@ void allow_debugging() {
   // modern Linux has "security features" which prevent processes from accessing memory of others.
   // we disable these for the GOAL runtime process so the debugger can connect.
   if (prctl(PR_SET_PTRACER, PR_SET_PTRACER_ANY) < 0) {
-    lg::info("[Debugger] Failed to PR_SET_PTRACER {}", strerror(errno));
+    lg::error("[Debugger] Failed to PR_SET_PTRACER {}", strerror(errno));
   }
 }
 
@@ -77,13 +77,13 @@ bool attach_and_break(const ThreadID& tid) {
   // SEIZE attaches without halting, but is required to use PTRACE_INTERRUPT in the future.
   auto rv = ptrace(PTRACE_SEIZE, tid.id, nullptr, nullptr);
   if (rv == -1) {
-    lg::info("[Debugger] Failed to attach {}", strerror(errno));
+    lg::error("[Debugger] Failed to attach {}", strerror(errno));
     return false;
   } else {
     // we attached, now send break
     lg::info("[Debugger] PTRACE_ATTACHED! Waiting for process to stop...");
     if (ptrace(PTRACE_INTERRUPT, tid.id, nullptr, nullptr) < 0) {
-      lg::info("[Debugger] Failed to PTRACE_INTERRUPT {}", strerror(errno));
+      lg::error("[Debugger] Failed to PTRACE_INTERRUPT {}", strerror(errno));
       return false;
     }
 
@@ -106,7 +106,7 @@ bool check_stopped(const ThreadID& tid, SignalInfo* out) {
       out->kind = SignalInfo::DISAPPEARED;
       return true;
     }
-    lg::info("[Debugger] Failed to waitpid: {}.", strerror(errno));
+    lg::error("[Debugger] Failed to waitpid: {}.", strerror(errno));
     //    ASSERT(false);  // todo, temp because I think we should never hit this.
     return false;
   }
@@ -148,7 +148,7 @@ bool check_stopped(const ThreadID& tid, SignalInfo* out) {
 bool open_memory(const ThreadID& tid, MemoryHandle* out) {
   int fd = open(fmt::format("/proc/{}/mem", tid.id).c_str(), O_RDWR);
   if (fd < -1) {
-    lg::info("[Debugger] Failed to open memory: {}.", strerror(errno));
+    lg::error("[Debugger] Failed to open memory: {}.", strerror(errno));
     return false;
   }
   out->fd = fd;
@@ -161,7 +161,7 @@ bool open_memory(const ThreadID& tid, MemoryHandle* out) {
 bool close_memory(const ThreadID& tid, MemoryHandle* handle) {
   (void)tid;
   if (close(handle->fd) < 0) {
-    lg::info("[Debugger] Failed to close memory: {}.", strerror(errno));
+    lg::error("[Debugger] Failed to close memory: {}.", strerror(errno));
     return false;
   }
   return true;
@@ -176,7 +176,7 @@ bool read_goal_memory(u8* dest_buffer,
                       const DebugContext& context,
                       const MemoryHandle& mem) {
   if (pread(mem.fd, dest_buffer, size, context.base + goal_addr) != size) {
-    lg::info("[Debugger] Failed to read memory: {}.", strerror(errno));
+    lg::error("[Debugger] Failed to read memory: {}.", strerror(errno));
     return false;
   }
   return true;
@@ -191,7 +191,7 @@ bool write_goal_memory(const u8* src_buffer,
                        const DebugContext& context,
                        const MemoryHandle& mem) {
   if (pwrite(mem.fd, src_buffer, size, context.base + goal_addr) != size) {
-    lg::info("[Debugger] Failed to write memory: {}.", strerror(errno));
+    lg::error("[Debugger] Failed to write memory: {}.", strerror(errno));
     return false;
   }
   return true;
@@ -202,7 +202,7 @@ bool write_goal_memory(const u8* src_buffer,
  */
 bool detach_and_resume(const ThreadID& tid) {
   if (ptrace(PTRACE_DETACH, tid.id, nullptr, nullptr) < 0) {
-    lg::info("[Debugger] Failed to detach: {}", strerror(errno));
+    lg::error("[Debugger] Failed to detach: {}", strerror(errno));
     return false;
   }
   return true;
@@ -214,7 +214,7 @@ bool detach_and_resume(const ThreadID& tid) {
 bool get_regs_now(const ThreadID& tid, Regs* out) {
   user regs = {};
   if (ptrace(PTRACE_GETREGS, tid.id, nullptr, &regs) < 0) {
-    lg::info("[Debugger] Failed to PTRACE_GETREGS {}", strerror(errno));
+    lg::error("[Debugger] Failed to PTRACE_GETREGS {}", strerror(errno));
     return false;
   }
 
@@ -246,7 +246,7 @@ bool get_regs_now(const ThreadID& tid, Regs* out) {
 bool set_regs_now(const ThreadID& tid, const Regs& out) {
   user regs = {};
   if (ptrace(PTRACE_GETREGS, tid.id, nullptr, &regs) < 0) {
-    lg::info("[Debugger] Failed to PTRACE_GETREGS {}", strerror(errno));
+    lg::error("[Debugger] Failed to PTRACE_GETREGS {}", strerror(errno));
     return false;
   }
 
@@ -269,7 +269,7 @@ bool set_regs_now(const ThreadID& tid, const Regs& out) {
   regs.regs.rip = out.rip;
 
   if (ptrace(PTRACE_SETREGS, tid.id, nullptr, &regs) < 0) {
-    lg::info("[Debugger] Failed to PTRACE_SETREGS {}", strerror(errno));
+    lg::error("[Debugger] Failed to PTRACE_SETREGS {}", strerror(errno));
     return false;
   }
   // todo, set fprs.
@@ -284,7 +284,7 @@ bool set_regs_now(const ThreadID& tid, const Regs& out) {
  */
 bool break_now(const ThreadID& tid) {
   if (ptrace(PTRACE_INTERRUPT, tid.id, nullptr, nullptr) < 0) {
-    lg::info("[Debugger] Failed to PTRACE_INTERRUPT {}", strerror(errno));
+    lg::error("[Debugger] Failed to PTRACE_INTERRUPT {}", strerror(errno));
     return false;
   }
 
@@ -296,7 +296,7 @@ bool break_now(const ThreadID& tid) {
  */
 bool cont_now(const ThreadID& tid) {
   if (ptrace(PTRACE_CONT, tid.id, nullptr, nullptr) < 0) {
-    lg::info("[Debugger] Failed to PTRACE_CONT {}", strerror(errno));
+    lg::error("[Debugger] Failed to PTRACE_CONT {}", strerror(errno));
     return false;
   }
   return true;
@@ -304,7 +304,7 @@ bool cont_now(const ThreadID& tid) {
 
 bool single_step_now(const ThreadID& tid) {
   if (ptrace(PTRACE_SINGLESTEP, tid.id, nullptr, nullptr) < 0) {
-    printf("[Debugger] Failed to PTRACE_SINGLESTEP %s\n", strerror(errno));
+    lg::error("[Debugger] Failed to PTRACE_SINGLESTEP {}", strerror(errno));
     return false;
   }
   return true;
@@ -741,7 +741,7 @@ ThreadID get_current_thread_id() {
 bool attach_and_break(const ThreadID& tid);
 
 void allow_debugging() {
-  lg::info("allow_debugging not implemented on macOS\n");
+  lg::info("allow_debugging not implemented on macOS");
 }
 
 bool detach_and_resume(const ThreadID& tid) {

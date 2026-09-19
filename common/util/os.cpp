@@ -193,7 +193,7 @@ void setup_cpu_info() {
   gCpuInfo.model = "Unknown Model";
 #endif
 
-  lg::info("-------- CPU Information --------\n");
+  lg::info("-------- CPU Information --------");
   lg::info(" Brand: {}", gCpuInfo.brand.c_str());
   lg::info(" Model: {}", gCpuInfo.model.c_str());
   lg::info(" AVX  : {}", gCpuInfo.has_avx ? "true" : "false");

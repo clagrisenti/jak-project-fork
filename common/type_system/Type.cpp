@@ -204,7 +204,7 @@ std::string Type::get_name() const {
 
 std::string Type::get_runtime_name() const {
   if (!m_allow_in_runtime) {
-    lg::print("[TypeSystem] Tried to use type {} as a runtime type, which is not allowed.\n",
+    lg::print("[TypeSystem] Tried to use type {} as a runtime type, which is not allowed.",
               get_name());
     throw std::runtime_error("get_runtime_name");
   }

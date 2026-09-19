@@ -1,5 +1,6 @@
 #include "EyeRenderer.h"
 
+#include "common/log/log.h"
 #include "common/util/FileUtil.h"
 
 #include "game/graphics/opengl_renderer/AdgifHandler.h"
@@ -591,14 +592,14 @@ void EyeRenderer::run_gpu(const std::vector<SingleEyeDraws>& draws,
 std::optional<u64> EyeRenderer::lookup_eye_texture(u8 eye_id) {
   eye_id = (eye_id % 40);
   if ((s32)eye_id >= NUM_EYE_PAIRS * 2) {
-    lg::print(fmt::format("lookup eye failed for {} (1)\n", eye_id));
+    lg::error("lookup eye failed for {} (1)\n", eye_id);
     return {};
   }
   auto* gpu_tex = m_gpu_eye_textures[eye_id].gpu_tex;
   if (gpu_tex) {
     return gpu_tex->gpu_textures.at(0).gl;
   } else {
-    lg::print(fmt::format("lookup eye failed for {}\n", eye_id));
+    lg::error("lookup eye failed for {}\n", eye_id);
     return {};
   }
 }
@@ -610,12 +611,12 @@ std::optional<u64> EyeRenderer::lookup_eye_texture_hash(u64 hash, bool lr) {
       if (gpu_tex) {
         return gpu_tex->gpu_textures.at(0).gl;
       } else {
-        lg::print(fmt::format("lookup eye failed for {} (1)\n", hash));
+        lg::error("lookup eye failed for {} (1)\n", hash);
         return {};
       }
     }
   }
-  lg::print(fmt::format("lookup eye failed for {} (2)\n", hash));
+  lg::error("lookup eye failed for {} (2)\n", hash);
   return {};
 }
 

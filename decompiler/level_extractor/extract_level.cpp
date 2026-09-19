@@ -246,7 +246,7 @@ level_tools::BspHeader extract_bsp_from_level(const ObjectFileDB& db,
       extract_collide_frags(as_collide_frags, all_ties, config,
                             fmt::format("{}-{}-collide", dgo_name, i++), level_data);
     } else {
-      lg::print("  unsupported tree {}\n", draw_tree->my_type());
+      lg::print("  unsupported tree {}", draw_tree->my_type());
     }
   }
 

@@ -120,7 +120,7 @@ s32 sceOpen(const char* filename, s32 flag) {
     } break;
   }
   if (!fp) {
-    lg::info("[SCE] sceOpen({}) failed.", name.c_str());
+    lg::error("[SCE] sceOpen({}) failed.", name.c_str());
     return -1;
   }
 
@@ -145,7 +145,7 @@ s32 sceClose(s32 fd) {
     sce_fds.erase(fd);
     return 0;
   } else {
-    lg::info("[SCE] sceClose called on invalid fd\n");
+    lg::warn("[SCE] sceClose called on invalid fd\n");
     return 0;
   }
 }

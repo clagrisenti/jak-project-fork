@@ -830,7 +830,7 @@ Ptr<uint8_t> link_and_exec(Ptr<uint8_t> data,
                            uint32_t flags,
                            bool jump_from_c_to_goal) {
   if (link_busy()) {
-    lg::info("-------------> saved link is busy\n");
+    lg::info("-------------> saved link is busy");
     // probably won't end well...
   }
   link_control lc;

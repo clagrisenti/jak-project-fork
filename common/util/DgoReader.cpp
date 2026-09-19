@@ -41,7 +41,7 @@ DgoReader::DgoReader(std::string file_name, const std::vector<u8>& data)
 
     entry.unique_name = get_object_file_name(entry.internal_name, reader.here(), obj_header.size);
     if (all_unique_names.find(entry.unique_name) != all_unique_names.end()) {
-      lg::print("Warning: there are multiple files named {}\n", entry.unique_name.c_str());
+      lg::print("Warning: there are multiple files named {}", entry.unique_name.c_str());
       entry.unique_name += '-';
       entry.unique_name += std::to_string(obj_header.size);
     }

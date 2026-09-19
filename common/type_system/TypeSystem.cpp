@@ -20,7 +20,7 @@
 namespace {
 template <typename... Args>
 [[noreturn]] void throw_typesystem_error(const std::string& str, Args&&... args) {
-  lg::print(fg(fmt::color::crimson) | fmt::emphasis::bold, "-- Type Error! --\n");
+  lg::print(fg(fmt::color::crimson) | fmt::emphasis::bold, "-- Type Error! --");
   if (!str.empty() && str.back() == '\n') {
     lg::print(fg(fmt::color::yellow), str, std::forward<Args>(args)...);
   } else {
@@ -65,7 +65,7 @@ Type* TypeSystem::add_type(const std::string& name, std::unique_ptr<Type> type) 
       if (m_allow_redefinition ||
           std::find(m_types_allowed_to_be_redefined.begin(), m_types_allowed_to_be_redefined.end(),
                     kv->second->get_name()) != m_types_allowed_to_be_redefined.end()) {
-        lg::print("[TypeSystem] Type {} was originally\n{}\nand is redefined as\n{}\n",
+        lg::print("[TypeSystem] Type {} was originally\n{}\nand is redefined as\n{}",
                   kv->second->get_name(), kv->second->print(), type->print());
         // extra dangerous, we have allowed type redefinition!
 
@@ -1690,10 +1690,10 @@ bool TypeSystem::typecheck_and_throw(const TypeSpec& expected,
   if (!success) {
     if (print_on_error) {
       if (error_source_name.empty()) {
-        lg::print("[TypeSystem] Got type \"{}\" when expecting \"{}\"\n", actual.print(),
+        lg::print("[TypeSystem] Got type \"{}\" when expecting \"{}\"", actual.print(),
                   expected.print());
       } else {
-        lg::print("[TypeSystem] For {}, got type \"{}\" when expecting \"{}\"\n", error_source_name,
+        lg::print("[TypeSystem] For {}, got type \"{}\" when expecting \"{}\"", error_source_name,
                   actual.print(), expected.print());
       }
     }

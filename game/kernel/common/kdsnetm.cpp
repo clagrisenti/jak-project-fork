@@ -86,7 +86,7 @@ void GoalProtoHandler(int event, int param, void* opt) {
           // receive failure
           pb->last_receive_size = -1;
           protoBlock.receive_progress = 0;  // why use protoBlock instead of pb here?
-          lg::info("gproto: read error with sceDeci2ExRecv\n");
+          lg::error("gproto: read error with sceDeci2ExRecv\n");
         } else {
           pb->receive_progress += received;
         }
@@ -189,7 +189,7 @@ s32 SendFromBufferD(s32 msg_kind, u64 msg_id, char* data, s32 size) {
     // start send!
     auto rv = ee::sceDeci2ReqSend(protoBlock.socket, header->deci2_header.dst);
     if (rv < 0) {
-      lg::info("1sceDeci2ReqSend fail, reason code = {0:#x}", rv);
+      lg::error("1sceDeci2ReqSend fail, reason code = {0:#x}", rv);
       return 0xfffffffa;
     }
 

@@ -129,14 +129,14 @@ void Deci2Server::read_data() {
     auto& prot = d2_drivers[i];
     if (prot.active && prot.protocol) {
       if (handler != -1) {
-        lg::warn("[DECI2] Warning: more than on protocol handler for this message!\n");
+        lg::warn("[DECI2] Warning: more than on protocol handler for this message!");
       }
       handler = i;
     }
   }
 
   if (handler == -1) {
-    lg::warn("[DECI2] Warning: no handler for this message, ignoring...\n");
+    lg::warn("[DECI2] Warning: no handler for this message, ignoring...");
     unlock();
     return;
   }

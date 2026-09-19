@@ -346,7 +346,7 @@ void write_text_file(const std::string& file_name, const std::string& text) {
 void write_text_file(const fs::path& file_name, const std::string& text) {
   FILE* fp = file_util::open_file(file_name.string().c_str(), "w");
   if (!fp) {
-    lg::error("Failed to fopen {}\n", file_name.string());
+    lg::error("Failed to fopen {}", file_name.string());
     throw std::runtime_error("Failed to open file");
   }
   fprintf(fp, "%s\n", text.c_str());

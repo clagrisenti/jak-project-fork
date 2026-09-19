@@ -413,7 +413,7 @@ BankHandle Loader::BankLoad(std::span<u8> bank) {
   fa.Read(reader);
 
   if (fa.type != 1 && fa.type != 3) {
-    lg::print("bad file type\n");
+    lg::warn("bad file type");
     return nullptr;
   }
 

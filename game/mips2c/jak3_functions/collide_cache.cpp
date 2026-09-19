@@ -186,7 +186,7 @@ block_11:
   call_addr = c->gprs[t9].du32[0];                  // function call:
   c->sll(v0, ra, 0);                                // sll v0, ra, 0
   // c->jalr(call_addr);                               // jalr ra, t9
-  lg::info("ERROR: Exceeded max number of collide-cache prims!\n");
+  lg::error("ERROR: Exceeded max number of collide-cache prims!\n");
   //beq r0, r0, L92                                 // beq r0, r0, L92
   // nop                                            // sll r0, r0, 0
   goto block_18;                                    // branch always
